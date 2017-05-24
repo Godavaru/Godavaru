@@ -20,7 +20,7 @@ async def on_ready():
 
 @bot.command()
 async def help():
-    await bot.say("**Commands!**\n\n**Info**\n`--help`, `--about`, `--invite`, `--support`, `--request`\n\n**Fun**\n`--year`, `--lewd`, `--lood`, `--shru`\n\n**Faces**\n`--shrug`, `--lenny`")
+    await bot.say("**Commands!**\n\n**Info**\n`--help`, `--about`, `--invite`, `--support`, `--request`\n\n**Fun**\n`--say`, `--year`, `--lewd`, `--lood`, `--shru`\n\n**Faces**\n`--shrug`, `--lenny`")
 
 @bot.command()
 async def invite():
@@ -50,23 +50,25 @@ async def lood():
 @bot.command()
 async def shrug():
     await bot.say ("¯\_(ツ)_/¯")
+    await bot.delete_message(ctx.message)
 
 
 @bot.command(pass_context=True)
 async def request(ctx):
     request_channel = discord.Object('316674935898636289')
 
-    if ctx.message.content[10:] != "":
+    if ctx.message.content[13:] != "":
         await bot.send_message(request_channel, '**Request from ' + ctx.message.author.name + '#' + ctx.message.author.discriminator + ':** ' + ctx.message.content[10:])
         await bot.say ("Your request has been sent to the developers! The owner will pm you if your suggestion has been implemented. :slight_smile:")
 
     else:
-        await bot.say ("Please specify something to request!")
+        await bot.say ("Please specify something to request or make the request longer!")
 
 
 @bot.command()
 async def lenny():
     await bot.say ("( ͡° ͜ʖ ͡°)")
+    await bot.delete_message(ctx.message)
 
 
 @bot.command()
@@ -74,7 +76,7 @@ async def about():
     server_count = 0
     for server in bot.servers:
         server_count = server_count + 1
-    await bot.say("**About Godavaru!**\nHello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!\n\n**Bot Version**\nv0.1.2\n\n**Servers**\n" + str(server_count))
+    await bot.say("**About Godavaru!**\nHello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!\n\n**Bot Version**\nv0.1.1\n\n**Servers**\n" + str(server_count))
 
 
 @bot.command(pass_context = True)
@@ -97,7 +99,7 @@ async def game(ctx, *, setGame: str):
         
     else:
         await bot.change_status(discord.Game(name="--help | " + setGame))
-        await bot.say("Set my playing status to `" + setGame + "`!");
+        await bot.say("Set my playing status to `--help | " + setGame + "`!");
 
 
 @bot.command(pass_context = True)
@@ -138,14 +140,14 @@ async def say(ctx):
 @bot.event
 async def on_server_join(server):
     console = discord.Object('316688736089800715')
-    await bot.send_message(console, 'Joined server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
+    await bot.send_message(console, ':tada: I joined the server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
 
 
 # server leave
 @bot.event
 async def on_server_remove(server):
     console = discord.Object('316688736089800715')
-    await bot.send_message(console, 'Left server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
+    await bot.send_message(console, ':frowning: I left the server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
 
 
 @bot.event
