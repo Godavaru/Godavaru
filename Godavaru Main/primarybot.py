@@ -54,12 +54,12 @@ async def shrug():
 async def request(ctx):
     request_channel = discord.Object('316674935898636289')
 
-    if ctx.message.content[10:] != "":
+    if ctx.message.content[13:] != "":
         await bot.send_message(request_channel, '**Request from ' + ctx.message.author.name + '#' + ctx.message.author.discriminator + ':** ' + ctx.message.content[10:])
         await bot.say ("Your request has been sent to the developers! The owner will pm you if your suggestion has been implemented. :slight_smile:")
 
     else:
-        await bot.say ("Please specify something to request!")
+        await bot.say ("Please specify something to request or make your request longer!")
 
 
 @bot.command()
