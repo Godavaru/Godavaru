@@ -74,7 +74,7 @@ async def about():
     server_count = 0
     for server in bot.servers:
         server_count = server_count + 1
-    await bot.say("**About Godavaru!**\nHello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!\n\n**Bot Version**\nv0.1.1\n\n**Servers**\n" + str(server_count))
+    await bot.say("**About Godavaru!**\nHello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!\n\n**Bot Version**\nv0.1.2\n\n**Servers**\n" + str(server_count))
 
 
 @bot.command(pass_context = True)
@@ -98,17 +98,6 @@ async def game(ctx, *, setGame: str):
     else:
         await bot.change_status(discord.Game(name="--help | " + setGame))
         await bot.say("Set my playing status to `" + setGame + "`!");
-
-
-@bot.command(pass_context = True)
-async def files(ctx):
-    member = ctx.message.author
-
-    if member.id != "267207628965281792" and member.id != "99965250052300800":
-        await bot.say ("Nosy, you don't need to see my files :eyes: (access denied)")
-
-    else:
-        await bot.say("Here you go! https://ufile.io/d0glb")
 
 
 @bot.command(pass_context = True)
