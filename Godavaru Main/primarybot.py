@@ -14,6 +14,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('=================')
+    console = discord.Object('316688736089800715')
     await bot.send_message(console, 'Successfully started up Godavaru.')
 
 
@@ -148,3 +149,5 @@ async def on_message(message):
         await bot.process_commands(message)
 # login and start bot
 bot.run('bot token')
+
+
