@@ -122,7 +122,7 @@ async def owner(ctx):
     member = ctx.message.author
 
     if member.id == "267207628965281792" or member.id == "99965250052300800":
-        await bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--files` - Obtain access to the bot's files.\n`--game` - Set the bot's playing status")
+        await bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status")
     elif ctx.message.content == "~~owner shutdown":
         await bot.say("I-I'm hurt! Ah well, I never loved you anyway! :broken_heart: :sob:")
         raise SystemExit
@@ -132,8 +132,14 @@ async def owner(ctx):
 
 @bot.command(pass_context = True)
 async def say(ctx):
-    await bot.say(ctx.message.content[6:])
-    await bot.delete_message(ctx.message)
+
+    if ctx.message.content[6:] == "":
+        await bot.say(' Specify something for me to say!')
+
+    else:
+        await bot.say(ctx.message.content[6:])
+        await bot.delete_message(ctx.message)
+
 
 
 # server join
