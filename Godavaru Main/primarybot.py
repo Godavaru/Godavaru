@@ -14,11 +14,13 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('=================')
+    await bot.send_message(console, 'Successfully started up Godavaru.')
 
 
 @bot.command()
 async def help():
     await bot.say("**Commands!**\n\n**Info**\n`--help`, `--about`, `--invite`, `--support`, `--request`\n\n**Fun**\n`--year`, `--lewd`, `--lood`, `--shru`\n\n**Faces**\n`--shrug`, `--lenny`")
+
 
 @bot.command()
 async def invite():
@@ -50,6 +52,12 @@ async def shrug():
     await bot.say ("¯\_(ツ)_/¯")
 
 
+@bot.command(pass_context = True)
+async def say(ctx):
+    await bot.say(ctx.message.content[6:])
+    await bot.delete_message(ctx.message)
+
+
 @bot.command(pass_context=True)
 async def request(ctx):
     request_channel = discord.Object('316674935898636289')
@@ -59,13 +67,12 @@ async def request(ctx):
         await bot.say ("Your request has been sent to the developers! The owner will pm you if your suggestion has been implemented. :slight_smile:")
 
     else:
-        await bot.say ("Please specify something to request or make your request longer!")
+        await bot.say ("Please specify something to request or make the request longer!")
 
 
 @bot.command()
 async def lenny():
     await bot.say ("( ͡° ͜ʖ ͡°)")
-
 
 
 @bot.command()
@@ -97,6 +104,7 @@ async def game(ctx, *, setGame: str):
     else:
         await bot.change_status(discord.Game(name="--help | " + setGame))
         await bot.say("Set my playing status to `" + setGame + "`!");
+
 
 
 @bot.command(pass_context = True)
@@ -139,4 +147,4 @@ async def on_message(message):
     if message.author.bot == False:
         await bot.process_commands(message)
 # login and start bot
-bot.run('<bot token>')
+bot.run('bot token')
