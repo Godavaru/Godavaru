@@ -59,7 +59,7 @@ async def request(ctx):
 
     if ctx.message.content[13:] != "":
         await bot.send_message(request_channel, '**Request from ' + ctx.message.author.name + '#' + ctx.message.author.discriminator + ':** ' + ctx.message.content[10:])
-        await bot.say ("Your request has been sent to the developers! The owner will pm you if your suggestion has been implemented. :slight_smile:")
+        await bot.say ("Your request has been recieved! :slight_smile:")
 
     else:
         await bot.say ("Please specify something to request or make the request longer!")
