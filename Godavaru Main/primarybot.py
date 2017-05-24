@@ -51,6 +51,7 @@ async def lood():
 @bot.command()
 async def shrug():
     await bot.say ("¯\_(ツ)_/¯")
+    await bot.delete_message(ctx.message)
 
 
 @bot.command(pass_context = True)
@@ -74,6 +75,7 @@ async def request(ctx):
 @bot.command()
 async def lenny():
     await bot.say ("( ͡° ͜ʖ ͡°)")
+    await bot.delete_message(ctx.message)
 
 
 @bot.command()
