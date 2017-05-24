@@ -4,3 +4,4 @@ The bot may become a good bot one day, but at the moment, it's a beginner projec
 
 You can contact me on Twitter, `@Diallusions` or Discord, `Desiree#3658` or join the support guild [here!]( https://discord.gg/ewvvKHM)
 
+Get updates on github instantly in the #github channel on my support guild!
