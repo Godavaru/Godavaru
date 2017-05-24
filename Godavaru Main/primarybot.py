@@ -47,13 +47,13 @@ async def lood():
     await bot.say ("You're very lewd :eyes: http://prntscr.com/fa7ug0")
 
 
-@bot.command()
-async def shrug():
+@bot.command(pass_context = True)
+async def shrug(ctx):
     await bot.say ("¯\_(ツ)_/¯")
     await bot.delete_message(ctx.message)
 
 
-@bot.command(pass_context=True)
+@bot.command(pass_context = True)
 async def request(ctx):
     request_channel = discord.Object('316674935898636289')
 
@@ -65,8 +65,8 @@ async def request(ctx):
         await bot.say ("Please specify something to request or make the request longer!")
 
 
-@bot.command()
-async def lenny():
+@bot.command(pass_context = True)
+async def lenny(ctx):
     await bot.say ("( ͡° ͜ʖ ͡°)")
     await bot.delete_message(ctx.message)
 
