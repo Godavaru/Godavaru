@@ -134,14 +134,14 @@ async def owner(ctx):
 @bot.event
 async def on_server_join(server):
     console = discord.Object('316688736089800715')
-    await bot.send_message(console, 'Joined server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
+    await bot.send_message(console, ':slight_smile: I joined the server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
 
 
 # server leave
 @bot.event
 async def on_server_remove(server):
     console = discord.Object('316688736089800715')
-    await bot.send_message(console, 'Left server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
+    await bot.send_message(console, ':slight_frown: I left the server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
 
 
 @bot.event
