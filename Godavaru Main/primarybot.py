@@ -20,7 +20,8 @@ async def on_ready():
 
 @bot.command()
 async def help():
-    await bot.say("**Commands!**\n\n**Info**\n`--help`, `--about`, `--invite`, `--support`, `--request`\n\n**Fun**\n`--echo`, `--kill`, `--say`, `--year`, `--lewd`, `--lood`, `--shru`\n\n**Faces**\n`--shrug`, `--lenny`")
+    await bot.say("**Commands!**\n\n**Info**\n`--about`, `--help`, `--invite`, `--request`, `--support`\n\n**Fun**\n`--echo`, `--kill`, `--lewd`, `--lood`, `--say`,  `--shru`, `--year`\n\n**Faces**\n`--lenny`, `--shrug`")
+
 
 @bot.command()
 async def invite():
