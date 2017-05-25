@@ -46,7 +46,7 @@ async def lewd():
 async def lood():
     await bot.say ("You're very lewd :eyes: http://prntscr.com/fa7ug0")
 
-
+   
 @bot.command(pass_context = True)
 async def shrug(ctx):
     await bot.say ("¯\_(ツ)_/¯")
@@ -96,7 +96,7 @@ async def game(ctx, *, setGame: str):
     
     if member.id != "267207628965281792" and member.id != "99965250052300800":
         await bot.say("No changey my gamey :rage: (access denied)")
-        
+
     else:
         await bot.change_status(discord.Game(name="--help | " + setGame))
         await bot.say("Set my playing status to `--help | " + setGame + "`!");
@@ -121,13 +121,29 @@ async def shutdown(ctx):
 async def owner(ctx):
     member = ctx.message.author
 
-    if member.id == "267207628965281792" or member.id == "99965250052300800":
+    if member.id != "267207628965281792" or member.id != "99965250052300800":
         await bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status")
-    elif ctx.message.content == "~~owner shutdown":
-        await bot.say("I-I'm hurt! Ah well, I never loved you anyway! :broken_heart: :sob:")
-        raise SystemExit
+        
     else:
         await bot.say("No need to be looking at owner commands :eyes: (access denied)")
+
+
+@bot.command(pass_context = True)
+async def echo(ctx):
+
+    if ctx.message.content[7:] == "":
+        await bot.say (":mega: I can't echo something that isn't specified!")
+
+    else:
+        await bot.say(':mega:' + ctx.message.content[6:])
+
+
+@bot.command(pass_context = True)
+async def kill(ctx):
+    if ctx.message.mentions[0].id == ctx.message.author.id:
+        await bot.say("Why do you want me to kill you?")
+    else:
+        await bot.say("I just killed " + ctx.message.mentions[0].mention + "!")
 
 
 @bot.command(pass_context = True)
@@ -139,7 +155,6 @@ async def say(ctx):
     else:
         await bot.say(ctx.message.content[6:])
         await bot.delete_message(ctx.message)
-
 
 
 # server join
@@ -155,7 +170,7 @@ async def on_server_remove(server):
     console = discord.Object('316688736089800715')
     await bot.send_message(console, ':frowning: I left the server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
 
-
+    
 @bot.event
 async def on_message(message):
     if message.author.bot == False:
