@@ -20,7 +20,7 @@ async def on_ready():
 
 @bot.command()
 async def help():
-    await bot.say("**Commands!**\n\n**Info**\n`--help`, `--about`, `--invite`, `--support`, `--request`\n\n**Fun**\n`--say`, `--year`, `--lewd`, `--lood`, `--shru`\n\n**Faces**\n`--shrug`, `--lenny`")
+    await bot.say("**Commands!**\n\n**Info**\n`--help`, `--about`, `--invite`, `--support`, `--request`\n\n**Fun**\n`--echo`, `--kill`, `--say`, `--year`, `--lewd`, `--lood`, `--shru`\n\n**Faces**\n`--shrug`, `--lenny`")
 
 @bot.command()
 async def invite():
@@ -76,7 +76,7 @@ async def about():
     server_count = 0
     for server in bot.servers:
         server_count = server_count + 1
-    await bot.say("**About Godavaru!**\nHello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!\n\n**Bot Version**\nv0.1.1\n\n**Servers**\n" + str(server_count))
+    await bot.say("**About Godavaru!**\nHello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!\n\n**Bot Version**\nv0.1.3\n\n**Servers**\n" + str(server_count))
 
 
 @bot.command(pass_context = True)
