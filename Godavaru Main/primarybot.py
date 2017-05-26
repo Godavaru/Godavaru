@@ -38,14 +38,16 @@ async def year():
     await bot.say ("A year has:\n\n12 Months\n52 Weeks\n365 Days\n8760 Hours\n525600 Minutes\n3153600 Seconds\n\nAnd it only takes 1 minute to send me nudes :3")
 
 
-@bot.command()
-async def lewd():
-    await bot.say ("We need to go lewder, man. http://prntscr.com/fa7tiq")
+@bot.command(pass_context = True)
+async def lewd(ctx):
+    embed = discord.Embed(title='We must go lewder!', description=":eyes:").set_image(url="https://image.prntscr.com/image/4beb7e203f394913abfccc19154d994a.png")
+    await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 
-@bot.command()
-async def lood():
-    await bot.say ("You're very lewd :eyes: http://prntscr.com/fa7ug0")
+@bot.command(pass_context = True)
+async def lood(ctx):
+    embed = discord.Embed(title='P-put it in me senpai...', description=':blush:').set_image(url="https://image.prntscr.com/image/8e9cad7c75d84e419a2c551c18c36427.png")
+    await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
    
 @bot.command(pass_context = True)
