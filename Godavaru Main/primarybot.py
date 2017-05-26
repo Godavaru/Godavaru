@@ -167,7 +167,9 @@ async def kill(ctx):
     random.seed(time.time())
     var = int(random.random() * 4)
     
-    if ctx.message.mentions[0].id == ctx.message.author.id and ctx.message.mentions[0].id == '267207628965281792':
+    if ctx.message.content[7:] == "":
+        await bot.say ("I can't kill someone who doesn't exist!")
+    elif ctx.message.mentions[0].id == ctx.message.author.id and ctx.message.mentions[0].id == '267207628965281792':
         await bot.say("Are you sure, master..?")
     elif ctx.message.mentions[0].id == ctx.message.author.id:
         await bot.say("Why would you want me to kill you?")
