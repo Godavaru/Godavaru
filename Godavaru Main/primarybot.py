@@ -29,7 +29,7 @@ async def about(ctx):
     server_count = 0
     for server in bot.servers:
         server_count = server_count + 1
-    embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.1.4', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+    embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.2.0', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
     await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 
@@ -93,7 +93,7 @@ async def game(ctx, *, setGame: str):
         await bot.say("No changey my gamey :rage: (access denied)")
 
     else:
-        await bot.change_status(discord.Game(name="--help | " + setGame))
+        await bot.change_presence(discord.Game(name="--help | " + setGame))
         await bot.say("Set my playing status to `--help | " + setGame + "`!");
 
 
