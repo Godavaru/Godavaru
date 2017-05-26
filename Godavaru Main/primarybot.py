@@ -116,12 +116,11 @@ async def shru(ctx):
 @bot.command(pass_context = True)
 async def game(ctx, *, setGame: str):
     member = ctx.message.author
-    
+
     if member.id != "267207628965281792" and member.id != "99965250052300800":
         await bot.say("No changey my gamey :rage: (access denied)")
-
     else:
-        await bot.change_status(discord.Game(name='--help | ' + setGame))
+        await bot.change_presence(game=discord.Game(name='--help | ' + setGame))
         await bot.say("Set my playing status to `--help | " + setGame + "`!");
 
 
