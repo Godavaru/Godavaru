@@ -2,6 +2,8 @@
 import discord
 import asyncio
 from discord.ext import commands
+import random
+import time
 
 # client
 bot = commands.Bot(command_prefix='--')
@@ -20,8 +22,34 @@ async def on_ready():
 
 @bot.command(pass_context = True)
 async def help(ctx):
-    embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `kill`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `shrug`', inline=False).set_footer(text="Enjoy the bot! <3")
-    await bot.send_message(ctx.message.channel, content=None, embed=embed)
+
+    if ctx.message.content[7:] == "echo":
+        await bot.say ("Use `--echo <text>` to make me echo something!")
+    elif ctx.message.content[7:] == "about":
+        await bot.say ("Display the facts about me by doing `--about`!")
+    elif ctx.message.content[7:] == "help":
+        await bot.say ("Uh... really? just do `--help`...")
+    elif ctx.message.content[7:] == "request":
+        await bot.say ("Request something to add by doing `--request <suggestion>`! Make sure it's longer than three characters!")
+    elif ctx.message.content[7:] == "kill":
+        await bot.say ("Kill your worst enemies! ~~Or friends, whatever you wish.~~ Do `--kill <@user>`")
+    elif ctx.message.content[7:] == "lewd":
+        await bot.say ("What should we do? `--lewd`")
+    elif ctx.message.content[7:] == "lood":
+        await bot.say ("S-senpai! `--lood`")
+    elif ctx.message.content[7:] == "say":
+        await bot.say ("Make me say something by doing `--say <text>`")
+    elif ctx.message.content[7:] == "shru":
+        await bot.say ("I hope that was a spelling error... `--shru`")
+    elif ctx.message.content[7:] == "year":
+        await bot.say ("See my very first fun command! It's good I promise ( ͡° ͜ʖ ͡°) `--year`")
+    elif ctx.message.content[7:] == "lenny":
+        await bot.say ("Make a lenny face by doing `--lenny`!")
+    elif ctx.message.content[7:] == "shrug":
+        await bot.say ("Uhh... idk *shrugs* `--shrug`")
+    else:
+        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `kill`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `shrug`', inline=False).set_footer(text="Enjoy the bot! <3")
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
     
 
 @bot.command(pass_context = True)
@@ -29,9 +57,21 @@ async def about(ctx):
     server_count = 0
     for server in bot.servers:
         server_count = server_count + 1
-    embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.2.0', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+    embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.2.1', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
     await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
+
+@bot.command(pass_context = True)
+async def request(ctx):
+    request_channel = discord.Object('316674935898636289')
+
+    if ctx.message.content[13:] != "":
+        await bot.send_message(request_channel, '**Request from ' + ctx.message.author.name + '#' + ctx.message.author.discriminator + ':** ' + ctx.message.content[10:])
+        await bot.say ("Your request has been recieved! :slight_smile:")
+
+    else:
+        await bot.say ("Please specify something to request or make the request longer!")
+        
 
 @bot.command()
 async def year():
@@ -54,18 +94,6 @@ async def lood(ctx):
 async def shrug(ctx):
     await bot.say ("¯\_(ツ)_/¯")
     await bot.delete_message(ctx.message)
-
-
-@bot.command(pass_context = True)
-async def request(ctx):
-    request_channel = discord.Object('316674935898636289')
-
-    if ctx.message.content[13:] != "":
-        await bot.send_message(request_channel, '**Request from ' + ctx.message.author.name + '#' + ctx.message.author.discriminator + ':** ' + ctx.message.content[10:])
-        await bot.say ("Your request has been recieved! :slight_smile:")
-
-    else:
-        await bot.say ("Please specify something to request or make the request longer!")
 
 
 @bot.command(pass_context = True)
@@ -93,7 +121,7 @@ async def game(ctx, *, setGame: str):
         await bot.say("No changey my gamey :rage: (access denied)")
 
     else:
-        await bot.change_presence(discord.Game(name="--help | " + setGame))
+        await bot.change_status(discord.Game(name='--help | ' + setGame))
         await bot.say("Set my playing status to `--help | " + setGame + "`!");
 
 
@@ -135,17 +163,28 @@ async def echo(ctx):
 
 @bot.command(pass_context = True)
 async def kill(ctx):
+    random.seed(time.time())
+    var = int(random.random() * 4)
+    
     if ctx.message.mentions[0].id == ctx.message.author.id:
-        await bot.say("Why do you want me to kill you?")
+        await bot.say("Why would you want me to kill you?")
+    elif (var == 0):
+        await bot.say(ctx.message.mentions[0].mention + ' "accidentally" fell in a ditch. RIP >:)')
+    elif (var == 1):
+        await bot.say("I just tackled " + ctx.message.mentions[0].mention + " and killed them accidentally... oops")
+    elif (var == 2):
+        await bot.say(ctx.message.mentions[0].mention + " died. Why are you looking at me? I don't know how... :fingers_crossed:")
+    elif (var == 3):
+        await bot.say("I poisoned the food of " + ctx.message.mentions[0].mention + ". This should be fun to watch!")
     else:
-        await bot.say("I just killed " + ctx.message.mentions[0].mention + "!")
+        await bot.say("Whoops, I just killed " + ctx.message.mentions[0].mention + " by taking their own hair and making a rope to tie around their neck... Please don't tell the cops...")
 
 
 @bot.command(pass_context = True)
 async def say(ctx):
 
     if ctx.message.content[6:] == "":
-        await bot.say(' Specify something for me to say!')
+        await bot.say('Specify something for me to say!')
 
     else:
         await bot.say(ctx.message.content[6:])
