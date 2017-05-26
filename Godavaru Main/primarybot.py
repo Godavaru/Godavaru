@@ -18,19 +18,19 @@ async def on_ready():
     await bot.send_message(console, 'Successfully started up!')
 
 
-@bot.command()
-async def help():
-    await bot.say("**Commands!**\n\n**Info**\n`--about`, `--help`, `--invite`, `--request`, `--support`\n\n**Fun**\n`--echo`, `--kill`, `--lewd`, `--lood`, `--say`,  `--shru`, `--year`\n\n**Faces**\n`--lenny`, `--shrug`")
+@bot.command(pass_context = True)
+async def help(ctx):
+    embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `kill`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `shrug`', inline=False).set_footer(text="Enjoy the bot! <3")
+    await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    
 
-
-@bot.command()
-async def invite():
-    await bot.say("Invite me at the following link! https://goo.gl/chLxM9")
-
-
-@bot.command()
-async def support():
-    await bot.say("**Join the support guild!**\nFor help with the bot, join the support guild at https://discord.gg/ewvvKHM")
+@bot.command(pass_context = True)
+async def about(ctx):
+    server_count = 0
+    for server in bot.servers:
+        server_count = server_count + 1
+    embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.1.4', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+    await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 
 @bot.command()
@@ -70,14 +70,6 @@ async def request(ctx):
 async def lenny(ctx):
     await bot.say ("( ͡° ͜ʖ ͡°)")
     await bot.delete_message(ctx.message)
-
-
-@bot.command()
-async def about():
-    server_count = 0
-    for server in bot.servers:
-        server_count = server_count + 1
-    await bot.say("**About Godavaru!**\nHello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!\n\n**Bot Version**\nv0.1.3\n\n**Servers**\n" + str(server_count))
 
 
 @bot.command(pass_context = True)
