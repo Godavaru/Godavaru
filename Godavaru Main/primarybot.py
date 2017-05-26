@@ -161,12 +161,15 @@ async def echo(ctx):
         await bot.say(':mega:' + ctx.message.content[6:])
 
 
+
 @bot.command(pass_context = True)
 async def kill(ctx):
     random.seed(time.time())
     var = int(random.random() * 4)
     
-    if ctx.message.mentions[0].id == ctx.message.author.id:
+    if ctx.message.mentions[0].id == ctx.message.author.id and ctx.message.mentions[0].id == '267207628965281792':
+        await bot.say("Are you sure, master..?")
+    elif ctx.message.mentions[0].id == ctx.message.author.id:
         await bot.say("Why would you want me to kill you?")
     elif (var == 0):
         await bot.say(ctx.message.mentions[0].mention + ' "accidentally" fell in a ditch. RIP >:)')
