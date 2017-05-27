@@ -49,8 +49,10 @@ async def help(ctx):
         await bot.say ("Uhh... idk *shrugs* `--shrug`")
     elif ctx.message.content[7:] == "hug":
         await bot.say ("To hug a user, do `--hug <@user>`! :hugging:")
+    elif ctx.message.content[7:] == "kiss":
+        await bot.say ("Kiss me before I lose my mind!! `--kiss <@user>`")
     else:
-        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `kill`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `shrug`', inline=False).set_footer(text="Enjoy the bot! <3")
+        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `kill`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `shrug`', inline=False).add_field(name='Action', value='`hug`, `kiss`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 14")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     
 
@@ -59,7 +61,7 @@ async def about(ctx):
     server_count = 0
     for server in bot.servers:
         server_count = server_count + 1
-    embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.2.3', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+    embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.2.5', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
     await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 
@@ -249,6 +251,46 @@ async def hug(ctx):
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
         
+@bot.command(pass_context = True)
+async def kiss(ctx):
+    random.seed(time.time())
+    var = int(random.random() * 10)
+
+    if  (var == 0):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/nxhdQuJ.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 1):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/2mFkqXh.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 2):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/71lpaeH.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 3):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/ZUc3T7U.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 4):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/Lce2Zw2.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 5):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/dpHduEL.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 6):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/YfqU78J.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 7):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/uKxYHBx.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 8):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/gvn3TYx.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 9):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/w58KuGF.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 10):
+        embed = discord.Embed(description=':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/6F1blBK.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+	
+
 # server join
 @bot.event
 async def on_server_join(server):
