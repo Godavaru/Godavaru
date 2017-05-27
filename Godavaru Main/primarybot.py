@@ -215,37 +215,37 @@ async def hug(ctx):
     var = int(random.random() * 10)
     
     if  (var == 0):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='http://i.imgur.com/64tEiNj.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/64tEiNj.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 1):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='http://i.imgur.com/kvTu3tb.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='http://i.imgur.com/kvTu3tb.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 2):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media3.giphy.com/media/lXiRKBj0SAA0EWvbG/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media3.giphy.com/media/lXiRKBj0SAA0EWvbG/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var ==3):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='http://cdn.smosh.com/sites/default/files/ftpuploads/bloguploads/0413/epic-hugs-monsters-inc.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='http://cdn.smosh.com/sites/default/files/ftpuploads/bloguploads/0413/epic-hugs-monsters-inc.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 4):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media1.giphy.com/media/BXrwTdoho6hkQ/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media1.giphy.com/media/BXrwTdoho6hkQ/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 5):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media0.giphy.com/media/VGACXbkf0AeGs/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media0.giphy.com/media/VGACXbkf0AeGs/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 6):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media1.giphy.com/media/mLYVrZR44EcU0/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media1.giphy.com/media/mLYVrZR44EcU0/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 7):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media.giphy.com/media/81kpBJDlwPi2Q/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/81kpBJDlwPi2Q/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 8):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media.giphy.com/media/14tdcXZOONVCXm/giphy.gif')
+        embed = discord.Embed(description=':hugging:**' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/14tdcXZOONVCXm/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 9):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media.giphy.com/media/jmwFZljh2QnkI/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/jmwFZljh2QnkI/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 10):
-        embed = discord.Embed(description=ctx.message.mentions[0].mention + ' was hugged by ' + ctx.message.author.mention +'!').set_image(url='https://media.giphy.com/media/Bg3PXi0Ka1ZWE/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/Bg3PXi0Ka1ZWE/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
         
