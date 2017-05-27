@@ -239,7 +239,7 @@ async def hug(ctx):
         embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/81kpBJDlwPi2Q/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 8):
-        embed = discord.Embed(description=':hugging:**' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/14tdcXZOONVCXm/giphy.gif')
+        embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/14tdcXZOONVCXm/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 9):
         embed = discord.Embed(description=':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!').set_image(url='https://media.giphy.com/media/jmwFZljh2QnkI/giphy.gif')
