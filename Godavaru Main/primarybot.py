@@ -8,7 +8,12 @@ import time
 # client
 bot = commands.Bot(command_prefix='--')
 bot.remove_command("help")
-		
+ownerids = [
+	'267207628965281792',
+	'99965250052300800',
+	'170991374445969408'
+]
+
 # when bot is ready
 @bot.event
 async def on_ready():
@@ -129,7 +134,7 @@ async def shru(ctx):
 async def game(ctx, *, setGame: str):
     member = ctx.message.author
 
-    if member.id != "267207628965281792" and member.id != "99965250052300800":
+    if member.id not in ownerids:
         await bot.say("No changey my gamey :rage: (access denied)")
     else:
         await bot.change_presence(game=discord.Game(name='--help | ' + setGame))
@@ -141,7 +146,7 @@ async def shutdown(ctx):
     member = ctx.message.author
     console = discord.Object('316688736089800715')
     
-    if member.id != "267207628965281792" and member.id != "99965250052300800":
+    if member.id not in ownerids:
         await bot.say("Y-you want me gone? That's just rude! (access denied)")
         await bot.send_message(console, '`' +  str(ctx.message.author) + '` tried to shut me down! :frowning:')
         
@@ -155,7 +160,7 @@ async def shutdown(ctx):
 async def owner(ctx):
     member = ctx.message.author
 
-    if member.id != "267207628965281792" and member.id != "99965250052300800":
+    if member.id not in ownerids:
         await bot.say("No need to be looking at owner commands :eyes: (access denied)")
     else:
         await bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status")
@@ -202,7 +207,7 @@ async def serverlist(ctx):
     for server in bot.servers:
         msg = msg + '\n`' + server.name + '` owned by `' + server.owner.name + '#' + server.owner.discriminator + '`'
     
-    if member.id != '267207628965281792' and member.id !='99965250052300800':
+    if member.id not in ownerids:
         await bot.say ("My mommy says giving strangers information is bad! (access denied)")
     else:
         await bot.send_message(channel, msg)
