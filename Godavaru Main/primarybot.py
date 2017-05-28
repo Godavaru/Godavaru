@@ -208,7 +208,7 @@ async def kill(ctx):
     elif (var == 5):
         await bot.say(":knife: stabby stab to you," + ctx.message.mentions[0].mention + "! :eyes:")
     elif (var == 6):
-            await bot.say("I decided to be nice for once, so I ordered " + ctx.message.mentions[0].mention + 'some pizza. Little did I know that I was gonna bump into the pizza guy in town. I was carrying poison and I "accidentally" poisoned and killed' + ctx.message.mentions[0].mention + "...")
+            await bot.say("I decided to be nice for once, so I ordered " + ctx.message.mentions[0].mention + ' some pizza. Little did I know that I was gonna bump into the pizza guy in town. I was carrying poison and I "accidentally" poisoned and killed ' + ctx.message.mentions[0].mention + "...")
     elif (var == 7):
         await bot.say("RIP to " + ctx.message.mentions[0].mention + ". I took over their account and made them tag b1nzy on Google Emoji >:)")
     elif (var == 8):
