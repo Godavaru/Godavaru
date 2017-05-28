@@ -60,10 +60,12 @@ async def help(ctx):
         await bot.say ("Don't poke me! Poke someone else with `--poke <@user>`!")
     elif ctx.message.content[7:] =="cuddle":
         await bot.say ("<:godavarublobhug:318227863646109696> Cuddle someone with `--cuddle <@user>`")
+    elif ctx.message.content[7:] == "nonowa":
+        await bot.say ("Make a nonowa face! `--nonowa`")
     else:
-        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `poke`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 16")
-        await bot.send_message(ctx.message.channel, content=None, embed=embed)
-    
+        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `poke`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 17")
+	await bot.send_message(ctx.message.channel, content=None, embed=embed)
+
 
 @bot.command(pass_context = True)
 async def about(ctx):
@@ -116,6 +118,12 @@ async def shrug(ctx):
 @bot.command(pass_context = True)
 async def lenny(ctx):
     await bot.say ("( ͡° ͜ʖ ͡°)")
+    await bot.delete_message(ctx.message)
+
+
+@bot.command(pass_context = True)
+async def nonowa(ctx):
+    await bot.say("のワの")
     await bot.delete_message(ctx.message)
 
 
@@ -426,7 +434,6 @@ async def on_error(e):
     console = discord.Object('316688736089800715')
     await bot.send_message(console, "```\n" + e + "```")
 # login and start bot
-
 bot.run('bot token')
 
 
