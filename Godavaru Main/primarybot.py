@@ -11,7 +11,8 @@ bot.remove_command("help")
 ownerids = [
 	'267207628965281792',
 	'99965250052300800',
-	'170991374445969408'
+	'170991374445969408',
+	'188663897279037440'
 ]
 
 # when bot is ready
@@ -171,9 +172,9 @@ async def owner(ctx):
     if member.id not in ownerids:
         await bot.say("No need to be looking at owner commands :eyes: (access denied)")
     else:
-        await bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status")
+        await bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status\n`--serverlist` - List all servers the bot is in.")
 
-
+	
 @bot.command(pass_context = True)
 async def echo(ctx):
 
