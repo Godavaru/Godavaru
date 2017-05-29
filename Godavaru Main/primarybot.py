@@ -253,8 +253,9 @@ async def hug(ctx):
 	
     msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
-        msg = ':hugging: Aw, are you lonely? Have a hug!'
-    
+        msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
+    elif(ctx.message.content[5:] == ""):
+	msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
     if  (var == 0):
         embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/64tEiNj.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
