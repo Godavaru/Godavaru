@@ -303,7 +303,7 @@ async def kiss(ctx):
 	
     msg = ':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!'
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
-        msg = ':kissing_heart: Are you that desperate for affection? Guess I have no choice then.'
+        msg = ":kissing_heart: I don't think you can kiss yourself... I'll kiss you instead!"
 
     if  (var == 0):
         embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/nxhdQuJ.gif')
@@ -347,7 +347,7 @@ async def poke(ctx):
 	
     msg = ':eyes: **' + ctx.message.mentions[0].display_name + '** was poked by **' + ctx.message.author.display_name +'**!'
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
-        msg = ':eyes: I mean alright, if you really need someone to poke you.'
+        msg = ":eyes: Poking yourself is no fun! I'll poke you myself :3"
 
     if  (var == 0):
         embed = discord.Embed(description=msg).set_image(url='http://fc06.deviantart.net/fs71/f/2012/007/3/e/minako_poke_by_endless_summer181-d4llj28.gif')
@@ -391,7 +391,7 @@ async def cuddle(ctx):
 	
     msg = '<:godavarublobhug:318227863646109696> **' + ctx.message.mentions[0].display_name + '** was cuddled by **' + ctx.message.author.display_name +'**!'
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
-        msg = '<:godavarublobhug:318227863646109696> Aw, you want to cuddle with me?'
+        msg = "<:godavarublobhug:318227863646109696> You seem lonely ;-; I'll cuddle with you!"
 
     if  (var == 0):
         embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/87ml5C6JwBhBe/giphy.gif')
