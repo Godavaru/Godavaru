@@ -8,13 +8,16 @@ class Action():
         self.bot = bot
 
     @commands.command(pass_context = True)
-    async def cuddle(self, ctx):
+    async def cuddle(self, ctx, member : discord.Member = None):
         random.seed(time.time())
         var = int(random.random() * 12)
-            
-        msg = '<:godavarublobhug:318227863646109696> **' + ctx.message.mentions[0].display_name + '** was cuddled by **' + ctx.message.author.display_name +'**!'
-        if  (ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = "<:godavarublobhug:318227863646109696> You seem lonely ;-; I'll cuddle with you!"
+        
+        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
+            msg = '<:godavarublobhug:318227863646109696> Aww, are you lonely? I\'ll cuddle with you, '+ctx.message.author.display_name+'!'
+        elif ctx.message.mentions[0] is not None:
+            msg = '<:godavarublobhug:318227863646109696> **' + ctx.message.mentions[0].display_name + '** was cuddled by **' + ctx.message.author.display_name +'**!'
+        if(ctx.message.content[9:] == ""):
+            msg = '<:godavarublobhug:318227863646109696> Aww, are you lonely? I\'ll cuddle with you, '+ctx.message.author.display_name+'!'
 
         if  (var == 0):
             embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/87ml5C6JwBhBe/giphy.gif')
@@ -54,14 +57,13 @@ class Action():
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context = True)
-    async def hug(self, ctx):
+    async def hug(self, ctx, member : discord.Member = None):
         random.seed(time.time())
         var = int(random.random() * 13)
-            
         
-        if  (ctx.message.mentions[0].id == ctx.message.author.id):
+        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
             msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
-        elif message.mentions[0] is not None:
+        elif ctx.message.mentions[0] is not None:
             msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
         if(ctx.message.content[5:] == ""):
             msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
@@ -107,12 +109,68 @@ class Action():
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context = True)
+    async def kiss(self, ctx, member: discord.Member = None):
+        random.seed(time.time())
+        var = int(random.random() * 14)
+
+        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
+            msg = ":kissing_heart: I don't think you can kiss yourself... I'll kiss you instead!"
+        elif ctx.message.mentions[0] is not None:
+            msg = ':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!'
+        if(ctx.message.content[5:] == ""):
+            msg = ":kissing_heart: I don't think you can kiss yourself... I'll kiss you instead!"
+        
+        if  (var == 0):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/nxhdQuJ.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 1):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/2mFkqXh.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 2):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/71lpaeH.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 3):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/ZUc3T7U.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 4):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/Lce2Zw2.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 5):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/dpHduEL.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 6):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/YfqU78J.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 7):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/uKxYHBx.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 8):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/gvn3TYx.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 9):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/w58KuGF.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 10):
+            embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/6F1blBK.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 11):
+            embed = discord.Embed(description=msg).set_image(url='https://cdn.discordapp.com/attachments/291978890237313024/310061819836235779/Kiss3.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 12):
+            embed = discord.Embed(description=msg).set_image(url='https://cdn.discordapp.com/attachments/291978890237313024/310061848349114369/Kiss2.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif  (var == 13):
+            embed = discord.Embed(description=msg).set_image(url='https://cdn.discordapp.com/attachments/291978890237313024/310061884399157259/Kiss1.gif')
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+    @commands.command(pass_context = True)
     async def kill(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 9)
-        
-        if ctx.message.mentions[0].id == ctx.message.author.id and ctx.message.mentions[0].id == '267207628965281792':
-            await self.self.bot.say("Are you sure, master..?")
+
+        if len(ctx.message.mentions) == 0:
+            await self.bot.say("I don't know who I'm going to kill!")
+        elif ctx.message.mentions[0].id == ctx.message.author.id and ctx.message.mentions[0].id == '267207628965281792':
+            await self.bot.say("Are you sure, master..?")
         elif ctx.message.mentions[0].id == '311810096336470017':
             await self.bot.say("DON'T YOU DARE TRY TO KILL ME! I'LL KILL YOU FIRST! :knife:")
         elif ctx.message.mentions[0].id == ctx.message.author.id:
@@ -139,14 +197,17 @@ class Action():
             embed = discord.Embed(description=ctx.message.mentions[0].display_name + ', you deded. <3',color='member').set_image(url='https://cdn.discordapp.com/attachments/312256765104226304/316225947277983746/kms.gif')
 
     @commands.command(pass_context = True)
-    async def pat(self, ctx):
+    async def pat(self, ctx, member : discord.Member = None):
         random.seed(time.time())
         var = int(random.random() * 12)
-            
-        msg = '<:patemote:318592885090156544> **' + ctx.message.mentions[0].display_name + '** was pat by **' + ctx.message.author.display_name + '**!'
-        if  (ctx.message.mentions[0].id == ctx.message.author.id):
+        
+        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
             msg = '<:patemote:318592885090156544> I guess I can pat you if nobody else will.'
-
+        elif ctx.message.mentions[0] is not None:
+            msg = '<:patemote:318592885090156544> **' + ctx.message.mentions[0].display_name + '** was pat by **' + ctx.message.author.display_name + '**!'
+        if(ctx.message.content[9:] == ""):
+            msg = '<:patemote:318592885090156544> I guess I can pat you if nobody else will.'
+            
         if (var == 0):
             embed = discord.Embed(description=msg).set_image(url='https://68.media.tumblr.com/50ae3b3525c02603b15e5c4b51d7490b/tumblr_ngihi38QXY1qks4szo1_r3_500.gif')
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
@@ -185,14 +246,17 @@ class Action():
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context = True)
-    async def poke(self, ctx):
+    async def poke(self, ctx, member: discord.Member = None):
         random.seed(time.time())
         var = int(random.random() * 11)
-            
-        msg = ':eyes: **' + ctx.message.mentions[0].display_name + '** was poked by **' + ctx.message.author.display_name +'**!'
-        if  (ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = ":eyes: Poking yourself is no fun! I'll poke you myself :3"
 
+        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
+            msg = ":eyes: Poking yourself is no fun! I'll poke you myself :3"
+        elif ctx.message.mentions[0] is not None:
+            msg = ':eyes: **' + ctx.message.mentions[0].display_name + '** was poked by **' + ctx.message.author.display_name +'**!'
+        if(ctx.message.content[9:] == ""):
+            msg = ":eyes: Poking yourself is no fun! I'll poke you myself :3"
+        
         if  (var == 0):
             embed = discord.Embed(description=msg).set_image(url='http://fc06.deviantart.net/fs71/f/2012/007/3/e/minako_poke_by_endless_summer181-d4llj28.gif')
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
