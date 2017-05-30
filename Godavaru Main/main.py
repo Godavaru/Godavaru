@@ -8,6 +8,7 @@ bot = commands.Bot(command_prefix="--")
 bot.remove_command("help")
 startup_extensions = ["cog_info", "cog_fun", "cog_faces", "cog_action", "cog_owner"]
 
+# ready
 @bot.event
 async def on_ready():
     print("Starting up bot:")
@@ -16,6 +17,32 @@ async def on_ready():
     print("====================")
     console = discord.Object('316688736089800715')
     await bot.send_message(console, 'Successfully started up!')
+    
+# server join
+@bot.event
+async def on_server_join(server):
+    console = discord.Object('316688736089800715')
+    await bot.send_message(console, ':tada: I joined the server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
+
+
+# server leave
+@bot.event
+async def on_server_remove(server):
+    console = discord.Object('316688736089800715')
+    await bot.send_message(console, ':frowning: I left the server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
+
+# on message
+@bot.event
+async def on_message(message):
+    if message.author.bot == False:
+        await bot.process_commands(message)
+
+# error... rip
+@bot.event
+async def on_error(e):
+    print("There was an error, see below")
+    console = discord.Object('316688736089800715')
+    await bot.send_message(console, "```\n" + e + "```")
 
 @bot.command(pass_context = True)
 async def help(ctx):
