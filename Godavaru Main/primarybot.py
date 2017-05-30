@@ -12,7 +12,7 @@ ownerids = [
 	'267207628965281792',
 	'99965250052300800',
 	'170991374445969408',
-	'188663897279037440'
+        '188663897279037440'
 ]
 
 # when bot is ready
@@ -66,10 +66,9 @@ async def help(ctx):
     elif ctx.message.content[7:] == "pat":
         await bot.say ("You did good! `--pat <@user>`")
     else:
-        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 18")
+        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `invite`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 19")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
-
-
+    
 
 @bot.command(pass_context = True)
 async def about(ctx):
@@ -82,6 +81,12 @@ async def about(ctx):
     else:
         embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.3.1', inline=False).add_field(name='Servers', value=str(server_count)+ '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do --about credits for credits!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
+
+
+@bot.command(pass_context = True)
+async def invite(ctx):
+    embed = discord.Embed(description='Here are some useful links for the Godavaru bot. If you have any questions at all, feel free to join the support guild and tag Desiree#3658 with your questions!\nBelow you can also find the links to the support guild itself and the Patreon URL. Thanks for using the bot!', color=0x9B59B6).set_author(name='Useful Links for Godavaru!', icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Invite URL', value='http://polr.me/godavaru').add_field(name='Support Guild', value='https://discord.gg/ewvvKHM').add_field(name="Patreon URL", value='https://patreon.com/godavaru')
+    await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 
 @bot.command(pass_context = True)
@@ -177,7 +182,7 @@ async def owner(ctx):
     else:
         await bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status\n`--serverlist` - List all servers the bot is in.")
 
-	
+
 @bot.command(pass_context = True)
 async def echo(ctx):
 
@@ -258,6 +263,7 @@ async def hug(ctx):
         msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
     if(ctx.message.content[5:] == ""):
         msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
+        
     if  (var == 0):
         embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/64tEiNj.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
@@ -283,10 +289,10 @@ async def hug(ctx):
         embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/81kpBJDlwPi2Q/giphy.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 8):
-        embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/14tdcXZOONVCXm/giphy.gif')
+        embed = discord.Embed(description=msg).set_image(url='http://pa1.narvii.com/5940/c29578ee808fc55992dedae89ac46d75d9e9f84d_hq.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 9):
-        embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/jmwFZljh2QnkI/giphy.gif')
+        embed = discord.Embed(description=msg).set_image(url='http://i1004.photobucket.com/albums/af169/mutopis/SodokoMakoyurihug_zpsd86d47a5.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif (var == 10):
         embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/Bg3PXi0Ka1ZWE/giphy.gif')
@@ -302,7 +308,7 @@ async def hug(ctx):
 @bot.command(pass_context = True)
 async def kiss(ctx):
     random.seed(time.time())
-    var = int(random.random() * 11)
+    var = int(random.random() * 14)
 	
     msg = ':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!'
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
@@ -340,6 +346,15 @@ async def kiss(ctx):
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
     elif  (var == 10):
         embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/6F1blBK.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 11):
+        embed = discord.Embed(description=msg).set_image(url='https://cdn.discordapp.com/attachments/291978890237313024/310061819836235779/Kiss3.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 12):
+        embed = discord.Embed(description=msg).set_image(url='https://cdn.discordapp.com/attachments/291978890237313024/310061848349114369/Kiss2.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 13):
+        embed = discord.Embed(description=msg).set_image(url='https://cdn.discordapp.com/attachments/291978890237313024/310061884399157259/Kiss1.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 
@@ -390,7 +405,7 @@ async def poke(ctx):
 @bot.command(pass_context = True)
 async def cuddle(ctx):
     random.seed(time.time())
-    var = int(random.random() * 11)
+    var = int(random.random() * 12)
 	
     msg = '<:godavarublobhug:318227863646109696> **' + ctx.message.mentions[0].display_name + '** was cuddled by **' + ctx.message.author.display_name +'**!'
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
@@ -429,12 +444,15 @@ async def cuddle(ctx):
     elif  (var == 10):
         embed = discord.Embed(description=msg).set_image(url='http://pa1.narvii.com/5824/92a2818ade550f45782d302b8707a6046bfdf652_hq.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
+    elif  (var == 11):
+        embed = discord.Embed(description=msg).set_image(url='https://68.media.tumblr.com/b601854c659e4327f103e157306c6237/tumblr_opn01yPHjK1wpo4m9o1_500.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 
 @bot.command(pass_context = True)
 async def pat(ctx):
     random.seed(time.time())
-    var = int(random.random() * 11)
+    var = int(random.random() * 12)
 	
     msg = '<:patemote:318592885090156544> **' + ctx.message.mentions[0].display_name + '** was pat by **' + ctx.message.author.display_name + '**!'
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
@@ -473,8 +491,11 @@ async def pat(ctx):
     elif (var == 10):
         embed = discord.Embed(description=msg).set_image(url='https://68.media.tumblr.com/472da02d9544dd3d26fdf6afb9995ee3/tumblr_ogj6hz2XhG1ukty6zo1_500.gif')
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
-	
-
+    elif (var == 11):
+        embed = discord.Embed(description=msg).set_image(url='https://68.media.tumblr.com/c92bd1a98d593c1b7d98493f96e1d09d/tumblr_nj4r4iKOa91tuglmxo4_400.gif')
+        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+        
+    
 # server join
 @bot.event
 async def on_server_join(server):
