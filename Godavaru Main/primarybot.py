@@ -251,10 +251,12 @@ async def hug(ctx):
     random.seed(time.time())
     var = int(random.random() * 13)
 	
-    msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
+    
     if  (ctx.message.mentions[0].id == ctx.message.author.id):
         msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
-    elif(ctx.message.content[5:] == ""):
+    elif message.mentions[0] is not None:
+        msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
+    if(ctx.message.content[5:] == ""):
         msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
     if  (var == 0):
         embed = discord.Embed(description=msg).set_image(url='http://i.imgur.com/64tEiNj.gif')
