@@ -44,7 +44,7 @@ class Owner():
             await self.bot.change_presence(game=discord.Game(name='--help | ' + setGame))
             await self.bot.say("Set my playing status to `--help | " + setGame + "`!")
             console = discord.Object('316688736089800715')
-            await self.bot.send_message(console, '{0.name}#{0.discriminator} changed my playing status to `--help | {}`.'.format(ctx.message.author, setGame))
+            await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` changed my playing status to `--help | ' + setGame + '`.')
 
     @commands.command(pass_context = True)
     async def serverlist(self, ctx):
