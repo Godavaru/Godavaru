@@ -162,6 +162,7 @@ class Action():
         elif  (var == 13):
             embed = discord.Embed(description=msg).set_image(url='https://cdn.discordapp.com/attachments/291978890237313024/310061884399157259/Kiss1.gif')
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+            
     @commands.command(pass_context = True)
     async def kill(self, ctx):
         random.seed(time.time())
@@ -255,7 +256,7 @@ class Action():
         elif ctx.message.mentions[0] is not None:
             msg = ':eyes: **' + ctx.message.mentions[0].display_name + '** was poked by **' + ctx.message.author.display_name +'**!'
         if(ctx.message.content[9:] == ""):
-            msg = ":eyes: Poking yourself is no fun! I'll poke you myself :3"
+            msg = ":eyes: You can't poke nothing! I'll poke you instead!"
         
         if  (var == 0):
             embed = discord.Embed(description=msg).set_image(url='http://fc06.deviantart.net/fs71/f/2012/007/3/e/minako_poke_by_endless_summer181-d4llj28.gif')
@@ -290,6 +291,52 @@ class Action():
         elif  (var == 10):
             embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/VTIF0AivyNoL6/source.gif')
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-        
+
+    @commands.command(pass_context = True)
+    async def wakeup(self, ctx, member: discord.Member = None):
+        random.seed(time.time())
+        var = int(random.random() * 11)
+
+        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
+            msg = "<:GoodMorning:270672240973053962> You can't wake yourself up... aren't you already awake? Ah well <3"
+        elif ctx.message.mentions[0] is not None:
+            msg = '<:GoodMorning:270672240973053962> **' + ctx.message.mentions[0].display_name + '**, rise and shine honey! **' + ctx.message.author.display_name + '** wants you to wake up!'
+        if ctx.message.content[11:] == "":
+            msg = '<:GoodMorning:270672240973053962> What are you trying to wake up? Well, you do you I guess.'
+
+        if (var == 0):
+           embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/JGrhaJzR1eMoM/giphy.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 1):
+           embed = discord.Embed(description=msg).set_image(url='http://data.whicdn.com/images/16713172/original.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 2):
+           embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/oav6WEAGsFIFG/giphy.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 3):
+           embed = discord.Embed(description=msg).set_image(url='http://orig12.deviantart.net/2db7/f/2012/287/4/a/wake_up__sugu__by_diemdenis-d5hs3gu.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 4):
+           embed = discord.Embed(description=msg).set_image(url='https://68.media.tumblr.com/f58ad175ae8b1cf095f712b70cbb7eb5/tumblr_oegjq4J3761tydz8to1_500.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 5):
+           embed = discord.Embed(description=msg).set_image(url='https://s-media-cache-ak0.pinimg.com/originals/97/bd/f2/97bdf2fc6e043b602153bc282e237ded.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 6):
+           embed = discord.Embed(description=msg).set_image(url='http://31.media.tumblr.com/86cc50bc61f7f49a228525af3985897a/tumblr_nh04bnIe0c1r37arko1_500.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 7):
+           embed = discord.Embed(description=msg).set_image(url='http://pa1.narvii.com/5659/2b2d65dcbf9cf3ba16eb7037f64f7a82bdbb2f6f_hq.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 8):
+           embed = discord.Embed(description=msg).set_image(url='https://68.media.tumblr.com/cd7c02510749b14581a47296f9019222/tumblr_nk2qpsplXb1uo1owvo1_500.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 9):
+           embed = discord.Embed(description=msg).set_image(url='http://data.whicdn.com/images/20582147/large.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif (var == 10):
+           embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/yxFTNmdbcLmes/giphy.gif')
+           await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+           
 def setup(bot):
     bot.add_cog(Action(bot))
