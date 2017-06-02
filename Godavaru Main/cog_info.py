@@ -33,6 +33,14 @@ class Info():
             await self.bot.say ("Your request has been received! :slight_smile:")
         else:
             await self.bot.say ("Please specify something to request or make the request longer!")
+            
+    @commands.command(pass_context=True)
+    async def ping(self, ctx):
+        before = time.monotonic()
+        await (await self.bot.ws.ping())
+        after = time.monotonic()
+        ping = (after - before) * 1000
+        await self.bot.say("Pong! The message took **{0:.0f}ms**. :thinking:".format(ping))
 
 def setup(bot):
     bot.add_cog(Info(bot))
