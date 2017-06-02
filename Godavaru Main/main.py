@@ -47,43 +47,47 @@ async def on_error(e):
 @bot.command(pass_context = True)
 async def help(ctx):
     if ctx.message.content[7:] == "echo":
-        await bot.say ("Use `--echo <text>` to make me echo something!")
+        await bot.say ("Use `" + bot.command_prefix + "echo <text>` to make me echo something!")
     elif ctx.message.content[7:] == "about":
-        await bot.say ("Display the facts about me by doing `--about`!")
+        await bot.say ("Display the facts about me by doing `" + bot.command_prefix + "about`!")
     elif ctx.message.content[7:] == "help":
-        await bot.say ("Uh... really? just do `--help`...")
+        await bot.say ("Uh... really? just do `" + bot.command_prefix + "help`...")
     elif ctx.message.content[7:] == "request":
-        await bot.say ("Request something to add by doing `--request <suggestion>`! Make sure it's longer than three characters!")
+        await bot.say ("Request something to add by doing `" + bot.command_prefix + "request <suggestion>`! Make sure it's longer than three characters!")
     elif ctx.message.content[7:] == "kill":
-        await bot.say ("Kill your worst enemies! ~~Or friends, whatever you wish.~~ Do `--kill <@user>`")
+        await bot.say ("Kill your worst enemies! ~~Or friends, whatever you wish.~~ Do `" + bot.command_prefix + "kill <@user>`")
     elif ctx.message.content[7:] == "lewd":
-        await bot.say ("What should we do? `--lewd`")
+        await bot.say ("What should we do? `" + bot.command_prefix + "lewd`")
     elif ctx.message.content[7:] == "lood":
-        await bot.say ("S-senpai! `--lood`")
+        await bot.say ("S-senpai! `" + bot.command_prefix + "lood`")
     elif ctx.message.content[7:] == "say":
-        await bot.say ("Make me say something by doing `--say <text>`")
+        await bot.say ("Make me say something by doing `" + bot.command_prefix + "say <text>`")
     elif ctx.message.content[7:] == "shru":
-        await bot.say ("I hope that was a spelling error... `--shru`")
+        await bot.say ("I hope that was a spelling error... `" + bot.command_prefix + "shru`")
     elif ctx.message.content[7:] == "year":
-        await bot.say ("See my very first fun command! It's good I promise ( ͡° ͜ʖ ͡°) `--year`")
+        await bot.say ("See my very first fun command! It's good I promise ( ͡° ͜ʖ ͡°) `" + bot.command_prefix + "year`")
     elif ctx.message.content[7:] == "lenny":
-        await bot.say ("Make a lenny face by doing `--lenny`!")
+        await bot.say ("Make a lenny face by doing `" + bot.command_prefix + "lenny`!")
     elif ctx.message.content[7:] == "shrug":
-        await bot.say ("Uhh... idk *shrugs* `--shrug`")
+        await bot.say ("Uhh... idk *shrugs* `" + bot.command_prefix + "shrug`")
     elif ctx.message.content[7:] == "hug":
-        await bot.say ("To hug a user, do `--hug <@user>`! :hugging:")
+        await bot.say ("To hug a user, do `" + bot.command_prefix + "hug <@user>`! :hugging:")
     elif ctx.message.content[7:] == "kiss":
-        await bot.say ("Kiss me before I lose my mind!! `--kiss <@user>`")
+        await bot.say ("Kiss me before I lose my mind!! `" + bot.command_prefix + "kiss <@user>`")
     elif ctx.message.content[7:] =="poke":
-        await bot.say ("Don't poke me! Poke someone else with `--poke <@user>`!")
+        await bot.say ("Don't poke me! Poke someone else with `" + bot.command_prefix + "poke <@user>`!")
     elif ctx.message.content[7:] =="cuddle":
-        await bot.say ("<:godavarublobhug:318227863646109696> Cuddle someone with `--cuddle <@user>`")
+        await bot.say ("<:godavarublobhug:318227863646109696> Cuddle someone with `" + bot.command_prefix + "cuddle <@user>`")
     elif ctx.message.content[7:] == "nonowa":
-        await bot.say ("Make a nonowa face! `--nonowa`")
+        await bot.say ("Make a nonowa face! `" + bot.command_prefix + "nonowa`")
     elif ctx.message.content[7:] == "pat":
-        await bot.say ("You did good! `--pat <@user>`")
+        await bot.say ("You did good! `" + bot.command_prefix + "pat <@user>`")
+    elif ctx.message.content[7:] == "ping":
+        await bot.say ("Play ping pong with me! `" + bot.command_prefix + "ping`")
+    elif ctx.message.content[7:] == "wakeup":
+        await bot.say ("WAKE ME UP INSIDE! Or wake up a friend with `" + bot.command_prefix + "wakeup <@user>`")
     else:
-        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `--`!', color=0x9B59B6).set_author(name="For more detailed help, do --help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 19")
+        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `' + bot.command_prefix + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 20")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
         
 @bot.command()
