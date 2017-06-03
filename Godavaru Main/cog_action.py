@@ -298,11 +298,11 @@ class Action():
         var = int(random.random() * 11)
 
         if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = "<:GoodMorning:270672240973053962> You can't wake yourself up... aren't you already awake? Ah well <3"
+            msg = "<:morning:319631823766552597> You can't wake yourself up... aren't you already awake? Ah well <3"
         elif ctx.message.mentions[0] is not None:
-            msg = '<:GoodMorning:270672240973053962> **' + ctx.message.mentions[0].display_name + '**, rise and shine honey! **' + ctx.message.author.display_name + '** wants you to wake up!'
+            msg = '<:morning:319631823766552597> **' + ctx.message.mentions[0].display_name + '**, rise and shine honey! **' + ctx.message.author.display_name + '** wants you to wake up!'
         if ctx.message.content[11:] == "":
-            msg = '<:GoodMorning:270672240973053962> What are you trying to wake up? Well, you do you I guess.'
+            msg = '<:morning:319631823766552597> What are you trying to wake up? Well, you do you I guess.'
 
         if (var == 0):
            embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/JGrhaJzR1eMoM/giphy.gif')
