@@ -86,6 +86,10 @@ async def help(ctx):
         await bot.say ("Play ping pong with me! `" + bot.command_prefix[0] + "ping`")
     elif ctx.message.content[7:] == "wakeup":
         await bot.say ("WAKE ME UP INSIDE! Or wake up a friend with `" + bot.command_prefix[0] + "wakeup <@user>`")
+    elif ctx.message.content[7:] == "magicball":
+        await bot.say ("Ask the magician a question! :thinking: `" + bot.command_prefix[0] + "magicball` or `" + bot.command_prefix[0] + "mb`")
+    elif ctx.message.content[7:] == "mb":
+        await bot.say ("Ask the magician a question! :thinking: `" + bot.command_prefix[0] + "magicball` or `" + bot.command_prefix[0] + "mb`")
     else:
         embed = discord.Embed(title='Commands!', description='**Note:** The `--` prefix is now deprecated and will be removed at a later date. Please use `g!`.\n\nRemember, the prefix is `' + bot.command_prefix[0] + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix[0] + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `help`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `magicball`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 20")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
