@@ -19,7 +19,7 @@ class Owner():
         if member.id not in ownerids:
             await self.bot.say("No need to be looking at owner commands :eyes: (access denied)")
         else:
-            await self.bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status\n`--serverlist` - List all servers the bot is in.")
+            await self.bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status\n`--serverlist` - List all servers the bot is in.\n`--reload` - Reload a cog.\n`--unload` - Unload a cog.")
     
     @commands.command(pass_context = True)
     async def shutdown(self, ctx):

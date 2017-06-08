@@ -338,5 +338,10 @@ class Action():
            embed = discord.Embed(description=msg).set_image(url='https://media.giphy.com/media/yxFTNmdbcLmes/giphy.gif')
            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
            
+    @commands.command(pass_context = True)
+    async def shrug(self, ctx):
+        embed = discord.Embed(title='Welp', description='*shrugs*', color=0x9B59B6).set_image(url='https://i.imgur.com/TPyz6lH.gif')
+        await self.bot.send_message(ctx.message.channel, content = None, embed=embed)
+        
 def setup(bot):
     bot.add_cog(Action(bot))

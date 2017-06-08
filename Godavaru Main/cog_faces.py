@@ -15,10 +15,5 @@ class Faces():
         await self.bot.say("のワの")
         await self.bot.delete_message(ctx.message)
 
-    @commands.command(pass_context = True)
-    async def shrug(self, ctx):
-        await self.bot.say ("¯\_(ツ)_/¯")
-        await self.bot.delete_message(ctx.message)
-
 def setup(bot):
     bot.add_cog(Faces(bot))
