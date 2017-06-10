@@ -17,7 +17,7 @@ class Info():
         if ctx.message.content[8:] == "credits":
             embed = discord.Embed(title='Credits!', description='Here are some very honorable mentions for the creation, support, and overall community of the bot!',color=0x9B59B6).add_field(name='First Donator',value='MrLar#8117').add_field(name='Developers',value='Desiree#3658, Instance#2513, Yuvira#7842, and Jonas B.#9089').set_footer(text='Hope you enjoy the bot!').set_thumbnail(url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png')
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-        if ctx.message.content[8:] == "patreon":
+        elif ctx.message.content[8:] == "patreon":
             embed = discord.Embed(description='Here are all of our Patreon supporters! Thank you!\n\n`MrLar#8117`, `「August」#1793`', color=0x9B59B6).set_author(name='Patrons!', icon_url=ctx.message.author.avatar_url)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
         else:
@@ -45,6 +45,15 @@ class Info():
         after = time.monotonic()
         ping = (after - before) * 1000
         await self.bot.say("Pong! The message took **{0:.0f}ms**. :thinking:".format(ping))
+
+    @commands.command(pass_context=True)
+    async def avatar(self, ctx, member : discord.Member = None):        
+        if(member is None or ctx.message.mentions[0].id == ctx.message.author.id):
+            embed = discord.Embed(title=ctx.message.author.name + "'s Avatar!",color=ctx.message.author.color).set_image(url=ctx.message.author.avatar_url)
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        elif ctx.message.mentions[0] is not None:
+            embed = discord.Embed(title =ctx.message.mentions[0].name + "'s Avatar!",color=ctx.message.author.color).set_image(url=ctx.message.mentions[0].avatar_url)
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 def setup(bot):
     bot.add_cog(Info(bot))
