@@ -19,7 +19,7 @@ class Owner():
         if member.id not in ownerids:
             await self.bot.say("No need to be looking at owner commands :eyes: (access denied)")
         else:
-            await self.bot.say("**Owner commands!**\n\n`--shutdown` - Shutdown the bot.\n`--game` - Set the bot's playing status\n`--serverlist` - List all servers the bot is in.\n`--reload` - Reload a cog.\n`--unload` - Unload a cog.")
+            await self.bot.say("**Owner commands!**\n\n`g!shutdown` - Shutdown the bot.\n`g!game` - Set the bot's playing status\n`g!serverlist` - List all servers the bot is in.\n`g!reload` - Reload a cog.\n`g!unload` - Unload a cog.\n`g!leaveserver` - Leave the server I am in.\n`g!todo` - Add a message to the to-do list.")
     
     @commands.command(pass_context = True)
     async def shutdown(self, ctx):
@@ -41,10 +41,10 @@ class Owner():
         if member.id not in ownerids:
             await self.bot.say("No changey my gamey :rage: (access denied)")
         else:
-            await self.bot.change_presence(game=discord.Game(name='--help | ' + setGame))
-            await self.bot.say("Set my playing status to `--help | " + setGame + "`!")
+            await self.bot.change_presence(game=discord.Game(name='g!help | ' + setGame))
+            await self.bot.say("Set my playing status to `g!help | " + setGame + "`!")
             console = discord.Object('316688736089800715')
-            await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` changed my playing status to `--help | ' + setGame + '`.')
+            await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` changed my playing status to `g!help | ' + setGame + '`.')
 
     @commands.command(pass_context = True)
     async def serverlist(self, ctx):
@@ -59,5 +59,38 @@ class Owner():
         else:
             await self.bot.send_message(channel, msg)
 
+    @commands.command(pass_context = True)
+    async def leaveserver(self, ctx):
+        member = ctx.message.author
+
+        if member.id not in ownerids:
+            await self.bot.say("Nah, I'm good. (access denied)")
+        else:
+            await self.bot.say("This server is not worthy of me, bye!")
+            await self.bot.leave_server(ctx.message.server)
+
+    @commands.command(pass_context = True)
+    async def todo(self, ctx):
+        testing = discord.Object('316638257104551946')
+        msg = ctx.message.content[7:]
+        member = ctx.message.author
+        if member.id not in ownerids:
+            await self.bot.say('You may not use this command...')
+        else:
+            await self.bot.send_message(testing, content=msg)
+            await self.bot.say('Successfully added your message to the to-do list!')
+
+    @commands.command(pass_context = True)
+    async def nick(self, ctx):
+        member = ctx.message.author
+        if member.id not in ownerids:
+            await self.bot.say('You may not use this command...')
+        elif ctx.message.content[7:] == "":
+            await self.bot.change_nickname(ctx.message.server.me, str(ctx.message.content[7:]))
+            await self.bot.say("My nickname was reset!")
+        else:
+            await self.bot.change_nickname(ctx.message.server.me, str(ctx.message.content[7:]))
+            await self.bot.say("My nickname was changed to `" + ctx.message.content[7:] + "` successfully!")
+        
 def setup(bot):
     bot.add_cog(Owner(bot))

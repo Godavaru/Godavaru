@@ -46,6 +46,11 @@ class Fun():
         await self.bot.say ("A year has:\n\n12 Months\n52 Weeks\n365 Days\n8760 Hours\n525600 Minutes\n3153600 Seconds\n\nAnd it only takes 1 minute to send " + ctx.message.author.mention + " nudes :3")
 
     @commands.command(pass_context = True)
+    async def f(self, ctx):
+        embed = discord.Embed(title='Press F to pay respects!',description='**' + ctx.message.author.display_name + '** has paid their respects successfully :eggplant:',color=ctx.message.author.color).set_footer(text='f')
+        await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        
+    @commands.command(pass_context = True)
     async def magicball(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 20)

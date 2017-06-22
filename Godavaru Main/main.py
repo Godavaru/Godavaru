@@ -3,10 +3,12 @@ import asyncio
 from discord.ext import commands
 import random
 import time
+import datetime, re
 
 bot = commands.Bot(command_prefix="g!")
 bot.remove_command("help")
-startup_extensions = ["cog_info", "cog_fun", "cog_faces", "cog_action", "cog_owner"]
+startup_extensions = ["cog_info", "cog_fun", "cog_faces", "cog_action", "cog_owner", "cog_mod"]
+console = discord.Object('316688736089800715')
 
 # ready
 @bot.event
@@ -21,36 +23,45 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print("====================")
-    console = discord.Object('316688736089800715')
     await bot.send_message(console, 'Godavaru now ready! Preparing for use in `' + str(server_count) + '` servers for `' + str(member_count) + '` members!')
+    if not hasattr(bot, 'uptime'):
+        bot.uptime = datetime.datetime.utcnow()
     
 # server join
 @bot.event
 async def on_server_join(server):
-    console = discord.Object('316688736089800715')
     await bot.send_message(console, ':tada: I joined the server `' + server.name + '` ('+ server.id + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
 
 
 # server leave
 @bot.event
 async def on_server_remove(server):
-    console = discord.Object('316688736089800715')
     await bot.send_message(console, ':frowning: I left the server `' + server.name + '` ('+ server.id + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
 
 
-# on message
+# on message and dm
 @bot.event
 async def on_message(message):
+    dm = message.content
+    dm = dm.replace("`", " ")
     if message.author.bot == False:
         await bot.process_commands(message)
+    check = 'true'
+    try:
+	    if (message.server.name != ''):
+		    check = 'true'
+    except AttributeError:
+	    if (message.author.bot == False):
+		    await bot.send_message(console, "A user sent me a direct message!\n\n**User**: `" + message.author.name + '#' + message.author.discriminator + '`\n**Content**: ```css\n' + message.content + "```")
+		    check = 'false'
 
 # this will be fixed later ;-;
 @bot.event
 async def on_error(e):
     print("There was an error, see #console")
-    console = discord.Object('316688736089800715')
     await bot.send_message(console, "<@!267207628965281792>, you fucked up. Fix it. ```\n" + str(e) + "```")
 
+# help command
 @bot.command(pass_context = True)
 async def help(ctx):
     if ctx.message.content[7:] == "echo":
@@ -93,14 +104,18 @@ async def help(ctx):
         await bot.say ("Play ping pong with me! `" + bot.command_prefix + "ping`")
     elif ctx.message.content[7:] == "wakeup":
         await bot.say ("WAKE ME UP INSIDE! Or wake up a friend with `" + bot.command_prefix + "wakeup <@user>`")
-    elif ctx.message.content[7:] == "magicball":
-        await bot.say ("Ask the magician a question! :thinking: `" + bot.command_prefix + "magicball` or `" + bot.command_prefix + "mb`")
-    elif ctx.message.content[7:] == "mb":
+    elif ctx.message.content[7:] == "magicball" or ctx.message.content[7:] == "mb":
         await bot.say ("Ask the magician a question! :thinking: `" + bot.command_prefix + "magicball` or `" + bot.command_prefix + "mb`")
     else:
-        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `' + bot.command_prefix + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `avatar`, `help`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `magicball`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 20")
+        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `' + bot.command_prefix + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `avatar`, `help`, `info`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `magicball`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).add_field(name='Mod', value='soon:tm:', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 22")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
-    
+
+# The test command is for me to try new features
+@bot.command(pass_context = True)
+async def test(ctx):
+    await bot.say("Uh... no test command here... *runs*")
+
+# cog commands    
 @bot.command()
 async def load(extension_name : str):
     try:
