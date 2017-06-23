@@ -120,25 +120,25 @@ class Action():
         if (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
         elif (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissb.gif', content=msg)
         elif (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissc.gif', content=msg)
         elif (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissd.gif', content=msg)
         elif (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kisse.gif', content=msg)
         elif (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissf.gif', content=msg)
         elif (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissg.gif', content=msg)
         elif (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissh.gif', content=msg)
         elif (var == 8):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissi.gif', content=msg)
         elif (var == 9):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissj.gif', content=msg)
         elif (var == 10):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            await self.bot.send_file(ctx.message.channel, './images/kissk.gif', content=msg)
             
     @commands.command(pass_context = True)
     async def pat(self, ctx, member : discord.Member = None):
