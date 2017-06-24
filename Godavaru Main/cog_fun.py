@@ -26,11 +26,14 @@ class Fun():
 
     @commands.command(pass_context = True)
     async def say(self, ctx):
+        console = discord.Obkect("316688736089800715")
         if ctx.message.content[6:] == "":
             await self.bot.say('Specify something for me to say!')
         else:
             await self.bot.say(ctx.message.content[6:])
             await self.bot.delete_message(ctx.message)
+            await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
+
 
     @commands.command(pass_context = True)
     async def shru(self, ctx):

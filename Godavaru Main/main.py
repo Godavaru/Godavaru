@@ -109,6 +109,7 @@ async def help(ctx):
     else:
         embed = discord.Embed(title='Commands!', description='Remember, the prefix is `' + bot.command_prefix + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `avatar`, `help`, `info`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `lewd`, `lood`, `magicball`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).add_field(name='Mod', value='soon:tm:', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 22")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
+        await bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` issued my `help` command in channel `' + ctx.message.channel.name + '` in  server `' + ctx.message.server.name + '`')
 
 # The test command is for me to try new features
 @bot.command(pass_context = True)

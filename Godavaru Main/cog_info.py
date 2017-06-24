@@ -48,19 +48,27 @@ class Info():
 
     @commands.command(pass_context=True)
     async def ping(self, ctx):
+        console = discord.Object("316688736089800715")
         before = time.monotonic()
         await (await self.bot.ws.ping())
         after = time.monotonic()
         ping = (after - before) * 1000
-        vowels = 'aeiou'
-        accents = 'áãàâäåæāêéèēęėëîíìīïįòôõóōøöœüúūùû'
-        var = int(random.random() * 10)
+        var = int(random.random() * 5)
 
         if (var == 0):
-            v = vowels[int(random.random() * len(accents))]
-        else:
-            v = accents[int(random.random() * len(vowels))]
+            v = 'a'
+        elif (var == 1):
+            v = 'e'
+        elif (var == 2):
+            v = 'i'
+        elif (var == 3):
+            v = 'o'
+        elif (var == 4):
+            v = 'u'
+        elif (var == 5):
+            v = 'y'
         await self.bot.say("P" + str(v) + "ng! The message took **{0:.0f}ms**. :thinking:".format(ping))
+        await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` checked my ping in the channel `' + ctx.message.channel.name + '` in the server `' + ctx.message.server.name + '`. The result was {0:.0f}ms.'.format(ping))
 
     def get_bot_uptime(self, *, brief=False):
         now = datetime.datetime.utcnow()
