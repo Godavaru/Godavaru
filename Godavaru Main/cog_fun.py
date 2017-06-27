@@ -26,8 +26,10 @@ class Fun():
 
     @commands.command(pass_context = True)
     async def say(self, ctx):
-        console = discord.Obkect("316688736089800715")
-        if ctx.message.content[6:] == "":
+        console = discord.Object("316688736089800715")
+        saythis = ctx.message.content[6:]
+        saythis = saythis.replace("`", "")
+        if saythis == "":
             await self.bot.say('Specify something for me to say!')
         else:
             await self.bot.say(ctx.message.content[6:])
@@ -40,7 +42,7 @@ class Fun():
         member = ctx.message.author
    
         if member.id != "99965250052300800":
-            await self.bot.say ("Who are you, Instance#2513? Messing up the spelling that bad smh >:(")
+            await self.bot.say ("Who are you, AttributeError#2513? Messing up the spelling that bad smh >:(")
         else:
             await self.bot.say("Learn to spell, Paul. For real ;-;")
 
@@ -152,6 +154,28 @@ class Fun():
             await self.bot.say(":crystal_ball: Very doubtful")
         elif (var == 20):
             await self.bot.say(":crystal_ball: Congratulations, you found an easter egg. I hope you realise this doesn't answer your question...")
+
+    @commands.command(pass_context=True)
+    async def flip(self, ctx, user : discord.Member=None):
+        if user != None:
+            msg = ""
+            if user.id == self.bot.user.id:
+                user = ctx.message.author
+                msg = "Don't you dare try and flip me. Just for that, take this!\n"
+            elif user.id == "267207628965281792":
+                user = ctx.message.author
+                msg = "Don't flip my master! Hyah!\n"
+            char = "abcdefghijklmnopqrstuvwxyz"
+            tran = "ɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎz"
+            table = str.maketrans(char, tran)
+            name = user.display_name.translate(table)
+            char = char.upper()
+            tran = "∀qƆpƎℲפHIſʞ˥WNOԀQᴚS┴∩ΛMX⅄Z"
+            table = str.maketrans(char, tran)
+            name = name.translate(table)
+            await self.bot.say(msg + "(╯°□°）╯︵ " + name[::-1])
+        else:
+            await self.bot.say("Who do you want me to flip? :thinking:")
 			
 def setup(bot):
     bot.add_cog(Fun(bot))

@@ -19,9 +19,9 @@ class Owner():
         if member.id not in ownerids:
             await self.bot.say("No need to be looking at owner commands :eyes: (access denied)")
         else:
-            embed = discord.Embed(title="Owner Commands",description=bot.command_prefix + "shutdown - Shutdown the bot.\n" + bot.command_prefix + "game - Set the bot's playing status.\n" + bot.command_prefix + "reload - Reload a cog\n" + bot.command_prefix + "unload - Unload a cog.\n" + bot.command_prefix + "leaveserver - Leave the server in which this command was executed.\n" + bot.command_prefix + "todo - Add a message to the todo list.", color=ctx.message.author.color).set_footer(text="Commands created in Discord.py")
+            embed = discord.Embed(title="Owner Commands",description=self.bot.command_prefix + "shutdown - Shutdown the bot.\n" + self.bot.command_prefix + "game - Set the bot's playing status.\n" + self.bot.command_prefix + "reload - Reload a cog\n" + self.bot.command_prefix + "unload - Unload a cog.\n" + self.bot.command_prefix + "leaveserver - Leave the server in which this command was executed.\n" + self.bot.command_prefix + "todo - Add a message to the todo list.", color=ctx.message.author.color).set_footer(text="Commands created in Discord.py")
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-    
+            
     @commands.command(pass_context = True)
     async def shutdown(self, ctx):
         member = ctx.message.author

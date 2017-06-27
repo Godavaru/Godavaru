@@ -47,7 +47,7 @@ class Action():
         var = int(random.random() * 10)
         
         if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = ':hugging: Aww, are you lonely? Have a hug, '+ctx.message.author.display_name+'!'
+            msg = ':hugging: Aww, are you lonely? Have a hug, **'+ctx.message.author.display_name+'**!'
         elif ctx.message.mentions[0] is not None:
             msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
         if(ctx.message.content[6:] == ""):
