@@ -239,6 +239,41 @@ class Action():
             await self.bot.send_file(ctx.message.channel, './images/wakeuph.gif', content=msg)
 
     @commands.command(pass_context = True)
+    async def cry(self, ctx, member: discord.Member = None):
+        random.seed(time.time())
+        var = int(random.random() * 11)
+
+        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
+            msg = ":cry: **" + ctx.message.author.display_name + "** just started to cry!"
+        elif ctx.message.mentions[0] is not None:
+            msg = ':cry: **' + ctx.message.mentions[0].display_name + '** just made **' + ctx.message.author.display_name + '** cry!'
+        if ctx.message.content[6:] == "":
+            msg = ":cry: **" + ctx.message.author.display_name + "** just started to cry!"
+
+        if (var == 0):
+            await self.bot.send_file(ctx.message.channel, './images/crya.gif', content=msg)
+        elif (var == 1):
+            await self.bot.send_file(ctx.message.channel, './images/cryb.gif', content=msg)
+        elif (var == 2):
+            await self.bot.send_file(ctx.message.channel, './images/cryc.gif', content=msg)
+        elif (var == 3):
+            await self.bot.send_file(ctx.message.channel, './images/cryd.gif', content=msg)
+        elif (var == 4):
+            await self.bot.send_file(ctx.message.channel, './images/crye.gif', content=msg)
+        elif (var == 5):
+            await self.bot.send_file(ctx.message.channel, './images/cryf.gif', content=msg)
+        elif (var == 6):
+            await self.bot.send_file(ctx.message.channel, './images/cryg.gif', content=msg)
+        elif (var == 7):
+            await self.bot.send_file(ctx.message.channel, './images/cryh.gif', content=msg)
+        elif (var == 8):
+            await self.bot.send_file(ctx.message.channel, './images/cryi.gif', content=msg)
+        elif (var == 9):
+            await self.bot.send_file(ctx.message.channel, './images/cryj.gif', content=msg)
+        elif (var == 10):
+            await self.bot.send_file(ctx.message.channel, './images/cryk.gif', content=msg)
+
+    @commands.command(pass_context = True)
     async def kill(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 9)

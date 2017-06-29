@@ -9,7 +9,7 @@ import datetime
 class Info():
     def __init__(self, bot):
         self.bot = bot
-
+    botversion = '0.5.2'
     @commands.command(pass_context = True)
     async def about(self, ctx):
         server_count = 0
@@ -27,7 +27,7 @@ class Info():
             embed = discord.Embed(description='Here are all of our Patreon supporters! Thank you!\n\n`MrLar#8117`, `「August」#1793`', color=0x9B59B6).set_author(name='Patrons!', icon_url=avatar1)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
         else:
-            embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.5.1', inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do g!about credits for credits! | Do g!about patreon for our patrons!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+            embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value=str(botversion), inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do g!about credits for credits! | Do g!about patreon for our patrons!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context = True)
@@ -103,7 +103,7 @@ class Info():
             server_count += 1
             for member in server.members:
                 member_count += 1
-        await self.bot.say("```prolog\n --------- Bot Information --------- \n\nCommands: 22\nVersion: 0.5.0\nDiscord.py Version: " + str(version) + "\nPython Version: " + str(pversion) + "\nPing: {0:.0f}ms".format(ping) + "\nUptime: {}".format(self.get_bot_uptime()) + "\n\n --------- Guild Information --------- \n\nGuilds: " + str(server_count) + "\nUsers: " + str(member_count) + "\nHost: Heroku```")
+        await self.bot.say("```prolog\n --------- Bot Information --------- \n\nCommands: 22\nVersion: " + str(botversion) + "\nDiscord.py Version: " + str(version) + "\nPython Version: " + str(pversion) + "\nPing: {0:.0f}ms".format(ping) + "\nUptime: {}".format(self.get_bot_uptime()) + "\n\n --------- Guild Information --------- \n\nGuilds: " + str(server_count) + "\nUsers: " + str(member_count) + "\nHost: Heroku```")
         
 
     @commands.command(pass_context=True)
