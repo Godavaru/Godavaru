@@ -26,7 +26,7 @@ class Info():
             embed = discord.Embed(description='Here are all of our Patreon supporters! Thank you!\n\n`MrLar#8117`', color=0x9B59B6).set_author(name='Patrons!', icon_url=avatar1)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
         else:
-            embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.6.2', inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do g!about credits for credits! | Do g!about patreon for our patrons!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+            embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.6.5', inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do g!about credits for credits! | Do g!about patreon for our patrons!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context = True)
@@ -69,7 +69,7 @@ class Info():
         elif (var == 5):
             v = 'y'
         await self.bot.edit_message(ping_msg, new_content=":mega: P"+str(v)+"ng! The message took **{:.2f}ms**!".format(ping.total_seconds())+" `Websocket: {0:.0f}ms` :thinking:".format(ping2))
-        await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` checked my ping in the channel `' + ctx.message.channel.name + '` in the server `' + ctx.message.server.name + '`. The result was {:.2f}ms'.format(ping)+" with a websocket ping of {0:.0f}ms".format(ping2))
+        await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` checked my ping in the channel `' + ctx.message.channel.name + '` in the server `' + ctx.message.server.name + '`. The result was {:.2f}ms'.format(ping.total_seconds())+" with a websocket ping of {0:.0f}ms".format(ping2))
 
     def get_bot_uptime(self, *, brief=False):
         now = datetime.datetime.utcnow()
@@ -104,7 +104,7 @@ class Info():
             server_count += 1
             for member in server.members:
                 member_count += 1
-        await self.bot.say("```prolog\n --------- Bot Information --------- \n\nCommands: this is lazy coding\nVersion: 0.6.2\nDiscord.py Version: " + str(version) + "\nPython Version: " + str(pversion) + "\nWebsocket Ping: {0:.0f}ms".format(ping) + "\nUptime: {}".format(self.get_bot_uptime()) + "\n\n --------- Guild Information --------- \n\nGuilds: " + str(server_count) + "\nUsers: " + str(member_count) + "\nHost: Heroku```")
+        await self.bot.say("```prolog\n --------- Bot Information --------- \n\nCommands: 37\nVersion: 0.6.5\nDiscord.py Version: " + str(version) + "\nPython Version: " + str(pversion) + "\nWebsocket Ping: {0:.0f}ms".format(ping) + "\nUptime: {}".format(self.get_bot_uptime()) + "\n\n --------- Guild Information --------- \n\nGuilds: " + str(server_count) + "\nUsers: " + str(member_count) + "\nHost: Heroku```")
         
     @commands.command(pass_context=True)
     async def avatar(self, ctx):

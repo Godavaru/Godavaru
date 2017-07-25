@@ -19,29 +19,29 @@ class Action():
                 msg = '<:godavarublobhug:318227863646109696> Aww, are you lonely? I\'ll cuddle with you, **'+ctx.message.author.display_name+'**!'
             else:
                 msg = '<:godavarublobhug:318227863646109696> **' + ctx.message.mentions[0].display_name + '** was cuddled by **' + ctx.message.author.display_name +'**!'
+
+            if  (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/cuddlea.gif', content=msg)
+            elif  (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/cuddleb.gif', content=msg)
+            elif  (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/cuddlec.gif', content=msg)
+            elif  (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/cuddled.gif', content=msg)
+            elif  (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/cuddlee.gif', content=msg)
+            elif  (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/cuddlef.gif', content=msg)
+            elif  (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/cuddleg.gif', content=msg)
+            elif  (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/cuddleh.gif', content=msg)
+            elif  (var == 8):
+                await self.bot.send_file(ctx.message.channel, './images/cuddlei.gif', content=msg)
+            elif  (var == 9):
+                await self.bot.send_file(ctx.message.channel, './images/cuddlej.gif', content=msg)
         else:
             await self.bot.say(":x: You must mention a user!")
-
-        if  (var == 0):
-            await self.bot.send_file(ctx.message.channel, './images/cuddlea.gif', content=msg)
-        elif  (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/cuddleb.gif', content=msg)
-        elif  (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/cuddlec.gif', content=msg)
-        elif  (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/cuddled.gif', content=msg)
-        elif  (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/cuddlee.gif', content=msg)
-        elif  (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/cuddlef.gif', content=msg)
-        elif  (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/cuddleg.gif', content=msg)
-        elif  (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/cuddleh.gif', content=msg)
-        elif  (var == 8):
-            await self.bot.send_file(ctx.message.channel, './images/cuddlei.gif', content=msg)
-        elif  (var == 9):
-            await self.bot.send_file(ctx.message.channel, './images/cuddlej.gif', content=msg)
         
 
     @commands.command(pass_context = True)
@@ -56,29 +56,29 @@ class Action():
                 msg = ':hugging: Are you lonely, **'+ctx.message.mentions[0].display_name+'**? I\'ll hug you!'
             else:
                 msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
+            
+            if  (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/huga.gif', content=msg)
+            elif  (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/hugb.gif', content=msg)
+            elif  (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/hugc.gif', content=msg)
+            elif  (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/hugd.gif', content=msg)
+            elif  (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/huge.gif', content=msg)
+            elif  (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/hugf.gif', content=msg)
+            elif  (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/hugg.gif', content=msg)
+            elif  (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/hugh.gif', content=msg)
+            elif  (var == 8):
+                await self.bot.send_file(ctx.message.channel, './images/hugi.gif', content=msg)
+            elif  (var == 9):
+                await self.bot.send_file(ctx.message.channel, './images/hugj.gif', content=msg)
         else:
             await self.bot.say(":x: You must mention a user!")
-            
-        if  (var == 0):
-            await self.bot.send_file(ctx.message.channel, './images/huga.gif', content=msg)
-        elif  (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/hugb.gif', content=msg)
-        elif  (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/hugc.gif', content=msg)
-        elif  (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/hugd.gif', content=msg)
-        elif  (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/huge.gif', content=msg)
-        elif  (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/hugf.gif', content=msg)
-        elif  (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/hugg.gif', content=msg)
-        elif  (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/hugh.gif', content=msg)
-        elif  (var == 8):
-            await self.bot.send_file(ctx.message.channel, './images/hugi.gif', content=msg)
-        elif  (var == 9):
-            await self.bot.send_file(ctx.message.channel, './images/hugj.gif', content=msg)
 
     @commands.command(pass_context = True)
     async def slap(self, ctx):
@@ -92,27 +92,27 @@ class Action():
                 msg = ':raised_hand: This makes no sense... Oh well'
             else:
                 msg = ':raised_hand: Hyaah! **' + ctx.message.author.display_name + '** has slapped **' + ctx.message.mentions[0].display_name + '**!'
+                
+            if (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/slapa.gif', content=msg)
+            elif (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/slapb.gif', content=msg)
+            elif (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/slapc.gif', content=msg)
+            elif (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/slapd.gif', content=msg)
+            elif (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/slape.gif', content=msg)
+            elif (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/slapf.gif', content=msg)
+            elif (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/slapg.gif', content=msg)
+            elif (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/slaph.gif', content=msg)
+            elif (var == 8):
+                await self.bot.send_file(ctx.message.channel, './images/slapi.gif', content=msg)
         else:
             await self.bot.say(":x: You must mention a user!")
-                
-        if (var == 0):
-            await self.bot.send_file(ctx.message.channel, './images/slapa.gif', content=msg)
-        elif (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/slapb.gif', content=msg)
-        elif (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/slapc.gif', content=msg)
-        elif (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/slapd.gif', content=msg)
-        elif (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/slape.gif', content=msg)
-        elif (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/slapf.gif', content=msg)
-        elif (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/slapg.gif', content=msg)
-        elif (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/slaph.gif', content=msg)
-        elif (var == 8):
-            await self.bot.send_file(ctx.message.channel, './images/slapi.gif', content=msg)
 
     @commands.command(pass_context = True)
     async def kiss(self, ctx):
@@ -126,31 +126,31 @@ class Action():
                 msg = ":kissing_heart: I don't think you can kiss yourself... I'll kiss you instead!"
             else:
                 msg = ':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!'
+        
+            if (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
+            elif (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/kissb.gif', content=msg)
+            elif (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/kissc.gif', content=msg)
+            elif (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/kissd.gif', content=msg)
+            elif (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/kisse.gif', content=msg)
+            elif (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/kissf.gif', content=msg)
+            elif (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/kissg.gif', content=msg)
+            elif (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/kissh.gif', content=msg)
+            elif (var == 8):
+                await self.bot.send_file(ctx.message.channel, './images/kissi.gif', content=msg)
+            elif (var == 9):
+                await self.bot.send_file(ctx.message.channel, './images/kissj.gif', content=msg)
+            elif (var == 10):
+                await self.bot.send_file(ctx.message.channel, './images/kissk.gif', content=msg)
         else:
             await self.bot.say(":x: You must mention a user!")
-        
-        if (var == 0):
-            await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
-        elif (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/kissb.gif', content=msg)
-        elif (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/kissc.gif', content=msg)
-        elif (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/kissd.gif', content=msg)
-        elif (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/kisse.gif', content=msg)
-        elif (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/kissf.gif', content=msg)
-        elif (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/kissg.gif', content=msg)
-        elif (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/kissh.gif', content=msg)
-        elif (var == 8):
-            await self.bot.send_file(ctx.message.channel, './images/kissi.gif', content=msg)
-        elif (var == 9):
-            await self.bot.send_file(ctx.message.channel, './images/kissj.gif', content=msg)
-        elif (var == 10):
-            await self.bot.send_file(ctx.message.channel, './images/kissk.gif', content=msg)
             
     @commands.command(pass_context = True)
     async def pat(self, ctx):
@@ -164,31 +164,31 @@ class Action():
                 msg = '<:patemote:318592885090156544> I guess I can pat you if nobody else will.'
             else:
                 msg = '<:patemote:318592885090156544> **' + ctx.message.mentions[0].display_name + '** was pat by **' + ctx.message.author.display_name + '**!'
+            
+            if (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/pata.gif', content=msg)
+            elif (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/patb.gif', content=msg)
+            elif (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/patc.gif', content=msg)
+            elif (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/patd.gif', content=msg)
+            elif (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/pate.gif', content=msg)
+            elif (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/patf.gif', content=msg)
+            elif (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/patg.gif', content=msg)
+            elif (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/path.gif', content=msg)
+            elif (var == 8):
+                await self.bot.send_file(ctx.message.channel, './images/pati.gif', content=msg)
+            elif (var == 9):
+                await self.bot.send_file(ctx.message.channel, './images/patj.gif', content=msg)
+            elif (var == 10):
+                await self.bot.send_file(ctx.message.channel, './images/patk.gif', content=msg)
         else:
             await self.bot.say(":x: You must mention a user!")
-            
-        if (var == 0):
-            await self.bot.send_file(ctx.message.channel, './images/pata.gif', content=msg)
-        elif (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/patb.gif', content=msg)
-        elif (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/patc.gif', content=msg)
-        elif (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/patd.gif', content=msg)
-        elif (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/pate.gif', content=msg)
-        elif (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/patf.gif', content=msg)
-        elif (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/patg.gif', content=msg)
-        elif (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/path.gif', content=msg)
-        elif (var == 8):
-            await self.bot.send_file(ctx.message.channel, './images/pati.gif', content=msg)
-        elif (var == 9):
-            await self.bot.send_file(ctx.message.channel, './images/patj.gif', content=msg)
-        elif (var == 10):
-            await self.bot.send_file(ctx.message.channel, './images/patk.gif', content=msg)
 
     @commands.command(pass_context = True)
     async def poke(self, ctx):
@@ -202,30 +202,29 @@ class Action():
                 msg = ":eyes: You can't poke nothing! I'll poke you instead!"
             else:
                 msg = ':eyes: **' + ctx.message.mentions[0].display_name + '** was poked by **' + ctx.message.author.display_name +'**!'
+        
+            if (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/pokea.gif', content=msg)
+            elif (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/pokeb.gif', content=msg)
+            elif (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/pokec.gif', content=msg)
+            elif (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/poked.gif', content=msg)
+            elif (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/pokee.gif', content=msg)
+            elif (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/pokef.gif', content=msg)
+            elif (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/pokeg.gif', content=msg)
+            elif (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/pokeh.gif', content=msg)
+            elif (var == 8):
+                await self.bot.send_file(ctx.message.channel, './images/pokei.gif', content=msg)
+            elif (var == 9):
+                await self.bot.send_file(ctx.message.channel, './images/pokej.gif', content=msg)
         else:
-            await self.bot.say(":x: You must mention a user!")
-        
-        if (var == 0):
-            await self.bot.send_file(ctx.message.channel, './images/pokea.gif', content=msg)
-        elif (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/pokeb.gif', content=msg)
-        elif (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/pokec.gif', content=msg)
-        elif (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/poked.gif', content=msg)
-        elif (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/pokee.gif', content=msg)
-        elif (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/pokef.gif', content=msg)
-        elif (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/pokeg.gif', content=msg)
-        elif (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/pokeh.gif', content=msg)
-        elif (var == 8):
-            await self.bot.send_file(ctx.message.channel, './images/pokei.gif', content=msg)
-        elif (var == 9):
-            await self.bot.send_file(ctx.message.channel, './images/pokej.gif', content=msg)
-        
+            await self.bot.say(":x: You must mention a user!")  
 
     @commands.command(pass_context = True)
     async def wakeup(self, ctx):
@@ -239,25 +238,25 @@ class Action():
                 msg = '<:morning:319631823766552597> What are you trying to wake up? Well, you do you I guess.'
             else:
                 msg = '<:morning:319631823766552597> **' + ctx.message.mentions[0].display_name + '**, rise and shine honey! **' + ctx.message.author.display_name + '** wants you to wake up!'
+
+            if (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/wakeupa.gif', content=msg)
+            elif (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/wakeupb.gif', content=msg)
+            elif (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/wakeupc.gif', content=msg)
+            elif (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/wakeupd.gif', content=msg)
+            elif (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/wakeupe.gif', content=msg)
+            elif (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/wakeupf.gif', content=msg)
+            elif (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/wakeupg.gif', content=msg)
+            elif (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/wakeuph.gif', content=msg)
         else:
             await self.bot.say(":x: You must mention a user!")
-
-        if (var == 0):
-            await self.bot.send_file(ctx.message.channel, './images/wakeupa.gif', content=msg)
-        elif (var == 1):
-            await self.bot.send_file(ctx.message.channel, './images/wakeupb.gif', content=msg)
-        elif (var == 2):
-            await self.bot.send_file(ctx.message.channel, './images/wakeupc.gif', content=msg)
-        elif (var == 3):
-            await self.bot.send_file(ctx.message.channel, './images/wakeupd.gif', content=msg)
-        elif (var == 4):
-            await self.bot.send_file(ctx.message.channel, './images/wakeupe.gif', content=msg)
-        elif (var == 5):
-            await self.bot.send_file(ctx.message.channel, './images/wakeupf.gif', content=msg)
-        elif (var == 6):
-            await self.bot.send_file(ctx.message.channel, './images/wakeupg.gif', content=msg)
-        elif (var == 7):
-            await self.bot.send_file(ctx.message.channel, './images/wakeuph.gif', content=msg)
 
     @commands.command(pass_context = True)
     async def cry(self, ctx):
