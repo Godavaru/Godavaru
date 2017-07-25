@@ -8,16 +8,19 @@ class Action():
         self.bot = bot
 
     @commands.command(pass_context = True)
-    async def cuddle(self, ctx, member : discord.Member = None):
+    async def cuddle(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 10)
         
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = '<:godavarublobhug:318227863646109696> Aww, are you lonely? I\'ll cuddle with you, **'+ctx.message.author.display_name+'**!'
-        elif ctx.message.mentions[0] is not None:
-            msg = '<:godavarublobhug:318227863646109696> **' + ctx.message.mentions[0].display_name + '** was cuddled by **' + ctx.message.author.display_name +'**!'
-        if(ctx.message.content[9:] == ""):
-            msg = '<:godavarublobhug:318227863646109696> Aww, are you lonely? I\'ll cuddle with you, **'+ctx.message.author.display_name+'**!'
+        if ctx.message.content[9:] == "":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = '<:godavarublobhug:318227863646109696> Aww, are you lonely? I\'ll cuddle with you, **'+ctx.message.author.display_name+'**!'
+            else:
+                msg = '<:godavarublobhug:318227863646109696> **' + ctx.message.mentions[0].display_name + '** was cuddled by **' + ctx.message.author.display_name +'**!'
+        else:
+            await self.bot.say(":x: You must mention a user!")
 
         if  (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/cuddlea.gif', content=msg)
@@ -42,16 +45,19 @@ class Action():
         
 
     @commands.command(pass_context = True)
-    async def hug(self, ctx, member : discord.Member = None):
+    async def hug(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 10)
         
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = ':hugging: Aww, are you lonely? Have a hug, **'+ctx.message.author.display_name+'**!'
-        elif ctx.message.mentions[0] is not None:
-            msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
-        if(ctx.message.content[6:] == ""):
-            msg = ':hugging: Aww, are you lonely? Have a hug, **'+ctx.message.author.display_name+'**!'
+        if ctx.message.content[6:] == "":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = ':hugging: Are you lonely, **'+ctx.message.mentions[0].display_name+'**? I\'ll hug you!'
+            else:
+                msg = ':hugging: **' + ctx.message.mentions[0].display_name + '** was hugged by **' + ctx.message.author.display_name +'**!'
+        else:
+            await self.bot.say(":x: You must mention a user!")
             
         if  (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/huga.gif', content=msg)
@@ -75,17 +81,20 @@ class Action():
             await self.bot.send_file(ctx.message.channel, './images/hugj.gif', content=msg)
 
     @commands.command(pass_context = True)
-    async def slap(self, ctx, member : discord.Member = None):
+    async def slap(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 9)
 
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = '*slaps you* :eyes:'
-        elif ctx.message.mentions[0] is not None:
-            msg = ':raised_hand: Hyaah! **' + ctx.message.author.display_name + '** has slapped **' + ctx.message.mentions[0].display_name + '**!'
-        if(ctx.message.content[6:] == ""):
-            msg = '*slaps you* :eyes:'
-
+        if ctx.message.content[7:] == "":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = ':raised_hand: This makes no sense... Oh well'
+            else:
+                msg = ':raised_hand: Hyaah! **' + ctx.message.author.display_name + '** has slapped **' + ctx.message.mentions[0].display_name + '**!'
+        else:
+            await self.bot.say(":x: You must mention a user!")
+                
         if (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/slapa.gif', content=msg)
         elif (var == 1):
@@ -106,16 +115,19 @@ class Action():
             await self.bot.send_file(ctx.message.channel, './images/slapi.gif', content=msg)
 
     @commands.command(pass_context = True)
-    async def kiss(self, ctx, member: discord.Member = None):
+    async def kiss(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 11)
 
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = ":kissing_heart: I don't think you can kiss yourself... I'll kiss you instead!"
-        elif ctx.message.mentions[0] is not None:
-            msg = ':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!'
-        if(ctx.message.content[5:] == ""):
-            msg = ":kissing_heart: I don't think you can kiss yourself... I'll kiss you instead!"
+        if ctx.message.content[7:] == "":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = ":kissing_heart: I don't think you can kiss yourself... I'll kiss you instead!"
+            else:
+                msg = ':kissing_heart: **' + ctx.message.mentions[0].display_name + '** was kissed by **' + ctx.message.author.display_name +'**!'
+        else:
+            await self.bot.say(":x: You must mention a user!")
         
         if (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/kissa.gif', content=msg)
@@ -141,17 +153,20 @@ class Action():
             await self.bot.send_file(ctx.message.channel, './images/kissk.gif', content=msg)
             
     @commands.command(pass_context = True)
-    async def pat(self, ctx, member : discord.Member = None):
+    async def pat(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 11)
-        
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = '<:patemote:318592885090156544> I guess I can pat you if nobody else will.'
-        elif ctx.message.mentions[0] is not None:
-            msg = '<:patemote:318592885090156544> **' + ctx.message.mentions[0].display_name + '** was pat by **' + ctx.message.author.display_name + '**!'
-        if(ctx.message.content[9:] == ""):
-            msg = '<:patemote:318592885090156544> I guess I can pat you if nobody else will.'
-
+            
+        if ctx.message.content[6:] == "":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = '<:patemote:318592885090156544> I guess I can pat you if nobody else will.'
+            else:
+                msg = '<:patemote:318592885090156544> **' + ctx.message.mentions[0].display_name + '** was pat by **' + ctx.message.author.display_name + '**!'
+        else:
+            await self.bot.say(":x: You must mention a user!")
+            
         if (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/pata.gif', content=msg)
         elif (var == 1):
@@ -176,16 +191,19 @@ class Action():
             await self.bot.send_file(ctx.message.channel, './images/patk.gif', content=msg)
 
     @commands.command(pass_context = True)
-    async def poke(self, ctx, member: discord.Member = None):
+    async def poke(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 10)
 
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = ":eyes: Poking yourself is no fun! I'll poke you myself :3"
-        elif ctx.message.mentions[0] is not None:
-            msg = ':eyes: **' + ctx.message.mentions[0].display_name + '** was poked by **' + ctx.message.author.display_name +'**!'
-        if(ctx.message.content[9:] == ""):
-            msg = ":eyes: You can't poke nothing! I'll poke you instead!"
+        if ctx.message.content[7:] == "":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = ":eyes: You can't poke nothing! I'll poke you instead!"
+            else:
+                msg = ':eyes: **' + ctx.message.mentions[0].display_name + '** was poked by **' + ctx.message.author.display_name +'**!'
+        else:
+            await self.bot.say(":x: You must mention a user!")
         
         if (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/pokea.gif', content=msg)
@@ -210,16 +228,19 @@ class Action():
         
 
     @commands.command(pass_context = True)
-    async def wakeup(self, ctx, member: discord.Member = None):
+    async def wakeup(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 8)
 
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = "<:morning:319631823766552597> You can't wake yourself up... aren't you already awake? Ah well <3"
-        elif ctx.message.mentions[0] is not None:
-            msg = '<:morning:319631823766552597> **' + ctx.message.mentions[0].display_name + '**, rise and shine honey! **' + ctx.message.author.display_name + '** wants you to wake up!'
-        if ctx.message.content[11:] == "":
-            msg = '<:morning:319631823766552597> What are you trying to wake up? Well, you do you I guess.'
+        if ctx.message.content[9:] == "":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = '<:morning:319631823766552597> What are you trying to wake up? Well, you do you I guess.'
+            else:
+                msg = '<:morning:319631823766552597> **' + ctx.message.mentions[0].display_name + '**, rise and shine honey! **' + ctx.message.author.display_name + '** wants you to wake up!'
+        else:
+            await self.bot.say(":x: You must mention a user!")
 
         if (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/wakeupa.gif', content=msg)
@@ -239,16 +260,19 @@ class Action():
             await self.bot.send_file(ctx.message.channel, './images/wakeuph.gif', content=msg)
 
     @commands.command(pass_context = True)
-    async def cry(self, ctx, member: discord.Member = None):
+    async def cry(self, ctx):
         random.seed(time.time())
         var = int(random.random() * 11)
 
-        if (member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            msg = ":cry: **" + ctx.message.author.display_name + "** just started to cry!"
-        elif ctx.message.mentions[0] is not None:
-            msg = ':cry: **' + ctx.message.mentions[0].display_name + '** just made **' + ctx.message.author.display_name + '** cry!'
         if ctx.message.content[6:] == "":
-            msg = ":cry: **" + ctx.message.author.display_name + "** just started to cry!"
+            msg = ':cry: **'+ctx.message.author.display_name+'** just started to cry!'
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = ":cry: **" + ctx.message.author.display_name + "** just started to cry!"
+            else:
+                msg = ':cry: **' + ctx.message.mentions[0].display_name + '** just made **' + ctx.message.author.display_name + '** cry!'
+        else:
+            msg = ':cry: **'+ctx.message.author.display_name+'** just started to cry!'
 
         if (var == 0):
             await self.bot.send_file(ctx.message.channel, './images/crya.gif', content=msg)

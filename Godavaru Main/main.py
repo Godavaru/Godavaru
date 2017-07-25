@@ -109,17 +109,20 @@ async def help(ctx):
     elif ctx.message.content[7:] == "flip":
         await bot.say("Hyahh! Flip someone! `" + bot.command_prefix + "flip <@user>`")
     else:
-        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `' + bot.command_prefix + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `avatar`, `help`, `info`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `flip`, `lewd`, `lood`, `magicball`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).add_field(name='Mod', value='soon:tm:', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 22")
+        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `' + bot.command_prefix + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `avatar`, `help`, `info`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `flip`, `lewd`, `lood`, `love`, `magicball`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).add_field(name='Mod', value='soon:tm:', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 22")
         await bot.send_message(ctx.message.channel, content=None, embed=embed)
         await bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` issued my `help` command in channel `' + ctx.message.channel.name + '` in  server `' + ctx.message.server.name + '`')
 
 # The test command is for me to try new features
 @bot.command(pass_context = True)
 async def test(ctx):
-    await bot.say("Uh... no test command here... *runs*")
+    if ctx.message.author.id != "267207628965281792":
+        await bot.say("Uh... no test command here... *runs*")
+    else:
+        await bot.edit_role(ctx.message.server, discord.utils.get(ctx.message.server.roles, id="328329598322475009"), colour=discord.Color(0x66daff), permissions=discord.Permissions(permissions=1609956470))
 
-# cog commands    
-@bot.command()
+# cog commands
+@bot.command()                            
 async def load(extension_name : str):
     try:
         bot.load_extension(extension_name)
@@ -150,4 +153,5 @@ if __name__ == "__main__":
         except Exception as e:
             exc = '{}: {}'.format(type(e).__name__, e)
             print("Failed to load extension {}\n{}".format(extension, exc))
-    bot.run('token')
+            
+bot.run('token')

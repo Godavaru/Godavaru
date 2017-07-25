@@ -12,7 +12,7 @@ class Fun():
         if ctx.message.content[7:] == "":
             await self.bot.say (":mega: I can't echo something that isn't specified!")
         else:
-            await self.bot.say(':mega:' + ctx.message.content[6:])
+            await self.bot.say(':mega: ' + ctx.message.content[6:])
 
     @commands.command(pass_context = True)
     async def lewd(self, ctx):
@@ -60,7 +60,7 @@ class Fun():
         random.seed(time.time())
         var = int(random.random() * 20)
 
-        if (ctx.message.content == bot.command_prefix +"mb" or ctx.message.content == bot.command_prefix+"magicball" or ctx.message.content == bot.command_prefix+"8ball"):
+        if (ctx.message.content == self.bot.command_prefix +"mb" or ctx.message.content == self.bot.command_prefix+"magicball" or ctx.message.content == self.bot.command_prefix+"8ball"):
             await self.bot.say("I can't be a magician unless you ask me a question! <:thonk:316105720548556801>")
         elif (var == 0):
             await self.bot.say(":crystal_ball: It is certain.")
@@ -104,6 +104,43 @@ class Fun():
             await self.bot.say(":crystal_ball: Very doubtful")
         elif (var == 20):
             await self.bot.say(":crystal_ball: Congratulations, you found an easter egg. I hope you realise this doesn't answer your question...")
+
+    @commands.command(pass_context = True)
+    async def love(self, ctx):
+        random.seed(time.time())
+        var = int(random.random() * 101)
+
+        msg1 = ctx.message.content
+        msg1 = msg1.replace(self.bot.command_prefix+"love", "")
+        if (var < 10):
+            msg = "Try again next time."
+        elif (var < 30 and var > 9):
+            msg = "You could do better."
+        elif (var < 50 and var > 29):
+            msg = "Are you sure about these two?"
+        elif (var == 69):
+            msg = "L-lewd!"
+        elif (var < 70 and var != 69 and var > 49):
+            msg = "Not bad!"
+        elif (var < 90 and var > 69):
+            msg = "Almost perfect!"
+        elif (var < 100 and var > 89):
+            msg = "So close to perfection, it hurts."
+        elif (var == 100):
+            msg = "Literal perfection!!"
+    
+        if msg1 == "":
+            await self.bot.say(":x: You need to specify who you want to love!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                embed = discord.Embed(title=":two_hearts: Love meter :two_hearts:",description="<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`\n<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`",color=ctx.message.author.color).add_field(name="Result",value="**100%**\n`You are very important and should love yourself!`").set_footer(text="Requested by " + ctx.message.author.display_name).set_thumbnail(url="http://i.imgur.com/ND0m992.png")
+            elif ctx.message.mentions[0].id == "311810096336470017" and ctx.message.author.id == "267207628965281792":
+                embed = discord.Embed(title=":two_hearts: Love meter :two_hearts:",description="<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`\n<:in_love_heart:335217899885297664> `" + ctx.message.mentions[0].display_name + "`",color=ctx.message.author.color).add_field(name="Result",value="**-9000%**\n`Pure hatred. They absolutely hate eachother.`").set_footer(text="Requested by " + ctx.message.author.display_name).set_thumbnail(url="http://i.imgur.com/ND0m992.png")
+            else:
+                embed = discord.Embed(title=":two_hearts: Love meter :two_hearts:",description="<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`\n<:in_love_heart:335217899885297664> `" + ctx.message.mentions[0].display_name + "`",color=ctx.message.author.color).add_field(name="Result",value="**" + str(var) + "%**\n`" + str(msg) + "`").set_footer(text="Requested by " + ctx.message.author.display_name).set_thumbnail(url="http://i.imgur.com/ND0m992.png")
+        else:
+            embed = discord.Embed(title=":two_hearts: Love meter :two_hearts:",description="<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`\n<:in_love_heart:335217899885297664> `" + msg1 + "`",color=ctx.message.author.color).add_field(name="Result",value="**" + str(var) + "%**\n`" + str(msg) + "`").set_footer(text="Requested by " + ctx.message.author.display_name).set_thumbnail(url="http://i.imgur.com/ND0m992.png")
+        await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context=True)
     async def flip(self, ctx, user : discord.Member=None):

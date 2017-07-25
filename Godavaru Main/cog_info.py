@@ -9,7 +9,6 @@ import datetime
 class Info():
     def __init__(self, bot):
         self.bot = bot
-    botversion = '0.5.2'
     @commands.command(pass_context = True)
     async def about(self, ctx):
         server_count = 0
@@ -19,15 +18,15 @@ class Info():
             for member in server.members:
                 member_count += 1
         if ctx.message.content[8:] == "credits":
-            embed = discord.Embed(title='Credits!', description='Here are some very honorable mentions for the creation, support, and overall community of the bot!',color=0x9B59B6).add_field(name='First Donator',value='MrLar#8117').add_field(name='Developers',value='Desiree#3658, Instance#2513, Yuvira#7842, and Jonas B.#9089').set_footer(text='Hope you enjoy the bot!').set_thumbnail(url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png')
+            embed = discord.Embed(title='Credits!', description='Here are some very honorable mentions for the creation, support, and overall community of the bot!',color=0x9B59B6).add_field(name='First Donator',value='MrLar#8117').add_field(name='Developers',value='Desiree#3658, AttributeError#2513, Yuvira#7842, and Jonas B.#9089').set_footer(text='Hope you enjoy the bot!').set_thumbnail(url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png')
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
         elif ctx.message.content[8:] == "patreon":
             avatar1 = ctx.message.author.avatar_url
             avatar1 = avatar1.replace("?size=1024", " ")
-            embed = discord.Embed(description='Here are all of our Patreon supporters! Thank you!\n\n`MrLar#8117`, `「August」#1793`', color=0x9B59B6).set_author(name='Patrons!', icon_url=avatar1)
+            embed = discord.Embed(description='Here are all of our Patreon supporters! Thank you!\n\n`MrLar#8117`', color=0x9B59B6).set_author(name='Patrons!', icon_url=avatar1)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
         else:
-            embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value=str(botversion), inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do g!about credits for credits! | Do g!about patreon for our patrons!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+            embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.6.2', inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do g!about credits for credits! | Do g!about patreon for our patrons!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context = True)
@@ -49,12 +48,14 @@ class Info():
     @commands.command(pass_context=True)
     async def ping(self, ctx):
         console = discord.Object("316688736089800715")
-        before = time.monotonic()
+        before = datetime.datetime.utcnow()
+        ping_msg = await self.bot.send_message(ctx.message.channel, content=":mega: **Pinging...**")
+        ping = (datetime.datetime.utcnow() - before) * 1000
+        before2 = time.monotonic()
         await (await self.bot.ws.ping())
         after = time.monotonic()
-        ping = (after - before) * 1000
+        ping2 = (after - before2) * 1000
         var = int(random.random() * 5)
-
         if (var == 0):
             v = 'a'
         elif (var == 1):
@@ -67,8 +68,8 @@ class Info():
             v = 'u'
         elif (var == 5):
             v = 'y'
-        await self.bot.say("P" + str(v) + "ng! The message took **{0:.0f}ms**. :thinking:".format(ping))
-        await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` checked my ping in the channel `' + ctx.message.channel.name + '` in the server `' + ctx.message.server.name + '`. The result was {0:.0f}ms.'.format(ping))
+        await self.bot.edit_message(ping_msg, new_content=":mega: P"+str(v)+"ng! The message took **{:.2f}ms**!".format(ping.total_seconds())+" `Websocket: {0:.0f}ms` :thinking:".format(ping2))
+        await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` checked my ping in the channel `' + ctx.message.channel.name + '` in the server `' + ctx.message.server.name + '`. The result was {:.2f}ms'.format(ping)+" with a websocket ping of {0:.0f}ms".format(ping2))
 
     def get_bot_uptime(self, *, brief=False):
         now = datetime.datetime.utcnow()
@@ -103,22 +104,22 @@ class Info():
             server_count += 1
             for member in server.members:
                 member_count += 1
-        await self.bot.say("```prolog\n --------- Bot Information --------- \n\nCommands: 22\nVersion: " + str(botversion) + "\nDiscord.py Version: " + str(version) + "\nPython Version: " + str(pversion) + "\nPing: {0:.0f}ms".format(ping) + "\nUptime: {}".format(self.get_bot_uptime()) + "\n\n --------- Guild Information --------- \n\nGuilds: " + str(server_count) + "\nUsers: " + str(member_count) + "\nHost: Heroku```")
+        await self.bot.say("```prolog\n --------- Bot Information --------- \n\nCommands: this is lazy coding\nVersion: 0.6.2\nDiscord.py Version: " + str(version) + "\nPython Version: " + str(pversion) + "\nWebsocket Ping: {0:.0f}ms".format(ping) + "\nUptime: {}".format(self.get_bot_uptime()) + "\n\n --------- Guild Information --------- \n\nGuilds: " + str(server_count) + "\nUsers: " + str(member_count) + "\nHost: Heroku```")
         
-
     @commands.command(pass_context=True)
-    async def avatar(self, ctx, member : discord.Member = None):
-        if(member is None or ctx.message.mentions[0].id == ctx.message.author.id):
-            avatar1 = ctx.message.author.avatar_url
-            avatar1 = avatar1.replace("?size=1024", " ")
-            embed = discord.Embed(title="Your Avatar!",description="Click [here](" + avatar1 + ")!", color=ctx.message.author.color).set_image(url=avatar1).set_footer(text='Requested by ' + ctx.message.author.display_name, icon_url=avatar1)
+    async def avatar(self, ctx):
+        mavi = ctx.message.author.avatar_url
+        mavi = mavi.replace("?size=1024", "")
+        if ctx.message.content == "":
+            embed = discord.Embed(title="Your avatar!",description="Click [here]("+mavi+")!",color=ctx.message.author.color).set_image(url=mavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-        elif ctx.message.mentions[0] is not None:
-            avatar2 = ctx.message.mentions[0].avatar_url
-            avatar2 = avatar2.replace("?size=1024", " ")
-            avatar3 = ctx.message.author.avatar_url
-            avatar3 = avatar3.replace("?size=1024", " ")
-            embed = discord.Embed(title =ctx.message.mentions[0].display_name + "'s Avatar!",description="Click [here](" + avatar2 +")!",color=ctx.message.author.color).set_image(url=avatar2).set_footer(text='Requested by ' + ctx.message.author.display_name, icon_url=avatar3)
+        if len(ctx.message.mentions) > 0:
+            yavi = ctx.message.mentions[0].avatar_url
+            yavi = yavi.replace("?size=1024", "")
+            embed = discord.Embed(title=ctx.message.mentions[0].display_name+"'s avatar!",description="Click [here]("+yavi+")!",color=ctx.message.author.color).set_image(url=yavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
+            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        else:
+            embed = discord.Embed(title="Your avatar!",description="Click [here]("+mavi+")!",color=ctx.message.author.color).set_image(url=mavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     def get_bot_uptime(self, *, brief=False):
