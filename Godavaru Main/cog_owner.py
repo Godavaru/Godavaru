@@ -39,16 +39,16 @@ class Owner():
     async def game(self, ctx, *, setGame: str):
         member = ctx.message.author
         console = discord.Object('316688736089800715')
-        server_count = 0
-        member_count = 0
-        for server in bot.servers:
-            server_count += 1
-            for member in server.members:
-                member_count += 1
-
+        
         if member.id not in ownerids:
-            await self.bot.say("No changey my gamey :rage: (access denied)")
+            await self.bot.say(":x: No permission.")
         else:
+            server_count = 0
+            member_count = 0
+            for server in self.bot.servers:
+                server_count += 1
+                for member in server.members:
+                    member_count += 1
             if ctx.message.content[7:] == "":
                 await self.bot.say("You must specify a game or `reset`!")
             elif ctx.message.content[7:] == "reset":

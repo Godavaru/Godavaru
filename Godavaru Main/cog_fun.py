@@ -27,8 +27,8 @@ class Fun():
         elif '--s' in saythis:
             silentsay = ctx.message.content[6:]
             silentsay = silentsay.replace("--s", "")
-            await bot.say(silentsay)
-            await bot.delete_message(ctx.message)
+            await self.bot.say(silentsay)
+            await self.bot.delete_message(ctx.message)
             await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
         else:
             await self.bot.say(ctx.message.content[6:])
