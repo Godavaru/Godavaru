@@ -34,7 +34,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print("====================")
-    await self.bot.change_presence(game=discord.Game(name='g!help | with '+str(server_count)+' servers and '+str(member_count)+' users!'))
+    await bot.change_presence(game=discord.Game(name='g!help | with '+str(server_count)+' servers and '+str(member_count)+' users!'))
     await bot.send_message(console, 'Godavaru now ready! Preparing for use in `' + str(server_count) + '` servers for `' + str(member_count) + '` members!')
     if not hasattr(bot, 'uptime'):
         bot.uptime = datetime.datetime.utcnow()
