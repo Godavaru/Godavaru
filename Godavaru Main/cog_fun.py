@@ -8,13 +8,6 @@ class Fun():
         self.bot = bot
 
     @commands.command(pass_context = True)
-    async def echo(self, ctx):
-        if ctx.message.content[7:] == "":
-            await self.bot.say (":mega: I can't echo something that isn't specified!")
-        else:
-            await self.bot.say(':mega: ' + ctx.message.content[6:])
-
-    @commands.command(pass_context = True)
     async def lewd(self, ctx):
         embed = discord.Embed(title='We must go lewder!', description=":eyes:").set_image(url="https://image.prntscr.com/image/4beb7e203f394913abfccc19154d994a.png")
         await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
@@ -31,20 +24,15 @@ class Fun():
         saythis = saythis.replace("`", "")
         if saythis == "":
             await self.bot.say('Specify something for me to say!')
+        elif '--s' in saythis:
+            silentsay = ctx.message.content[6:]
+            silentsay = silentsay.replace("--s", "")
+            await bot.say(silentsay)
+            await bot.delete_message(ctx.message)
+            await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
         else:
             await self.bot.say(ctx.message.content[6:])
-            await self.bot.delete_message(ctx.message)
             await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
-
-
-    @commands.command(pass_context = True)
-    async def shru(self, ctx):
-        member = ctx.message.author
-   
-        if member.id != "99965250052300800":
-            await self.bot.say ("Who are you, AttributeError#2513? Messing up the spelling that bad smh >:(")
-        else:
-            await self.bot.say("Learn to spell, Paul. For real ;-;")
 
     @commands.command(pass_context = True)
     async def year(self, ctx):
@@ -163,6 +151,16 @@ class Fun():
             await self.bot.say(msg + "(╯°□°）╯︵ " + name[::-1])
         else:
             await self.bot.say("Who do you want me to flip? :thinking:")
+
+    @commands.command(pass_context = True)
+    async def lenny(self, ctx):
+        await self.bot.say ("( ͡° ͜ʖ ͡°)")
+        await self.bot.delete_message(ctx.message)
+
+    @commands.command(pass_context = True)
+    async def nonowa(self, ctx):
+        await self.bot.say("のワの")
+        await self.bot.delete_message(ctx.message)
 			
 def setup(bot):
     bot.add_cog(Fun(bot))

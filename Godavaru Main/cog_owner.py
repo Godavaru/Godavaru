@@ -38,14 +38,27 @@ class Owner():
     @commands.command(pass_context = True)
     async def game(self, ctx, *, setGame: str):
         member = ctx.message.author
+        console = discord.Object('316688736089800715')
+        server_count = 0
+        member_count = 0
+        for server in bot.servers:
+            server_count += 1
+            for member in server.members:
+                member_count += 1
 
         if member.id not in ownerids:
             await self.bot.say("No changey my gamey :rage: (access denied)")
         else:
-            await self.bot.change_presence(game=discord.Game(name='g!help | ' + setGame))
-            await self.bot.say("Set my playing status to `g!help | " + setGame + "`!")
-            console = discord.Object('316688736089800715')
-            await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` changed my playing status to `g!help | ' + setGame + '`.')
+            if ctx.message.content[7:] == "":
+                await self.bot.say("You must specify a game or `reset`!")
+            elif ctx.message.content[7:] == "reset":
+                await self.bot.change_presence(game=discord.Game(name='g!help | with '+str(server_count)+' servers and '+str(member_count)+' users!'))
+                await self.bot.say("Reset my playing status.")
+                await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` reset my playing status.')
+            else:
+                await self.bot.change_presence(game=discord.Game(name='g!help | ' + setGame))
+                await self.bot.say("Set my playing status to `g!help | " + setGame + "`!")
+                await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` changed my playing status to `g!help | ' + setGame + '`.')
 
     @commands.command(pass_context = True)
     async def leaveserver(self, ctx):

@@ -4,11 +4,22 @@ from discord.ext import commands
 import random
 import time
 import datetime, re
+import configparser
+
+config = configparser.ConfigParser()
+config.read("config.ini")
 
 bot = commands.Bot(command_prefix="g!")
 bot.remove_command("help")
-startup_extensions = ["cog_info", "cog_fun", "cog_faces", "cog_action", "cog_owner", "cog_mod"]
+startup_extensions = ["cog_info", "cog_fun", "cog_action", "cog_owner", "cog_mod"]
 console = discord.Object('316688736089800715')
+
+ownerids = [
+    '267207628965281792',
+    '99965250052300800',
+    '170991374445969408',
+    '188663897279037440'
+]
 
 # ready
 @bot.event
@@ -23,6 +34,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print("====================")
+    await self.bot.change_presence(game=discord.Game(name='g!help | with '+str(server_count)+' servers and '+str(member_count)+' users!'))
     await bot.send_message(console, 'Godavaru now ready! Preparing for use in `' + str(server_count) + '` servers for `' + str(member_count) + '` members!')
     if not hasattr(bot, 'uptime'):
         bot.uptime = datetime.datetime.utcnow()
@@ -64,54 +76,68 @@ async def on_error(e):
 # help command
 @bot.command(pass_context = True)
 async def help(ctx):
-    if ctx.message.content[7:] == "echo":
-        await bot.say ("Use `" + bot.command_prefix + "echo <text>` to make me echo something!")
-    elif ctx.message.content[7:] == "about":
-        await bot.say ("Display the facts about me by doing `" + bot.command_prefix + "about`!")
-    elif ctx.message.content[7:] == "help":
-        await bot.say ("Uh... really? just do `" + bot.command_prefix + "help`...")
-    elif ctx.message.content[7:] == "request":
-        await bot.say ("Request something to add by doing `" + bot.command_prefix + "request <suggestion>`! Make sure it's longer than three characters!")
-    elif ctx.message.content[7:] == "kill":
-        await bot.say ("Kill your worst enemies! ~~Or friends, whatever you wish.~~ Do `" + bot.command_prefix + "kill <@user>`")
-    elif ctx.message.content[7:] == "lewd":
-        await bot.say ("What should we do? `" + bot.command_prefix + "lewd`")
+    if ctx.message.content[7:] == "lewd":
+        embed = discord.Embed(title="Lewd Command",description="Believe it or not, it's completely sfw...",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"lewd").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "lood":
-        await bot.say ("S-senpai! `" + bot.command_prefix + "lood`")
+        embed = discord.Embed(title="Lood Command",description="Believe it or not, it's completely sfw...",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"lood").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "say":
-        await bot.say ("Make me say something by doing `" + bot.command_prefix + "say <text>`")
-    elif ctx.message.content[7:] == "shru":
-        await bot.say ("I hope that was a spelling error... `" + bot.command_prefi + "shru`")
+        embed = discord.Embed(title="Say Command",description="Make me say something!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"say [--s] <message>").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "year":
-        await bot.say ("See my very first fun command! It's good I promise ( ͡° ͜ʖ ͡°) `" + bot.command_prefix + "year`")
-    elif ctx.message.content[7:] == "lenny":
-        await bot.say ("Make a lenny face by doing `" + bot.command_prefix + "lenny`!")
-    elif ctx.message.content[7:] == "shrug":
-        await bot.say ("Uhh... idk *shrugs* `" + bot.command_prefix + "shrug`")
-    elif ctx.message.content[7:] == "hug":
-        await bot.say ("To hug a user, do `" + bot.command_prefix + "hug <@user>`! :hugging:")
-    elif ctx.message.content[7:] == "kiss":
-        await bot.say ("Kiss me before I lose my mind!! `" + bot.command_prefix + "kiss <@user>`")
-    elif ctx.message.content[7:] =="poke":
-        await bot.say ("Don't poke me! Poke someone else with `" + bot.command_prefix + "poke <@user>`!")
-    elif ctx.message.content[7:] =="cuddle":
-        await bot.say ("<:godavarublobhug:318227863646109696> Cuddle someone with `" + bot.command_prefix + "cuddle <@user>`")
-    elif ctx.message.content[7:] == "nonowa":
-        await bot.say ("Make a nonowa face! `" + bot.command_prefix + "nonowa`")
-    elif ctx.message.content[7:] == "pat":
-        await bot.say ("You did good! `" + bot.command_prefix + "pat <@user>`")
-    elif ctx.message.content[7:] == "ping":
-        await bot.say ("Play ping pong with me! `" + bot.command_prefix + "ping`")
-    elif ctx.message.content[7:] == "wakeup":
-        await bot.say ("WAKE ME UP INSIDE! Or wake up a friend with `" + bot.command_prefix + "wakeup <@user>`")
-    elif ctx.message.content[7:] == "magicball" or ctx.message.content[7:] == "mb":
-        await bot.say ("Ask the magician a question! :thinking: `" + bot.command_prefix + "magicball` or `" + bot.command_prefix + "mb`")
+        embed = discord.Embed(title="Year Command",description="The first command on this bot. You wont regret it :eyes:",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"year").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "f":
+        embed = discord.Embed(title="F Command",description="Pay your respects",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"f").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "8ball" or ctx.message.content[7:] == "mb" or ctx.message.content[7:] == "magicball":
+        embed = discord.Embed(title=ctx.message.content[7:]+" Command",description="Ask the magic 8ball a question!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+ctx.message.content[7:]+" <question>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "love":
+        embed = discord.Embed(title="Love Command",description="Use the love meter to find compatibility between you and something :eyes:",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"love <@user or thing>").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "flip":
-        await bot.say("Hyahh! Flip someone! `" + bot.command_prefix + "flip <@user>`")
-    else:
-        embed = discord.Embed(title='Commands!', description='Remember, the prefix is `' + bot.command_prefix + '`!', color=0x9B59B6).set_author(name="For more detailed help, do " + bot.command_prefix + "help <command>", icon_url ='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Info', value='`about`, `avatar`, `help`, `info`, `ping`, `request`', inline=False).add_field(name='Fun', value='`echo`, `flip`, `lewd`, `lood`, `love`, `magicball`, `say`, `shru`, `year`', inline=False).add_field(name='Faces', value='`lenny`, `nonowa`, `shrug`', inline=False).add_field(name='Action', value='`cuddle`, `hug`, `kill`, `kiss`, `pat`, `poke`, `wakeup`', inline=False).add_field(name='Mod', value='soon:tm:', inline=False).set_footer(text="Enjoy the bot! <3 | Total commands: 22")
-        await bot.send_message(ctx.message.channel, content=None, embed=embed)
+        embed = discord.Embed(title="Flip Command",description="Flip someone!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"flip <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "lenny":
+        embed = discord.Embed(title="Lenny Command",description="Make a lenny face.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"lenny").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "nonowa":
+        embed = discord.Embed(title="Nonowa Command",description="Make a nonowa face.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"nonowa").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "cuddle":
+        embed = discord.Embed(title="Cuddle Command",description="Cuddle someone! Awww!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"cuddle <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "hug":
+        embed = discord.Embed(title="Hug Command",description="Hug someone! How cute!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"hug <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "slap":
+        embed = discord.Embed(title="Slap Command",description="Is someone annoying you? Slap them!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"slap <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "kiss":
+        embed = discord.Embed(title="Kiss Command",description="Do you know that special someone? Just kiss them already!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"kiss <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "pat":
+        embed = discord.Embed(title="Pat Command",description="*pats*",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"pat <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "poke":
+        embed = discord.Embed(title="Poke Command",description="What is this, Facebook? ",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"poke <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "wakeup":
+        embed = discord.Embed(title="Wakeup Command",description="Someone needs to wake the hell up :eyes:",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"wakeup <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "cry":
+        embed = discord.Embed(title="Cry Command",description="Do you need to cry? :<",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"cry [@user]").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "kill":
+        embed = discord.Embed(title="Kill Command",description="When in doubt, kill your enemies... i mean wut",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"kill <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "shrug":
+        embed = discord.Embed(title="Shrug Command",description="¯\_(ツ)_/¯",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"shrug").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "about":
+        embed = discord.Embed(title="About Command",description="Display some things about me!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "invite":
+        embed = discord.Embed(title="Invite Command",description="Displays some important links, most importantly the invite links",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "request":
+        embed = discord.Embed(title="Request Command",description="Request some new features for the bot!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"request <feature>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "ping":
+        embed = discord.Embed(title="Ping Command",description="Play ping-pong with the bot and print the result.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"ping").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "info":
+        embed = discord.Embed(title="Info Command",description="STAAAATTTTTTTSSSS. SSSSSSSSSSTTTTTTTTTTTTTTAAAAAAAAAAAAAAAATTTTTTTTTTTTTSSSSSSSSSSSSSS\n\n... so just display some stats about me",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"info").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "avatar":
+        embed = discord.Embed(title="Avatar Command",description="Get someone's avatar!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"avatar [@user]").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "uptime":
+        embed = discord.Embed(title="Uptime Command",description="Display the bot's uptime!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"uptime").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "help":
+        embed = discord.Embed(title="Help Command",description="Uhm... Is this what you were looking for?",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"help [command]").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "":
+        embed = discord.Embed(title="The bot prefix is: "+bot.command_prefix,color=ctx.message.author.color).set_author(name="For more help, do "+bot.command_prefix+"help <command>",icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name="Action",value="`cuddle`, `cry`, `hug`, `kiss`, `pat`, `poke`, `slap`, `shrug`, `wakeup`",inline=False).add_field(name="Fun",value="`f`, `flip`, `lewd`, `lood`, `love`, `magicball`, `nonowa`, `say`, `year`",inline=False).add_field(name="Info",value="`about`, `avatar`, `info`, `invite`, `ping`, `request`, `uptime`",inline=False).add_field(name="Mod",value="soon:tm:",inline=False).set_footer(text="Requested by "+ctx.message.author.display_name)
         await bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` issued my `help` command in channel `' + ctx.message.channel.name + '` in  server `' + ctx.message.server.name + '`')
+    else:
+        await bot.send_message(ctx.message.channel, ":x: That command doesn't exist!")    
+    await bot.send_message(ctx.message.channel, content=None, embed=embed)
 
 # The test command is for me to try new features
 @bot.command(pass_context = True)
@@ -122,29 +148,38 @@ async def test(ctx):
         await bot.edit_role(ctx.message.server, discord.utils.get(ctx.message.server.roles, id="328329598322475009"), colour=discord.Color(0x66daff), permissions=discord.Permissions(permissions=1609956470))
 
 # cog commands
-@bot.command()                            
-async def load(extension_name : str):
-    try:
-        bot.load_extension(extension_name)
-    except (AttributeError, ImportError) as e:
-        await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
-        return
-    await bot.say("{} loaded.".format(extension_name))
+@bot.command(pass_context=True)                            
+async def load(ctx, extension_name : str):
+    if ctx.message.author.id not in ownerids:
+        await bot.say(":x: No permission.")
+    else:
+        try:
+            bot.load_extension(extension_name)
+        except (AttributeError, ImportError) as e:
+            await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
+            return
+        await bot.say("Cog `{}` loaded.".format(extension_name))
 
-@bot.command()
-async def unload(extension_name : str):
-    bot.unload_extension(extension_name)
-    await bot.say("{} unloaded.".format(extension_name))
-
-@bot.command()
-async def reload(extension_name : str):
-    try:
+@bot.command(pass_context=True)
+async def unload(ctx, extension_name : str):
+    if ctx.message.author.id not in ownerids:
+        await bot.say(":x: No permission.")
+    else:
         bot.unload_extension(extension_name)
-        bot.load_extension(extension_name)
-    except (AttributeError, ImportError) as e:
-        await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
-        return
-    await bot.say("{} reloaded.".format(extension_name))
+        await bot.say("Cog `{}` unloaded.".format(extension_name))
+
+@bot.command(pass_context=True)
+async def reload(ctx, extension_name : str):
+    if ctx.message.author.id not in ownerids:
+        await bot.say(":x: No permission.")
+    else:
+        try:
+            bot.unload_extension(extension_name)
+            bot.load_extension(extension_name)
+        except (AttributeError, ImportError) as e:
+            await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
+            return
+        await bot.say("Cog `{}` reloaded.".format(extension_name))
 
 if __name__ == "__main__":
     for extension in startup_extensions:
@@ -154,4 +189,4 @@ if __name__ == "__main__":
             exc = '{}: {}'.format(type(e).__name__, e)
             print("Failed to load extension {}\n{}".format(extension, exc))
             
-bot.run('token')
+bot.run(config['Main']['token'])
