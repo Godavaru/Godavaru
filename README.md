@@ -12,8 +12,8 @@ Our current developers are @Desiiii, @instanceofplayer, @Yuvira, and @jonasbpa. 
 # Utilities
 This bot provieds mostly fun commands, but moderation commands are in the works. If you would like to suggest anything, feel free to do so using `g!request <suggestion>` and it will be sent straight to myself and the other developers.
 
-# Compiling the bot
-I do not recommend compiling the bot yourself. While it is not a very big bot in file size, it does require the images file, which would take ages for me to upload here to github. If you wish to supply your own images and gifs for the action commands, feel free to download the repository and in main.py, replace `'token'` with your bot's token, replace the command prefix with whatever you want, and you should be good to go. As stated before, this is not recommended, but if you wanted to know, there it is
+# Running the bot
+I do not recommend downloading and running the bot yourself. While it is not a very big bot in file size, it does require the images file, which would take ages for me to upload here to github. If you wish to supply your own images and gifs for the action commands, feel free to download the repository and in main.py, replace `'token'` with your bot's token, replace the command prefix with whatever you want, and you should be good to go. As stated before, this is not recommended, but if you wanted to know, there it is
 
 # Inqueries
 If you'd like to contact me about working together on the bot or some other inquery, contact me via my business email at: `godavaru@gmail.com`
