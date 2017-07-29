@@ -258,6 +258,22 @@ class Action():
         else:
             await self.bot.say(":x: You must mention a user!")
 
+    @commands.command(pass_context=True)
+    async def sleep(self, ctx):
+        random.seed(time.time())
+        var = int(random.random() * 10)
+        if len(ctx.message.mentions) == 0 or ctx.message.content == self.bot.command_prefix+"sleep":
+            await self.bot.say(":x: You must mention a user!")
+        elif len(ctx.message.mentions) > 0:
+            if ctx.message.mentions[0].id == ctx.message.author.id:
+                msg = "<:night:319631860512587776> Hmm. Telling yourself to sleep. Self-discipline. I like it. Go slep!1!!"
+            else:
+                msg = "<:night:319631860512587776> **"+ctx.message.author.display_name+"** is telling **"+ctx.message.mentions[0].display_name+"** to go to sleep!"
+
+            # soon tm
+        else:
+            await bot.say("An unexpected error occurred. Please report this to Desiree#3658 on the support guild, found in g!about.") # just in case. You never know shrug 
+
     @commands.command(pass_context = True)
     async def cry(self, ctx):
         random.seed(time.time())
