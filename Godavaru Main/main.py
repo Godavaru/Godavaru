@@ -9,7 +9,7 @@ import configparser
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-bot = commands.Bot(command_prefix=['Main']['prefix'])
+bot = commands.Bot(command_prefix=config['Main']['prefix'])
 bot.remove_command("help")
 startup_extensions = ["cog_info", "cog_fun", "cog_action", "cog_owner", "cog_mod"]
 console = discord.Object('316688736089800715')
