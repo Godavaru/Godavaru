@@ -132,6 +132,8 @@ async def help(ctx):
         embed = discord.Embed(title="Uptime Command",description="Display the bot's uptime!",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"uptime").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "help":
         embed = discord.Embed(title="Help Command",description="Uhm... Is this what you were looking for?",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"help [command]").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif ctx.message.content[7:] == "sleep":
+        embed = discord.Embed(title="Sleep Command",description="The literal opposite of wakeup. This is also based off of my best friend, Kitty#4867, who would always tell me to go to bed. Love ya, Kat! ~Desii",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"sleep <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "":
         embed = discord.Embed(title="The bot prefix is: "+bot.command_prefix,color=ctx.message.author.color).set_author(name="For more help, do "+bot.command_prefix+"help <command>",icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name="Action",value="`cuddle`, `cry`, `hug`, `kiss`, `pat`, `poke`, `slap`, `shrug`, `wakeup`",inline=False).add_field(name="Fun",value="`f`, `flip`, `lewd`, `lood`, `love`, `magicball`, `nonowa`, `say`, `year`",inline=False).add_field(name="Info",value="`about`, `avatar`, `info`, `invite`, `ping`, `request`, `uptime`",inline=False).add_field(name="Mod",value="soon:tm:",inline=False).set_footer(text="Requested by "+ctx.message.author.display_name)
         await bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` issued my `help` command in channel `' + ctx.message.channel.name + '` in  server `' + ctx.message.server.name + '`')
@@ -151,35 +153,35 @@ async def test(ctx):
 @bot.command(pass_context=True)                            
 async def load(ctx, extension_name : str):
     if ctx.message.author.id not in ownerids:
-        await bot.say(":x: No permission.")
+        await bot.say(":x: You do not have permission to execute this command.")
     else:
         try:
-            bot.load_extension(extension_name)
+            bot.load_extension("cog_"+extension_name)
         except (AttributeError, ImportError) as e:
             await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
             return
-        await bot.say("Cog `{}` loaded.".format(extension_name))
+        await bot.say(":white_check_mark: Cog **`{}`** loaded.".format(extension_name))
 
 @bot.command(pass_context=True)
 async def unload(ctx, extension_name : str):
     if ctx.message.author.id not in ownerids:
-        await bot.say(":x: No permission.")
+        await bot.say(":x: You do not have permission to execute this command.")
     else:
-        bot.unload_extension(extension_name)
-        await bot.say("Cog `{}` unloaded.".format(extension_name))
+        bot.unload_extension("cog_"+extension_name)
+        await bot.say(":white_check_mark: Cog **`{}`** unloaded.".format(extension_name))
 
 @bot.command(pass_context=True)
 async def reload(ctx, extension_name : str):
     if ctx.message.author.id not in ownerids:
-        await bot.say(":x: No permission.")
+        await bot.say(":x: You do not have permission to execute this command.")
     else:
         try:
-            bot.unload_extension(extension_name)
-            bot.load_extension(extension_name)
+            bot.unload_extension("cog_"+extension_name)
+            bot.load_extension("cog_"+extension_name)
         except (AttributeError, ImportError) as e:
             await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
             return
-        await bot.say("Cog `{}` reloaded.".format(extension_name))
+        await bot.say(":white_check_mark: Cog **`{}`** reloaded.".format(extension_name))
 
 if __name__ == "__main__":
     for extension in startup_extensions:
