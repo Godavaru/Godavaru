@@ -261,7 +261,7 @@ class Action():
     @commands.command(pass_context=True)
     async def sleep(self, ctx):
         random.seed(time.time())
-        var = int(random.random() * 10)
+        var = int(random.random() * 12)
         if len(ctx.message.mentions) == 0 or ctx.message.content == self.bot.command_prefix+"sleep":
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
@@ -270,7 +270,30 @@ class Action():
             else:
                 msg = "<:night:319631860512587776> **"+ctx.message.author.display_name+"** is telling **"+ctx.message.mentions[0].display_name+"** to go to sleep!"
 
-            # soon tm
+            if (var == 0):
+                await self.bot.send_file(ctx.message.channel, './images/sleepa.gif', content=msg)
+            elif (var == 1):
+                await self.bot.send_file(ctx.message.channel, './images/sleepb.gif', content=msg)
+            elif (var == 2):
+                await self.bot.send_file(ctx.message.channel, './images/sleepc.gif', content=msg)
+            elif (var == 3):
+                await self.bot.send_file(ctx.message.channel, './images/sleepd.gif', content=msg)
+            elif (var == 4):
+                await self.bot.send_file(ctx.message.channel, './images/sleepe.gif', content=msg)
+            elif (var == 5):
+                await self.bot.send_file(ctx.message.channel, './images/sleepf.gif', content=msg)
+            elif (var == 6):
+                await self.bot.send_file(ctx.message.channel, './images/sleepg.gif', content=msg)
+            elif (var == 7):
+                await self.bot.send_file(ctx.message.channel, './images/sleeph.gif', content=msg)
+            elif (var == 8):
+                await self.bot.send_file(ctx.message.channel, './images/sleepi.gif', content=msg)
+            elif (var == 9):
+                await self.bot.send_file(ctx.message.channel, './images/sleepj.gif', content=msg)
+            elif (var == 10):
+                await self.bot.send_file(ctx.message.channel, './images/sleepk.gif', content=msg)
+            elif (var == 11):
+                await self.bot.send_file(ctx.message.channel, './images/sleepl.gif', content=msg)
         else:
             await bot.say("An unexpected error occurred. Please report this to Desiree#3658 on the support guild, found in g!about.") # just in case. You never know shrug 
 
