@@ -20,6 +20,9 @@ ownerids = [
     '170991374445969408',
     '188663897279037440'
 ]
+blacklist = [
+    "",
+]
 
 # ready
 @bot.event
@@ -57,7 +60,8 @@ async def on_message(message):
     dm = message.content
     dm = dm.replace("`", " ")
     if message.author.bot == False:
-        await bot.process_commands(message)
+	if message.author.id not in blacklist:
+            await bot.process_commands(message)
     check = 'true'
     try:
 	    if (message.server.name != ''):
