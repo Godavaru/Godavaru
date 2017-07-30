@@ -335,40 +335,40 @@ class Action():
         elif (var == 10):
             await self.bot.send_file(ctx.message.channel, './images/cryk.gif', content=msg)
 
-    @commands.command(pass_context = True)
-    async def kill(self, ctx):
-        random.seed(time.time())
-        var = int(random.random() * 9)
+    #@commands.command(pass_context = True)
+    #async def kill(self, ctx):
+        #random.seed(time.time())
+        #var = int(random.random() * 9) 
 
-        if len(ctx.message.mentions) == 0:
-            await self.bot.say("I don't know who I'm going to kill!")
-        elif ctx.message.mentions[0].id == ctx.message.author.id and ctx.message.mentions[0].id == '267207628965281792':
-            await self.bot.say("Are you sure, master..?")
-        elif ctx.message.mentions[0].id == '311810096336470017':
-            await self.bot.say("DON'T YOU DARE TRY TO KILL ME! I'LL KILL YOU FIRST! :knife:")
-        elif ctx.message.mentions[0].id == ctx.message.author.id:
-            await self.bot.say("Why would you want me to kill you?")
-        elif (var == 0):
-            await self.bot.say(ctx.message.mentions[0].mention + ' "accidentally" fell in a ditch. RIP >:)')
-        elif (var == 1):
-            await self.bot.say("I just tackled " + ctx.message.mentions[0].mention + " and killed them accidentally... oops")
-        elif (var == 2):
-            await self.bot.say(ctx.message.mentions[0].mention + " died. Why are you looking at me? I don't know how... :fingers_crossed:")
-        elif (var == 3):
-            await self.bot.say("I poisoned the food of " + ctx.message.mentions[0].mention + ". This should be fun to watch!")
-        elif (var == 4):
-            await self.bot.say("Whoops, I just killed " + ctx.message.mentions[0].mention + " by taking their own hair and making a rope to tie around their neck... Please don't tell the cops...")
-        elif (var == 5):
-            await self.bot.say(":knife: stabby stab to you," + ctx.message.mentions[0].mention + "! :eyes:")
-        elif (var == 6):
-            await self.bot.say("I decided to be nice for once, so I ordered " + ctx.message.mentions[0].mention + ' some pizza. Little did I know that I was gonna bump into the pizza guy in town. I was carrying poison and I "accidentally" poisoned and killed ' + ctx.message.mentions[0].mention + "...")
-        elif (var == 7):
-            await self.bot.say("RIP to " + ctx.message.mentions[0].mention + ". I took over their account and made them tag b1nzy on Google Emoji >:)")
-        elif (var == 8):
-            await self.bot.say("LOL! I just killed " + ctx.message.mentions[0].mention + " by pressing this button! I could try it on you too, " + ctx.message.author.mention + " :eyes:")
-        elif (var == 9):
-            embed = discord.Embed(description=ctx.message.mentions[0].display_name + ', you deded. <3',color='member').set_image(url='https://cdn.discordapp.com/attachments/312256765104226304/316225947277983746/kms.gif')
-            await bot.send_message(ctx.message.channel, conten=None, embed=embed)
+        #if len(ctx.message.mentions) == 0:
+            #await self.bot.say("I don't know who I'm going to kill!")
+        #elif ctx.message.mentions[0].id == ctx.message.author.id and ctx.message.mentions[0].id == '267207628965281792':
+            #await self.bot.say("Are you sure, master..?")
+        #elif ctx.message.mentions[0].id == '311810096336470017':
+            #await self.bot.say("DON'T YOU DARE TRY TO KILL ME! I'LL KILL YOU FIRST! :knife:")
+        #elif ctx.message.mentions[0].id == ctx.message.author.id:
+            #await self.bot.say("Why would you want me to kill you?")
+        #elif (var == 0):
+            #await self.bot.say(ctx.message.mentions[0].mention + ' "accidentally" fell in a ditch. RIP >:)')
+        #elif (var == 1):
+            #await self.bot.say("I just tackled " + ctx.message.mentions[0].mention + " and killed them accidentally... oops")
+        #elif (var == 2):
+            #await self.bot.say(ctx.message.mentions[0].mention + " died. Why are you looking at me? I don't know how... :fingers_crossed:")
+        #elif (var == 3):
+            #await self.bot.say("I poisoned the food of " + ctx.message.mentions[0].mention + ". This should be fun to watch!")
+        #elif (var == 4):
+            #await self.bot.say("Whoops, I just killed " + ctx.message.mentions[0].mention + " by taking their own hair and making a rope to tie around their neck... Please don't tell the cops...")
+        #elif (var == 5):
+            #await self.bot.say(":knife: stabby stab to you," + ctx.message.mentions[0].mention + "! :eyes:")
+        #elif (var == 6):
+            #await self.bot.say("I decided to be nice for once, so I ordered " + ctx.message.mentions[0].mention + ' some pizza. Little did I know that I was gonna bump into the pizza guy in town. I was carrying poison and I "accidentally" poisoned and killed ' + ctx.message.mentions[0].mention + "...")
+        #elif (var == 7):
+            #await self.bot.say("RIP to " + ctx.message.mentions[0].mention + ". I took over their account and made them tag b1nzy on Google Emoji >:)")
+        #elif (var == 8):
+            #await self.bot.say("LOL! I just killed " + ctx.message.mentions[0].mention + " by pressing this button! I could try it on you too, " + ctx.message.author.mention + " :eyes:")
+        #elif (var == 9):
+            #embed = discord.Embed(description=ctx.message.mentions[0].display_name + ', you deded. <3',color='member').set_image(url='https://cdn.discordapp.com/attachments/312256765104226304/316225947277983746/kms.gif')
+            #await bot.send_message(ctx.message.channel, conten=None, embed=embed)
 
     @commands.command(pass_context = True)
     async def shrug(self, ctx):
