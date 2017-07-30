@@ -9,6 +9,7 @@ import datetime
 class Info():
     def __init__(self, bot):
         self.bot = bot
+        
     @commands.command(pass_context = True)
     async def about(self, ctx):
         server_count = 0
