@@ -295,8 +295,8 @@ class Action():
             elif (var == 11):
                 await self.bot.send_file(ctx.message.channel, './images/sleepl.gif', content=msg)
         else:
-            await bot.say("An unexpected error occurred. Please report this to Desiree#3658 on the support guild, found in g!about.") # just in case. You never know shrug 
-
+            await bot.say("An unexpected error occurred. Please report this to Desiree#3658 on the support guild, found in g!about.") # just in case. You never know shrug
+            
     @commands.command(pass_context = True)
     async def cry(self, ctx):
         random.seed(time.time())
