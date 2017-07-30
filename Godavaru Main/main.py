@@ -9,7 +9,7 @@ import configparser
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-bot = commands.Bot(command_prefix="g!")
+bot = commands.Bot(command_prefix=['Main']['prefix'])
 bot.remove_command("help")
 startup_extensions = ["cog_info", "cog_fun", "cog_action", "cog_owner", "cog_mod"]
 console = discord.Object('316688736089800715')
@@ -19,6 +19,9 @@ ownerids = [
     '99965250052300800',
     '170991374445969408',
     '188663897279037440'
+]
+blacklist = [
+    "",
 ]
 
 # ready
@@ -34,8 +37,9 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print("====================")
+    commands = len(bot.commands)
     await bot.change_presence(game=discord.Game(name='g!help | with '+str(server_count)+' servers and '+str(member_count)+' users!'))
-    await bot.send_message(console, 'Godavaru now ready! Preparing for use in `' + str(server_count) + '` servers for `' + str(member_count) + '` members!')
+    await bot.send_message(console, 'Godavaru now ready! Preparing for use in `' + str(server_count) + '` servers for `' + str(member_count) + '` members! Loaded up `'+str(commands)+"` commands.")
     if not hasattr(bot, 'uptime'):
         bot.uptime = datetime.datetime.utcnow()
     
@@ -57,7 +61,8 @@ async def on_message(message):
     dm = message.content
     dm = dm.replace("`", " ")
     if message.author.bot == False:
-        await bot.process_commands(message)
+	if message.author.id not in blacklist:
+            await bot.process_commands(message)
     check = 'true'
     try:
 	    if (message.server.name != ''):
@@ -113,7 +118,7 @@ async def help(ctx):
     elif ctx.message.content[7:] == "cry":
         embed = discord.Embed(title="Cry Command",description="Do you need to cry? :<",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"cry [@user]").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "kill":
-        embed = discord.Embed(title="Kill Command",description="When in doubt, kill your enemies... i mean wut",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"kill <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+        embed = discord.Embed(title="Kill Command",description="When in doubt, kill your enemies... i mean wut\n\n**NOTE:** Command currently disabled. Sorry for any inconvenience.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"kill <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "shrug":
         embed = discord.Embed(title="Shrug Command",description="¯\_(ツ)_/¯",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"shrug").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "about":
@@ -135,7 +140,8 @@ async def help(ctx):
     elif ctx.message.content[7:] == "sleep":
         embed = discord.Embed(title="Sleep Command",description="The literal opposite of wakeup. This is also based off of my best friend, Kitty#4867, who would always tell me to go to bed. Love ya, Kat! ~Desii",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"sleep <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "":
-        embed = discord.Embed(title="The bot prefix is: "+bot.command_prefix,color=ctx.message.author.color).set_author(name="For more help, do "+bot.command_prefix+"help <command>",icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name="Action",value="`cuddle`, `cry`, `hug`, `kiss`, `pat`, `poke`, `slap`, `sleep`, `shrug`, `wakeup`",inline=False).add_field(name="Fun",value="`f`, `flip`, `lewd`, `lood`, `love`, `magicball`, `nonowa`, `say`, `year`",inline=False).add_field(name="Info",value="`about`, `avatar`, `info`, `invite`, `ping`, `request`, `uptime`",inline=False).add_field(name="Mod",value="soon:tm:",inline=False).set_footer(text="Requested by "+ctx.message.author.display_name)
+	commands = len(bot.commands)
+        embed = discord.Embed(title="The bot prefix is: "+bot.command_prefix,color=ctx.message.author.color).set_author(name="For more help, do "+bot.command_prefix+"help <command>",icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name="Action",value="`cuddle`, `cry`, `hug`, `kiss`, `pat`, `poke`, `slap`, `sleep`, `shrug`, `wakeup`",inline=False).add_field(name="Fun",value="`f`, `flip`, `lewd`, `lood`, `love`, `magicball`, `nonowa`, `say`, `year`",inline=False).add_field(name="Info",value="`about`, `avatar`, `info`, `invite`, `ping`, `request`, `uptime`",inline=False).add_field(name="Mod",value="soon:tm:",inline=False).set_footer(text="Requested by "+ctx.message.author.display_name+" | Total commands: "+str(commands))
         await bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` issued my `help` command in channel `' + ctx.message.channel.name + '` in  server `' + ctx.message.server.name + '`')
     else:
         await bot.send_message(ctx.message.channel, ":x: That command doesn't exist!")    

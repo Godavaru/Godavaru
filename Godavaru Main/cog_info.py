@@ -9,6 +9,7 @@ import datetime
 class Info():
     def __init__(self, bot):
         self.bot = bot
+        
     @commands.command(pass_context = True)
     async def about(self, ctx):
         server_count = 0
@@ -17,17 +18,8 @@ class Info():
             server_count += 1
             for member in server.members:
                 member_count += 1
-        if ctx.message.content[8:] == "credits":
-            embed = discord.Embed(title='Credits!', description='Here are some very honorable mentions for the creation, support, and overall community of the bot!',color=0x9B59B6).add_field(name='First Donator',value='MrLar#8117').add_field(name='Developers',value='Desiree#3658, AttributeError#2513, Yuvira#7842, and Jonas B.#9089').set_footer(text='Hope you enjoy the bot!').set_thumbnail(url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png')
-            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-        elif ctx.message.content[8:] == "patreon":
-            avatar1 = ctx.message.author.avatar_url
-            avatar1 = avatar1.replace("?size=1024", " ")
-            embed = discord.Embed(description='Here are all of our Patreon supporters! Thank you!\n\n`MrLar#8117`', color=0x9B59B6).set_author(name='Patrons!', icon_url=avatar1)
-            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-        else:
-            embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.7.0', inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Do g!about credits for credits! | Do g!about patreon for our patrons!").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
-            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        embed = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='0.7.0', inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
+        await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
     @commands.command(pass_context = True)
     async def invite(self, ctx):
@@ -122,10 +114,6 @@ class Info():
         else:
             embed = discord.Embed(title="Your avatar!",description="Click [here]("+mavi+")!",color=ctx.message.author.color).set_image(url=mavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-
-    @commands.command()
-    async def uptime(self):
-        await self.bot.say('**Bot Uptime**\nI was  started up `{}` ago.'.format(self.get_bot_uptime()))
 
 def setup(bot):
     bot.add_cog(Info(bot))

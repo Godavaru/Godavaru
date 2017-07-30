@@ -13,7 +13,7 @@ class Owner():
         self.bot = bot
 
     @commands.command(pass_context = True)
-    async def owner(self, ctx):
+    async def owner(self, ctx): # note for later, this will all be merged into one command.
         member = ctx.message.author
 
         if member.id not in ownerids:
