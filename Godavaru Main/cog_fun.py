@@ -159,14 +159,14 @@ class Fun():
     @commands.command(pass_context = True)
     async def lenny(self, ctx):
         args = ctx.message.content
-        args = args.replace(bot.command_prefix+"lenny", "")
+        args = args.replace(self.bot.command_prefix+"lenny", "")
         await self.bot.say (str(args)+"( ͡° ͜ʖ ͡°)")
         await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context = True)
     async def nonowa(self, ctx):
         args = ctx.message.content
-        args = args.replace(bot.command_prefix+"nonowa", "")
+        args = args.replace(self.bot.command_prefix+"nonowa", "")
         await self.bot.say(str(args)+"のワの")
         await self.bot.delete_message(ctx.message)
 			

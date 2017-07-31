@@ -118,7 +118,7 @@ async def help(ctx):
     elif ctx.message.content[7:] == "cry":
         embed = discord.Embed(title="Cry Command",description="Do you need to cry? :<",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"cry [@user]").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "kill":
-        embed = discord.Embed(title="Kill Command",description="When in doubt, kill your enemies... i mean wut\n\n**NOTE:** Command currently disabled. Sorry for any inconvenience.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"kill <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+        embed = discord.Embed(title="Kill Command",description="When in doubt, kill your enemies... i mean wut\n\n**NOTE:** Has a slight chance of failing and backfiring on you. Kill with caution ;)",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"kill <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "shrug":
         embed = discord.Embed(title="Shrug Command",description="¯\_(ツ)_/¯",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"shrug").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif ctx.message.content[7:] == "about":
