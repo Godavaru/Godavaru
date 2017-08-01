@@ -118,8 +118,10 @@ class Fun():
             msg = "Literal perfection!!"
     
         if msg1 == "":
-            await self.bot.say(":x: You need to specify who you want to love!")
+            content=":x: You need to specify who you want to love!"
+            embed=None
         elif len(ctx.message.mentions) > 0:
+            content=None
             if ctx.message.mentions[0].id == ctx.message.author.id:
                 embed = discord.Embed(title=":two_hearts: Love meter :two_hearts:",description="<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`\n<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`",color=ctx.message.author.color).add_field(name="Result",value="**100%**\n`You are very important and should love yourself!`").set_footer(text="Requested by " + ctx.message.author.display_name).set_thumbnail(url="http://i.imgur.com/ND0m992.png")
             elif ctx.message.mentions[0].id == "311810096336470017" and ctx.message.author.id == "267207628965281792":
@@ -131,8 +133,9 @@ class Fun():
             else:
                 embed = discord.Embed(title=":two_hearts: Love meter :two_hearts:",description="<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`\n<:in_love_heart:335217899885297664> `" + ctx.message.mentions[0].display_name + "`",color=ctx.message.author.color).add_field(name="Result",value="**" + str(var) + "%**\n`" + str(msg) + "`").set_footer(text="Requested by " + ctx.message.author.display_name).set_thumbnail(url="http://i.imgur.com/ND0m992.png")
         else:
+            content=None
             embed = discord.Embed(title=":two_hearts: Love meter :two_hearts:",description="<:in_love_heart:335217899885297664> `" + ctx.message.author.display_name + "`\n<:in_love_heart:335217899885297664> `" + msg1 + "`",color=ctx.message.author.color).add_field(name="Result",value="**" + str(var) + "%**\n`" + str(msg) + "`").set_footer(text="Requested by " + ctx.message.author.display_name).set_thumbnail(url="http://i.imgur.com/ND0m992.png")
-        await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+        await self.bot.send_message(ctx.message.channel, content=content, embed=embed)
 
     @commands.command(pass_context=True)
     async def flip(self, ctx, user : discord.Member=None):

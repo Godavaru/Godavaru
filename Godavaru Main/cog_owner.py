@@ -62,6 +62,7 @@ class Owner():
                 else:
                     await self.bot.send_message(todoChannel, "-"+str(targs))
                     await self.bot.say(':white_check_mark: Successfully added your message to the to-do list!')
+                    # Va, je ne te hais point. 
             elif args.startswith(" nick"):
                 nargs = ctx.message.content
                 nargs = nargs.replace(self.bot.command_prefix+"owner nick", "")
