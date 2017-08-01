@@ -20,3 +20,6 @@ If you'd like to contact me about working together on the bot or some other inqu
 
 # Thanks ya!
 Thank you for using Godavaru bot, it really means a lot to me! I know it's just a starter project, but with the fact that we just hit 50 guilds, I definitely won't stop developing it. Thanks again!
+
+# License
+This repository is protected under the MIT license. You can read it [here](https://github.com/Desiiii/Godavaru/blob/master/LICENSE.md).
