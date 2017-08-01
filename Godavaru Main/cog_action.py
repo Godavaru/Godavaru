@@ -191,7 +191,7 @@ class Action():
         args = ctx.message.content
         args = args.replace(self.bot.command_prefix+"kill", "")
         random.seed(time.time())
-        var = int(random.random() * 10)
+        var = int(random.random() * 20)
         
         if len(ctx.message.mentions) == 0 or args == "":
             await self.bot.say(":x: You must mention a user!")
@@ -201,8 +201,10 @@ class Action():
             elif ctx.message.mentions[0].id == ctx.message.server.me.id:
                 await self.bot.say("You tried to kill me, but you realised I'm a bot. So I killed you instead.")
             else:
-                killmsg = [ctx.message.mentions[0].mention+" was stabbed by "+ctx.message.author.mention, "You tried to kill "+ctx.message.mentions[0].mention+", but you got caught by the police :<", ctx.message.mentions[0].mention+" disintegrated.", "While trying to kill "+ctx.message.mentions[0].mention+", "+ctx.message.author.mention+" accidentally killed themselves.", ctx.message.mentions[0].mention+" drowned.", "Hahahaha nice try. You just tried to kill a cop. You're in jail now.", "While trying to kill "+ctx.message.mentions[0].mention+", you accidentally pinged b1nzy. Ouch.", "You pushed "+ctx.message.mentions[0].mention+" into a river with crocodiles.", "You made "+ctx.message.mentions[0].mention+" listen to KidzBop, so they bled out of their ears and died.", "Meh. I don't feel like helping a murder today. Try again."]
+                killmsg = ["**"+ctx.message.mentions[0].display_name+"** was stabbed by **"+ctx.message.author.display_name+"**", "You tried to kill **"+ctx.message.mentions[0].display_name+"**, but you got caught by the police :<", "**"+ctx.message.mentions[0].display_name+"** disintegrated.", "While trying to kill **"+ctx.message.mentions[0].display_name+"**, **"+ctx.message.author.display_name+"** accidentally killed themselves.", "**"+ctx.message.mentions[0].display_name+"** drowned.", "Hahahaha nice try. You just tried to kill a cop. You're in jail now.", "While trying to kill **"+ctx.message.mentions[0].display_name+"**, you accidentally pinged b1nzy. Ouch.", "You pushed **"+ctx.message.mentions[0].display_name+"** into a river with crocodiles.", "You made **"+ctx.message.mentions[0].display_name+"** listen to KidzBop, so they bled out of their ears and died.", "Meh. I don't feel like helping a murder today. Try again.", "**"+ctx.message.mentions[0].display_name+"** was thrown into a pit of snakes.", "**"+ctx.message.author.display_name+"** threw **"+ctx.message.mentions[0].display_name+"** into a pit of snakes, but fell in as well.", "**"+ctx.message.mentions[0].display_name+"** was given the death sentence after **"+ctx.message.author.display_name+"** framed them for murder.", "**"+ctx.message.mentions[0].display_name+"** was forced to use Kotlin by **"+ctx.message.author.display_name+"**, so they died.", "**"+ctx.message.author.display_name+"** tried to kill someone, but found their way into Mantaro Hub and gave into the memes.", "**"+ctx.message.mentions[0].display_name+"** was killed by a sentient robot... Why are you looking at me? I didn't do it...", "**"+ctx.message.author.display_name+"** tried to kill someone and got away from the police. However, the FBI jailed them.", "You don't have a weapon. Oops. Was I supposed to bring it? I think I was...", "When **"+ctx.message.author.display_name+"** tried to kill **"+ctx.message.mentions[0].display_name+"**, they were disappointed to find they were already dead.", "**"+ctx.message.mentions[0].display_name+"** took an arrow to the knee! Well, actually it was a gunshot. And it was actually to the heart."]
                 await self.bot.send_message(ctx.message.channel, killmsg[var])
+        else:
+            await bot.say("An unexpected error occurred. Please report this to Desiree#3658 on the support guild, link found in g!about.") # just in case. You never know shrug
 
     @commands.command(pass_context = True)
     async def shrug(self, ctx):
