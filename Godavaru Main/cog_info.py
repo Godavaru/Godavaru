@@ -29,7 +29,7 @@ class Info():
     @commands.command(pass_context = True)
     async def request(self, ctx, server):
         request_channel = discord.Object('316674935898636289')
-        request = ctx.message.content[10:]
+        request = ctx.message.content[10:] # this command is shit, i need to revamp later (or remove)
         request = request.replace("`", " ")
         if ctx.message.content[12:] != "":
             await self.bot.send_message(request_channel, '__Request from **' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '**__: \n```css\n' + request + '```')
@@ -48,19 +48,8 @@ class Info():
         after = time.monotonic()
         ping2 = (after - before2) * 1000
         var = int(random.random() * 5)
-        if (var == 0):
-            v = 'a'
-        elif (var == 1):
-            v = 'e'
-        elif (var == 2):
-            v = 'i'
-        elif (var == 3):
-            v = 'o'
-        elif (var == 4):
-            v = 'u'
-        elif (var == 5):
-            v = 'y'
-        await self.bot.edit_message(ping_msg, new_content=":mega: P"+str(v)+"ng! The message took **{:.2f}ms**!".format(ping.total_seconds())+" `Websocket: {0:.0f}ms` :thinking:".format(ping2))
+        v = ["a", "e", "i", "o", "u"]
+        await self.bot.edit_message(ping_msg, new_content=":mega: P"+v[var]+"ng! The message took **{:.2f}ms**!".format(ping.total_seconds())+" `Websocket: {0:.0f}ms` :thinking:".format(ping2))
         await self.bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` checked my ping in the channel `' + ctx.message.channel.name + '` in the server `' + ctx.message.server.name + '`. The result was {:.2f}ms'.format(ping.total_seconds())+" with a websocket ping of {0:.0f}ms".format(ping2))
 
     def get_bot_uptime(self, *, brief=False):
@@ -102,18 +91,33 @@ class Info():
     @commands.command(pass_context=True)
     async def avatar(self, ctx):
         mavi = ctx.message.author.avatar_url
-        mavi = mavi.replace("?size=1024", "")
-        if ctx.message.content == "":
-            embed = discord.Embed(title="Your avatar!",description="Click [here]("+mavi+")!",color=ctx.message.author.color).set_image(url=mavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
+        mavi = mavi.replace("gif?size=1024", "gif")
+        mavi = mavi.replace("webp?size=1024", "png?size=512")
+        mavi = mavi.replace("?size=1024", "?size=512")
+        if ctx.message.content == self.bot.command_prefix+"avatar" or len(ctx.message.mentions) == 0:
+            if mavi == "":
+                embed = discord.Embed(title="Your avatar!",description="Click [here]("+ctx.message.author.default_avatar_url+")!",color=ctx.message.author.color).set_image(url=ctx.message.author.default_avatar_url).set_footer(icon_url=ctx.message.author.default_avatar_url, text="Requested by "+ctx.message.author.display_name)
+            else:
+                embed = discord.Embed(title="Your avatar!",description="Click [here]("+mavi+")!",color=ctx.message.author.color).set_image(url=mavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-        if len(ctx.message.mentions) > 0:
+        elif len(ctx.message.mentions) > 0:
             yavi = ctx.message.mentions[0].avatar_url
-            yavi = yavi.replace("?size=1024", "")
-            embed = discord.Embed(title=ctx.message.mentions[0].display_name+"'s avatar!",description="Click [here]("+yavi+")!",color=ctx.message.author.color).set_image(url=yavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
+            yavi = yavi.replace("gif?size=1024", "gif")
+            yavi = yavi.replace("webp?size=1024", "png?size=512")
+            yavi = yavi.replace("?size=1024", "?size=512")
+            if yavi == "":
+                if mavi == "":
+                    embed = discord.Embed(title=ctx.message.mentions[0].display_name+"'s avatar!",description="Click [here]("+ctx.message.mentions[0].default_avatar_url+")!",color=ctx.message.author.color).set_image(url=ctx.message.mentions[0].default_avatar_url).set_footer(icon_url=ctx.message.author.default_avatar_url, text="Requested by "+ctx.message.author.display_name)
+                else:
+                    embed = discord.Embed(title=ctx.message.mentions[0].display_name+"'s avatar!",description="Click [here]("+ctx.message.mentions[0].default_avatar_url+")!",color=ctx.message.author.color).set_image(url=ctx.message.mentions[0].default_avatar_url).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
+            else:
+                if mavi == "":
+                    embed = discord.Embed(title=ctx.message.mentions[0].display_name+"'s avatar!",description="Click [here]("+yavi+")!",color=ctx.message.author.color).set_image(url=yavi).set_footer(icon_url=ctx.message.author.default_avatar_url, text="Requested by "+ctx.message.author.display_name)
+                else:
+                    embed = discord.Embed(title=ctx.message.mentions[0].display_name+"'s avatar!",description="Click [here]("+yavi+")!",color=ctx.message.author.color).set_image(url=yavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
         else:
-            embed = discord.Embed(title="Your avatar!",description="Click [here]("+mavi+")!",color=ctx.message.author.color).set_image(url=mavi).set_footer(icon_url=mavi, text="Requested by "+ctx.message.author.display_name)
-            await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
+            await self.bot.send_message(ctx.message.channel, "There was an unexpected error.")
 
 def setup(bot):
     bot.add_cog(Info(bot))

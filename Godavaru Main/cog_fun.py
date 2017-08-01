@@ -27,11 +27,17 @@ class Fun():
         elif '--s' in saythis:
             silentsay = ctx.message.content[6:]
             silentsay = silentsay.replace("--s", "")
+            silentsay = silentsay.replace("@everyone", "@\u200deveryone")
+            silentsay = silentsay.replace("@here", "@\u200dhere")
             await self.bot.say(silentsay)
             await self.bot.delete_message(ctx.message)
             await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
         else:
-            await self.bot.say(ctx.message.content[6:])
+            nsay = ctx.message.content
+            nsay = nsay.replace(self.bot.command_prefix+"say ", "")
+            nsay = nsay.replace("@everyone", "@\u200deveryone")
+            nsay = nsay.replace("@here", "@\u200dhere")
+            await self.bot.say(str(nsay))
             await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
 
     @commands.command(pass_context = True)

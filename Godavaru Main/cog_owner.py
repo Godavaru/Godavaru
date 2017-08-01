@@ -24,7 +24,7 @@ class Owner():
             args = ctx.message.content
             args = args.replace(self.bot.command_prefix+"owner", "")
             if args == "":
-                embed = discord.Embed(title="Owner Commands",description="These commands are subcommands of the owner command. Use them with `"+self.bot.command_prefix+"owner <command> <args>`\nshutdown - Shutdown the bot.\ngame - Set the bot's playing status.\nleaveserver - Leave the server in which this command was executed.\ntodo - Add a message to the todo list.", color=ctx.message.author.color).add_field(name="Other Commands",value="These commands are alone, meaning they are not owner subcommands.\nreload - Reload a cog.\nload - Load a cog.\nunload - Unload a cog.").set_footer(text="Commands created in Discord.py")
+                embed = discord.Embed(title="Owner Commands",description="```css\n  ===== [OwnerCmds] =====\nThe following are subcommands, meaning they are used with g!owner <subcommand> <args>\n  ===== ===== ===== =====\n.game        | Set my playing status.\n.nick        | Set my nickname on the current server.\n.name        | Set my username.\n.status      | Set my status.\n.shutdown    | Shutdown the bot.\n.leaveserver | Leave the current server.\n  ===== ===== ===== ===== \nThese are commands that sit on their own and are not owner subcommands.\n  ===== ===== ===== =====\n.load        | Load a cog.\n.reload      | Reload a cog.\n.unload      | Unload a cog.```", color=ctx.message.author.color).set_footer(text="Commands created in Discord.py")
                 await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
             elif args == " shutdown":
                 await self.bot.say("I-I'm hurt! Ah well, I never loved you anyway! :broken_heart: :sob:")
@@ -74,6 +74,35 @@ class Owner():
                 else:
                     await self.bot.change_nickname(ctx.message.server.me, str(nargs))
                     await self.bot.say(":white_check_mark: My nickname was changed to `"+str(nargs)+"` successfully!")
+            elif args.startswith(" status"):
+                sargs = ctx.message.content
+                sargs = sargs.replace(self.bot.command_prefix+"owner status", "")
+                if sargs == "":
+                    await self.bot.say(":x: You must specify a status to set to!")
+                elif sargs == " online":
+                    await self.bot.change_presence(game=ctx.message.server.me.game, status=discord.Status.online)
+                    await self.bot.say("Done! Set my status to `online`!")
+                elif sargs == " idle":
+                    await self.bot.change_presence(game=ctx.message.server.me.game, status=discord.Status.idle)
+                    await self.bot.say("Done! Set my status to `idle`!")
+                elif sargs == " dnd":
+                    await self.bot.change_presence(game=ctx.message.server.me.game, status=discord.Status.dnd)
+                    await self.bot.say("Done! Set my status to `dnd`!")
+                elif sargs == " invisible":
+                    await self.bot.change_presence(game=ctx.message.server.me.game, status=discord.Status.invisible)
+                    await self.bot.say("Done! Set my status to `invisible`!")
+                else:
+                    await self.bot.say(":x: Not a valid status. Valid statuses are: `online`, `idle`, `dnd`, `invisible`")
+                    # Les chefs-d'oeuvre ne sont jamais que des tentatives heureuses
+            elif args.startswith(" name"):
+                unargs = ctx.message.content
+                unargs = sargs.replace(self.bot.command_prefix+"owner name", "")
+                if unargs == "":
+                    await self.bot.say(x+"You must specify a name")
+                else:
+                    await self.bot.edit_profile(username=str(unargs))
+                    await self.bot.say("Done! Changed my name successfully to `"+str(unargs)+"`")
+                    await self.bot.send_message("`"+str(ctx.message.author)+"` changed my username to `"+str(unargs)"`")
             else:
                 await self.bot.say(":x: Not a valid owner subcommand.")
         

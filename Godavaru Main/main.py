@@ -141,11 +141,19 @@ async def help(ctx):
         embed = discord.Embed(title="Help Command",description="Uhm... Is this what you were looking for?",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"help [command]").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif args == " sleep":
         embed = discord.Embed(title="Sleep Command",description="The literal opposite of wakeup. This is also based off of my best friend, Kitty#4867, who would always tell me to go to bed. Love ya, Kat! ~Desii",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"sleep <@user>").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif args == " kick":
+        embed = discord.Embed(title="Kick Command",description="Kick someone from the current server.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"kick <@user> [reason]").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif args == " ban":
+        embed = discord.Embed(title="Ban Command",description="Ban someone from the current server.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"ban <@user> [reason]").set_footer(text="Requested by "+ctx.message.author.display_name)
+    elif args == " softban":
+        embed = discord.Embed(title="Softban Command",description="Effectively kick someone while pruning all previous messages.",color=ctx.message.author.color).add_field(name="Usage",value=bot.command_prefix+"softban <@user> [reason]").set_footer(text="Requested by "+ctx.message.author.display_name)
     elif args == "":
         commands = len(bot.commands)
-        embed = discord.Embed(title="The bot prefix is: "+bot.command_prefix,color=ctx.message.author.color).set_author(name="For more help, do "+bot.command_prefix+"help <command>",icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name="Action",value="`cuddle`, `cry`, `hug`, `kiss`, `pat`, `poke`, `slap`, `sleep`, `shrug`, `wakeup`",inline=False).add_field(name="Fun",value="`f`, `flip`, `lewd`, `lood`, `love`, `magicball`, `nonowa`, `say`, `year`",inline=False).add_field(name="Info",value="`about`, `avatar`, `info`, `invite`, `ping`, `request`, `uptime`",inline=False).add_field(name="Mod",value="soon:tm:",inline=False).set_footer(text="Requested by "+ctx.message.author.display_name+" | Total commands: "+str(commands))
+        embed = discord.Embed(title="The bot prefix is: "+bot.command_prefix,color=ctx.message.author.color).set_author(name="For more help, do "+bot.command_prefix+"help <command>",icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name="Action",value="`cuddle`, `cry`, `hug`, `kiss`, `pat`, `poke`, `slap`, `sleep`, `shrug`, `wakeup`",inline=False).add_field(name="Fun",value="`f`, `flip`, `lewd`, `lood`, `love`, `magicball`, `nonowa`, `say`, `year`",inline=False).add_field(name="Info",value="`about`, `avatar`, `info`, `invite`, `ping`, `request`, `uptime`",inline=False).set_footer(text="Requested by "+ctx.message.author.display_name+" | Total commands: "+str(commands))
         if ctx.message.author.id in ownerids:
-            embed.add_field(name="Owner",value="`load`, `owner`, `reload`, `unload`")
+            embed.add_field(name="Owner",value="`load`, `owner`, `reload`, `unload`", inline=False) # adds field if you have access to this. prep for mod cmds
+        if ctx.message.author.server_permissions.ban_members == True or ctx.message.author.server_permissions.kick_members == True:
+            embed.add_field(name="Mod",value="`ban`, `kick`, `softban`",inline=False) #mod cmds
         await bot.send_message(console, '`' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` issued my `help` command in channel `' + ctx.message.channel.name + '` in  server `' + ctx.message.server.name + '`')
     else:
         await bot.send_message(ctx.message.channel, ":x: That command doesn't exist!")    
