@@ -19,26 +19,21 @@ class Fun():
 
     @commands.command(pass_context = True)
     async def say(self, ctx):
-        console = discord.Object("316688736089800715")
-        saythis = ctx.message.content[6:]
-        saythis = saythis.replace("`", "")
-        if saythis == "":
-            await self.bot.say('Specify something for me to say!')
-        elif '--s' in saythis:
-            silentsay = ctx.message.content[6:]
-            silentsay = silentsay.replace("--s", "")
-            silentsay = silentsay.replace("@everyone", "@\u200deveryone")
-            silentsay = silentsay.replace("@here", "@\u200dhere")
-            await self.bot.say(silentsay)
-            await self.bot.delete_message(ctx.message)
-            await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
+        args = ctx.message.content
+        args = args.replace(self.bot.command_prefix[0]+"say", "")
+        args = args.replace(self.bot.command_prefix[1]+"say", "")
+        args = args[1:]
+        if args == "":
+            await self.bot.say("I can't send an empty message!")
+        elif args.startswith("--s"):
+            if args == "--s":
+                await self.bot.say("You can't silently send an empty message!")
+            else:
+                args = args[4:]
+                await self.bot.say(str(args))
+                await self.bot.delete_message(ctx.message)
         else:
-            nsay = ctx.message.content
-            nsay = nsay.replace(self.bot.command_prefix+"say ", "")
-            nsay = nsay.replace("@everyone", "@\u200deveryone")
-            nsay = nsay.replace("@here", "@\u200dhere")
-            await self.bot.say(str(nsay))
-            await self.bot.send_message(console, "My `say` command was used by `" + ctx.message.author.name + '#' + ctx.message.author.discriminator + "` in channel `" + ctx.message.channel.name + "` in server `" + ctx.message.server.name + "` with the parameters of: ```css\n" + saythis + "```")
+            await self.bot.say(str(args))
 
     @commands.command(pass_context = True)
     async def year(self, ctx):
@@ -51,53 +46,34 @@ class Fun():
         
     @commands.command(pass_context = True, aliases=["mb", "8ball"])
     async def magicball(self, ctx):
-        random.seed(time.time())
         var = int(random.random() * 20)
 
         if (ctx.message.content == self.bot.command_prefix +"mb" or ctx.message.content == self.bot.command_prefix+"magicball" or ctx.message.content == self.bot.command_prefix+"8ball"):
             await self.bot.say("I can't be a magician unless you ask me a question! <:thonk:316105720548556801>")
-        elif (var == 0):
-            await self.bot.say(":crystal_ball: It is certain.")
-        elif (var == 1):
-            await self.bot.say(":crystal_ball: It is decidedly so.")
-        elif (var == 2):
-            await self.bot.say(":crystal_ball: Without a doubt.")
-        elif (var == 3):
-            await self.bot.say(":crystal_ball: Yes, definitely.")
-        elif (var == 4):
-            await self.bot.say(":crystal_ball: You may rely on it.")
-        elif (var == 5):
-            await self.bot.say(":crystal_ball: As I see it, yes.")
-        elif (var == 6):
-            await self.bot.say(":crystal_ball: Most likely.")
-        elif (var == 7):
-            await self.bot.say(":crystal_ball: Outlook good.")
-        elif (var == 8):
-            await self.bot.say(":crystal_ball: Yes.")
-        elif (var == 9):
-            await self.bot.say(":crystal_ball: Signs point to yes.")
-        elif (var == 10):
-            await self.bot.say(":crystal_ball: Reply hazy, try again.")
-        elif (var == 11):
-            await self.bot.say(":crystal_ball: Ask again later.")
-        elif (var == 12):
-            await self.bot.say(":crystal_ball: Better not tell you now.")
-        elif (var == 13):
-            await self.bot.say(":crystal_ball: Cannot predict now.")
-        elif (var == 14):
-            await self.bot.say(":crystal_ball: Concentrate and ask again.")
-        elif (var == 15):
-            await self.bot.say(":crystal_ball: Don't count on it.")
-        elif (var == 16):
-            await self.bot.say(":crystal_ball: My reply is no.")
-        elif (var == 17):
-            await self.bot.say(":crystal_ball: My sources say no.")
-        elif (var == 18):
-            await self.bot.say(":crystal_ball: Outlook not so good.")
-        elif (var == 19):
-            await self.bot.say(":crystal_ball: Very doubtful")
-        elif (var == 20):
-            await self.bot.say(":crystal_ball: Congratulations, you found an easter egg. I hope you realise this doesn't answer your question...")
+        else:
+            ans = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."]
+            await self.bot.say(":crystal_ball: {}".format(ans[var]))
+
+    @commands.command(pass_context=True)
+    async def slots(self, ctx):
+        try:
+            var1 = int(random.random() * 5)
+            var2 = int(random.random() * 5)
+            var3 = int(random.random() * 5)
+            var4 = int(random.random() * 5)
+            var5 = int(random.random() * 5)
+            var6 = int(random.random() * 5)
+            var7 = int(random.random() * 5)
+            var8 = int(random.random() * 5)
+            var9 = int(random.random() * 5)
+            col = [":moneybag:", ":cherries:", ":carrot:", ":popcorn:", ":seven:"]
+            if var6 == var5 and var5 == var4 and var4 == var6:
+                msg = "**You won!**"
+            else:
+                msg = "**You lost!**"
+            await self.bot.say("{0}\n\n{1}{2}{3}\n{4}{5}{6} :arrow_left:\n{7}{8}{9}".format(msg, col[var1], col[var2], col[var3], col[var4], col[var5], col[var6], col[var7], col[var8], col[var9]))
+        except Exception as e:
+            await self.bot.say(":x: `ERROR` ```py\n{}```".format(type(e).__name__ + ': ' + str(e)))
 
     @commands.command(pass_context = True)
     async def love(self, ctx):
@@ -105,7 +81,8 @@ class Fun():
         var = int(random.random() * 101)
 
         msg1 = ctx.message.content
-        msg1 = msg1.replace(self.bot.command_prefix+"love", "")
+        msg1 = msg1.replace(self.bot.command_prefix[0]+"love", "")
+        msg1 = msg1.replace(self.bot.command_prefix[1]+"love", "")
         if (var < 10):
             msg = "Try again next time."
         elif (var < 30 and var > 9):
@@ -144,8 +121,9 @@ class Fun():
         await self.bot.send_message(ctx.message.channel, content=content, embed=embed)
 
     @commands.command(pass_context=True)
-    async def flip(self, ctx, user : discord.Member=None):
-        if user != None:
+    async def flip(self, ctx):
+        if len(ctx.message.mentions) > 0:
+            user = ctx.message.mentions[0]
             msg = ""
             if user.id == self.bot.user.id:
                 user = ctx.message.author
@@ -164,6 +142,43 @@ class Fun():
             await self.bot.say(msg + "(╯°□°）╯︵ " + name[::-1])
         else:
             await self.bot.say("Who do you want me to flip? :thinking:")
+
+    @commands.command(pass_context=True)
+    async def roll(self, ctx):
+        var = int(random.random() * 6)
+        num = ["1", "2", "3", "4", "5", "6"]
+        await self.bot.send_message(ctx.message.channel, ":game_die: You rolled a **{}**!".format(num[var]))
+
+    @commands.command(pass_context=True)
+    async def rps(self, ctx):
+        args = ctx.message.content
+        args = args.replace(self.bot.command_prefix[0]+"rps", "")
+        args = args.replace(self.bot.command_prefix[1]+"rps", "")
+        var = int(random.random() * 3)
+        if args == " paper" or args == " rock" or args == " scissors":
+            if (var == 0):
+                if args == " paper":
+                    await self.bot.send_message(ctx.message.channel, ":moyai: You win!")
+                elif args == " rock":
+                    await self.bot.send_message(ctx.message.channel, ":moyai: It's a draw!")
+                elif args == " scissors":
+                    await self.bot.send_message(ctx.message.channel, ":moyai: You lose!")
+            elif (var == 1):
+                if args == " paper":
+                    await self.bot.send_message(ctx.message.channel, ":newspaper: It's a draw!")
+                elif args == " rock":
+                    await self.bot.send_message(ctx.message.channel, ":newspaper: You lose!")
+                elif args == " scissors":
+                    await self.bot.send_message(ctx.message.channel, ":newspaper: You win!")
+            elif (var == 2):
+                if args == " paper":
+                    await self.bot.send_message(ctx.message.channel, ":scissors: You lose!")
+                elif args == " rock":
+                    await self.bot.send_message(ctx.message.channel, ":scissors: You win!")
+                elif args == " scissors":
+                    await self.bot.send_message(ctx.message.channel, ":scissors: It's a draw!")
+        else:
+            await self.bot.say(":x: You must specify either rock, paper, or scissors!")
 
     @commands.command(pass_context = True)
     async def lenny(self, ctx):

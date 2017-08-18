@@ -9,12 +9,9 @@ class Action():
 
     @commands.command(pass_context = True)
     async def cuddle(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"cuddle", "")
-        random.seed(time.time())
         var = int(random.random() * 10)
         
-        if args == "" or len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -29,12 +26,9 @@ class Action():
 
     @commands.command(pass_context = True)
     async def hug(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"hug", "")
-        random.seed(time.time())
         var = int(random.random() * 10)
         
-        if args == "" or len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -49,12 +43,9 @@ class Action():
 
     @commands.command(pass_context = True)
     async def slap(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"slap", "")
-        random.seed(time.time())
         var = int(random.random() * 9)
 
-        if args == "" or len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -69,12 +60,9 @@ class Action():
 
     @commands.command(pass_context = True)
     async def kiss(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"kiss", "")
-        random.seed(time.time())
         var = int(random.random() * 11)
 
-        if args == "" or len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -89,12 +77,9 @@ class Action():
             
     @commands.command(pass_context = True)
     async def pat(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"pat", "")
-        random.seed(time.time())
         var = int(random.random() * 11)
             
-        if args == "" or len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -109,12 +94,9 @@ class Action():
 
     @commands.command(pass_context = True)
     async def poke(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"poke", "")
-        random.seed(time.time())
         var = int(random.random() * 10)
 
-        if args == "" or len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -129,12 +111,9 @@ class Action():
 
     @commands.command(pass_context = True)
     async def wakeup(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"wakeup", "")
-        random.seed(time.time())
         var = int(random.random() * 8)
 
-        if args == "" or len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -149,11 +128,9 @@ class Action():
 
     @commands.command(pass_context=True)
     async def sleep(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"sleep", "")
-        random.seed(time.time())
         var = int(random.random() * 12)
-        if len(ctx.message.mentions) == 0 or args == "":
+        
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
@@ -168,11 +145,9 @@ class Action():
 
     @commands.command(pass_context=True)
     async def cry(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"cry", "")
-        random.seed(time.time())
         var = int(random.random() * 11)
-        if args == "" or len(ctx.message.mentions) == 0:
+        
+        if len(ctx.message.mentions) == 0:
             msg = ":cry: **"+ctx.message.author.display_name+"** just started to cry!"
             img = ["./images/crya.gif", "./images/cryb.gif", "./images/cryc.gif", "./images/cryd.gif", "./images/crye.gif", "./images/cryf.gif", "./images/cryg.gif", "./images/cryh.gif", "./images/cryi.gif", "./images/cryj.gif", "./images/cryk.gif"]
             await self.bot.send_file(ctx.message.channel, img[var], content=msg) # desii do not touch this command again
@@ -188,12 +163,9 @@ class Action():
         
     @commands.command(pass_context=True)
     async def kill(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"kill", "")
-        random.seed(time.time())
         var = int(random.random() * 20) # when updated msgs, update num here & add to array
         
-        if len(ctx.message.mentions) == 0 or args == "":
+        if len(ctx.message.mentions) == 0:
             await self.bot.say(":x: You must mention a user!")
         elif len(ctx.message.mentions) > 0:
             if ctx.message.mentions[0].id == ctx.message.author.id:
