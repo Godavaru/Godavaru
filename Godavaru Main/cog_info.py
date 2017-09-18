@@ -6,20 +6,71 @@ import random
 import traceback
 import datetime
 
-botVers = "1.0.0_DEV"
+botVers = "1.2.0"
+
+ownerids = [
+    '267207628965281792',
+    '99965250052300800',
+    '170991374445969408',
+    '188663897279037440'
+]
+helperids = [
+    '267207628965281792',
+    '99965250052300800',
+    '170991374445969408',
+    '188663897279037440',
+    '296049853056679937'
+]
+donatorids = [
+    "132584525296435200"
+]
+creditedids = [
+    '267207628965281792',
+    '99965250052300800',
+    '170991374445969408',
+    '188663897279037440',
+    '132584525296435200',
+    '155867458203287552',
+    '213466096718708737'
+]
 
 class Info():
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command(pass_context=True)
+    async def roleinfo(self, ctx):
+        try:
+            msg = ctx.message.content
+            a = msg.split(' ')
+            role = msg.replace(a[0], "")
+            role = role[1:]
+            if role == "":
+                await self.bot.say(":x: Specify a role to get.")
+                return
+            getId = discord.utils.get(ctx.message.server.roles, name=str(role))
+            em = discord.Embed(title="Role Info", description="Information for role **{}**".format(getId.name),color=getId.color)
+            em.add_field(name="Permissions",value=getId.permissions.value, inline=True)
+            em.add_field(name="Colour",value=getId.colour,inline=True)
+            em.add_field(name="Managed",value=getId.managed, inline=True)
+            em.add_field(name="Hoisted",value=getId.hoist,inline=True)
+            em.add_field(name="Role ID",value=getId.id,inline=True)
+            em.add_field(name="Position",value=getId.position,inline=True)
+            em.add_field(name="Mentionable",value=getId.mentionable,inline=True)
+            em.add_field(name="Creation Date",value=getId.created_at.strftime('%a %d %b %Y at %H:%M:%S'),inline=True)
+            em.set_thumbnail(url="https://i.imgur.com/La0f2NY.png")
+            await self.bot.send_message(ctx.message.channel, embed=em)
+        except (discord.NotFound, AttributeError):
+            await self.bot.say(":x: I couldn't find that role. Make sure it has capitals in the proper place, as this is case-sensitive.")
+            
         
     @commands.command(pass_context = True)
     async def about(self, ctx):
         args = ctx.message.content
-        args = args.split(' ')    
-        server_count = 0
+        args = args.split(' ')
         member_count = 0
+        server_count = len(self.bot.servers)
         for server in self.bot.servers:
-            server_count += 1
             for member in server.members:
                 member_count += 1
         abtEm = discord.Embed(title='About Godavaru!', description = "Hello! My name is Godavaru! I am Desiree#3658's very first bot, very much in production still. I hope you enjoy the bot so far!", color=0x9B59B6).add_field(name='Version Number', value='{}'.format(botVers), inline=False).add_field(name='Servers', value=str(server_count)).add_field(name='Users',value=str(member_count) + '\n\n[Invite me](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/godavaru)', inline=False).set_footer(text="Made with love <3 | Check out g_about credits for special credits.").set_thumbnail(url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
@@ -29,7 +80,8 @@ class Info():
                                       +"**Primary Developer:** Desiree#3658\n"
                                       +"**Developers:** Yuvira#7655, AttributeError#2513, and Jonas B.#9089\n"
                                       +"**Sensei:** Yuvira#7655\n"
-                                      +"**Inspiration:** Kodehawa#3457 (`and MantaroBot, if it wasn't for that project I probably would never have tried to make a bot`)\n\n"
+                                      +"**Inspiration:** Kodehawa#3457 (`and MantaroBot, if it wasn't for that project I probably would never have tried to make a bot`)\n"
+                                      +"**Emotional Support:** MrLar#8117 (`has helped me through personal issues, one reason the bot stayed a project of mine`)\n\n"
                                       +"And thanks to everyone who has used the bot. Much love <3",
                                       color=0x1abc9c)
             else:
@@ -38,21 +90,24 @@ class Info():
             embed = abtEm
         await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
+
     @commands.command(pass_context = True)
     async def invite(self, ctx):
         embed = discord.Embed(description='Here are some useful links for the Godavaru bot. If you have any questions at all, feel free to join the support guild and tag Desiree#3658 with your questions!\nBelow you can also find the links to the support guild itself and the Patreon URL. Thanks for using the bot!', color=0x9B59B6).set_author(name='Useful Links for Godavaru!', icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png').add_field(name='Invite URL', value='http://polr.me/godavaru').add_field(name='Support Guild', value='https://discord.gg/ewvvKHM').add_field(name="Patreon URL", value='https://patreon.com/godavaru').add_field(name="Github", value="https://github.com/Desiiii/Godavaru")
         await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
 
+
     @commands.command(pass_context = True)
-    async def request(self, ctx, server):
+    async def request(self, ctx):
         request_channel = discord.Object('316674935898636289')
         request = ctx.message.content[10:] # this command is shit, i need to revamp later (or remove)
         request = request.replace("`", " ")
         if ctx.message.content[12:] != "":
-            await self.bot.send_message(request_channel, '__Request from **' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '**__: \n```css\n' + request + '```')
+            await self.bot.send_message(request_channel, '__Request from **' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '** in server **'+ctx.message.server.name+'**__: \n```css\n' + request + '```')
             await self.bot.say ("Your request has been received! :slight_smile:")
         else:
             await self.bot.say ("Please specify something to request or make the request longer!")
+
 
     @commands.command(pass_context=True)
     async def ping(self, ctx):
@@ -68,6 +123,7 @@ class Info():
         v = ["a", "e", "i", "o", "u"]
         await self.bot.edit_message(ping_msg, new_content=':warning: [`'+str(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S"))+'`] `' + ctx.message.author.name + '#' + ctx.message.author.discriminator + '` checked my ping in the channel `' + ctx.message.channel.name + '` in the server `' + ctx.message.server.name + '`. The result was {:.2f}ms'.format(ping.total_seconds())+" with a websocket ping of {0:.0f}ms".format(ping2))
         await self.bot.send_message(ctx.message.channel, ":mega: P"+v[var]+"ng! The message took **{:.2f}ms**!".format(ping.total_seconds())+" `Websocket: {0:.0f}ms` :thinking:".format(ping2))
+
 
     def get_bot_uptime(self, *, brief=False):
         now = datetime.datetime.utcnow()
@@ -88,6 +144,7 @@ class Info():
 
         return fmt.format(d=days, h=hours, m=minutes, s=seconds)
     
+
     @commands.command(pass_context = True)
     async def info(self, ctx):
         commands = len(self.bot.commands)
@@ -108,6 +165,7 @@ class Info():
             for member in server.members:
                 member_count += 1
         await self.bot.say("```prolog\n =========[ Bot Information ]========= \n\nCommands           :  {0}\nCogs               :  {1}\nVersion            :  {2}\nDiscordPY Version  :  {3}\nPython Version     :  {4}\nWebsocket Ping     :  {5:.0f}ms\nUptime             :  {6}".format(commands, cogs, botVers, version, pversion, ping, self.get_bot_uptime()) + "\n\n =========[ Guild Information ]========= \n\nGuilds             :  {0}\nUsers              :  {1}\nChannels           :  {2}\nHost               :  heroku```".format(server_count, member_count, channel_count))
+
         
     @commands.command(pass_context=True)
     async def avatar(self, ctx):
@@ -139,6 +197,7 @@ class Info():
             await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
         else:
             await self.bot.send_message(ctx.message.channel, "There was an unexpected error.")
+            
 
     @commands.command(pass_context=True, aliases=["sinfo", "ginfo", "guildinfo"])
     async def serverinfo(self, ctx):
@@ -185,62 +244,85 @@ class Info():
             await self.bot.say("An unexpected error occurred when running the command! `{}`".format(e)
                           +"\nYou shouldn't receive an error like this."
                           +"\nPlease contact Desiree#3658.")
+            
 
     @commands.command(pass_context=True, aliases=["uinfo", "whois"])
     async def userinfo(self, ctx):
         try: # error catcher p1
             if len(ctx.message.mentions) == 0:
-                user = ctx.message.author
-                join = ctx.message.author.joined_at.strftime("%d/%m/%y %H:%M:%S")
-                created = ctx.message.author.created_at.strftime("%d/%m/%y %H:%M:%S")
-                uid = ctx.message.author.id
-                isbot  = ctx.message.author.bot
-                toprole = ctx.message.author.top_role.name                              # all this for no mentions/args
-                game = ctx.message.author.game
-                status = ctx.message.author.status
-                nick = ctx.message.author.display_name
-                vc = ctx.message.author.voice_channel
-                color = ctx.message.author.color
-                avatar = ctx.message.author.avatar_url.replace("?size=1024", "")
-                defAvi = ctx.message.author.default_avatar_url
-                roles = len(ctx.message.author.roles) - 1
-                role_list = ""
-                for x in range(0, len(ctx.message.author.roles)):
-                    if ctx.message.author.roles[x].is_everyone:
-                        continue
-                    if x == len(ctx.message.author.roles) - 1:
-                        role_list += ctx.message.author.roles[x].name
-                    else:
-                        role_list += ctx.message.author.roles[x].name + ", "
+                try:
+                    args = ctx.message.content
+                    args = args.split(' ')
+                    u = int(args[1])
+                    try:
+                        getInfo = await self.bot.get_user_info(u)
+                        user = getInfo
+                    except discord.NotFound:
+                        user = ctx.message.author
+                except IndexError:
+                    user = ctx.message.author
+                except ValueError:
+                    user = ctx.message.author
             else:
                 user = ctx.message.mentions[0]
-                join = ctx.message.mentions[0].joined_at.strftime("%d/%m/%y %H:%M:%S")
-                created = ctx.message.mentions[0].created_at.strftime("%d/%m/%y %H:%M:%S")
-                uid = ctx.message.mentions[0].id
-                isbot  = ctx.message.mentions[0].bot
-                toprole = ctx.message.mentions[0].top_role.name
-                game = ctx.message.mentions[0].game
-                status = ctx.message.mentions[0].status
-                nick = ctx.message.mentions[0].display_name                             # get the mentioned user, if 2 get the first
-                vc = ctx.message.mentions[0].voice_channel
-                color = ctx.message.mentions[0].color
-                avatar = ctx.message.mentions[0].avatar_url.replace("?size=1024", "")
-                defAvi = ctx.message.mentions[0].default_avatar_url
-                roles = len(ctx.message.mentions[0].roles) - 1
+            # wew
+            try:
+                if user == getInfo:
+                    join = "N/A"
+                    toprole = "N/A"
+                    color = 0x000000
+                    vc = "N/A"
+                    game = "None or I can't tell."
+                    status = "None or I can't tell."
+                    roles = "N/A"
+                    role_list = "N/A"
+            except UnboundLocalError:
+                join = user.joined_at.strftime("%d/%m/%y %H:%M:%S")
+                toprole = user.top_role.name
+                color = user.color
+                vc = user.voice_channel
+                game = user.game
+                status = user.status
+                roles = len(user.roles) - 1
                 role_list = ""
-                for x in range(0, len(ctx.message.mentions[0].roles)):
-                    if ctx.message.mentions[0].roles[x].is_everyone:
+                for x in range(0, len(user.roles)):
+                    if user.roles[x].is_everyone:
                         continue
-                    if x == len(ctx.message.mentions[0].roles) - 1:
-                        role_list += ctx.message.mentions[0].roles[x].name
+                    if x == len(user.roles) - 1:
+                        role_list += user.roles[x].name
                     else:
-                        role_list += ctx.message.mentions[0].roles[x].name + ", "
+                        role_list += user.roles[x].name + ", "
+            created = user.created_at.strftime("%d/%m/%y %H:%M:%S")
+            uid = user.id
+            isbot  = user.bot
+            nick = user.display_name
+            avatar = user.avatar_url.replace("?size=1024", "")
+            defAvi = user.default_avatar_url
+            # badges
+            badges = ""
+            if user.id in creditedids:
+                badges = ":star: "+badges
+                top = "Credited in `about credits`"
+            if user.id in donatorids:
+                badges = ":moneybag: "+badges
+                top = "Donator"
+            if user.id in helperids:
+                badges = ":wrench: "+badges
+                top = "Support Server Moderator"
+            if user.id in ownerids:
+                badges = ":tools: "+badges
+                top = "Developer"
+            if badges == "":
+                badges = "None"
+                top = "User"
             # start embed creation
-            em = discord.Embed(title=str(user)+"'s user info",color=color)
+            em = discord.Embed(title=str(user)+"'s user info",description="**{}**".format(top),color=color)
             em.add_field(name="Join Date",value=str(join),inline=True)
             em.add_field(name="Account Creation",value=str(created),inline=True)
             em.add_field(name="User ID",value=str(uid),inline=True)
             em.add_field(name="Is Bot",value=str(isbot),inline=True)
+            # send badges
+            em.add_field(name="Badges",value="{}".format(badges))
             # avatars
             if defAvi == "https://cdn.discordapp.com/embed/avatars/0.png":
                 em.add_field(name="Default Avatar",value="<:avi0:343852806563692554> **[Click here!]({})**".format(defAvi))
@@ -261,6 +343,8 @@ class Info():
                 em.add_field(name="Status", value="Do Not Disturb")
             elif status == discord.Status.offline:
                 em.add_field(name="Status", value="Offline")
+            elif status == "None or I can't tell.":
+                em.add_field(name="Status", value=status)
             # nickname
             if user.name == user.display_name:
                 em.add_field(name="Nickname",value="None",inline=True)
@@ -283,7 +367,7 @@ class Info():
             em.set_thumbnail(url=avatar)
             await self.bot.send_message(ctx.message.channel, embed=em)
         except Exception as e: # error catcher p2
-            await self.bot.say("An unexpected error occurred when running the command! `{}`".format(e)
+            await self.bot.say("An unexpected error occurred when running the command! `{}`".format(type(e).__name__+": "+str(e))
                           +"\nYou shouldn't receive an error like this."
                           +"\nPlease contact Desiree#3658.")
 

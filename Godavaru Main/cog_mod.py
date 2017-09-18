@@ -13,6 +13,35 @@ import inspect
 class Mod():
     def __init__(self, bot):
         self.bot = bot
+        
+    @commands.command(pass_context=True,aliases=["dc", "getthefuckoutofthatvoicechannel"])
+    async def disconnect(self, ctx):
+        if ctx.message.server.me.server_permissions.manage_channels == True and ctx.message.server.me.server_permissions.move_members == True:
+            if ctx.message.author.server_permissions.move_members == True:
+                if len(ctx.message.mentions) > 0:
+                    if ctx.message.author.top_role.position > ctx.message.mentions[0].top_role.position:
+                        if ctx.message.mentions[0].voice_channel is not None:
+                            v = await self.bot.create_channel(ctx.message.server, 'wew', type=discord.ChannelType.voice)
+                            await self.bot.move_member(ctx.message.mentions[0], v)
+                            await self.bot.delete_channel(v)
+                            b = ctx.message.content
+                            a = b.split(' ')
+                            m = b.replace(a[0]+" "+a[1], "")
+                            m = m[1:]
+                            if m == "":
+                                await self.bot.say(":white_check_mark: disconnected {} from their voice channel.".format(str(ctx.message.mentions[0])))
+                            else:
+                                await self.bot.say(":ok_hand: disconnected {0} from their voice channel. (`{1}`)".format(str(ctx.message.mentions[0]), m))
+                        else:
+                            await self.bot.say(':x: That person is not in a voice channel.')
+                    else:
+                        await self.bot.say(':x: You can\'t disconnect someone with a higher than or equal role.')
+                else:
+                    await self.bot.say(":x: Mention a user.")
+            else:
+                await self.bot.say(":x: You don't have permission for that.")
+        else:
+            await self.bot.say(":x: I need the `MANAGE_CHANNELS` permission to do that.")
 
     @commands.command(pass_context=True)
     async def kick(self, ctx):
@@ -47,35 +76,63 @@ class Mod():
                 await self.bot.say(":x: You cannot kick members.")
         else:
             await self.bot.say(":x: I cannot kick members.")
+            
 
     @commands.command(pass_context=True)
     async def ban(self, ctx):
         if ctx.message.server.me.server_permissions.ban_members == True:
             if ctx.message.author.server_permissions.ban_members == True:
                 if len(ctx.message.mentions) == 0:
-                    await self.bot.say(":x: Tell me who to ban.")
+                    umsg = ctx.message.content
+                    args = umsg.split(' ')
+                    try:
+                        uid = int(args[1])
+                        try:
+                            member = await self.bot.get_user_info(uid)
+                        except discord.NotFound:
+                            await self.bot.say(":x: That user doesn't exist.")
+                        else:
+                            reason = umsg.replace(args[0]+" "+args[1], "")
+                            if reason == "":
+                                await self.bot.http.ban(uid, ctx.message.server.id, delete_message_days=1)
+                                await self.bot.say(":white_check_mark: Banned **"+str(member)+"** with reason: Undefined")
+                            else:
+                                await self.bot.http.ban(uid, ctx.message.server.id, delete_message_days=1)
+                                await self.bot.say(":white_check_mark: Banned **"+str(member)+"** with reason: "+str(reason[1:]))
+                    except ValueError:
+                        await self.bot.say(":x: That is not an ID.")
+                    except IndexError:
+                        await self.bot.say("Usage: `{}ban <@user/id> [reason]`".format(bot.command_prefix))
                 else:
                     if ctx.message.author.top_role.position > ctx.message.mentions[0].top_role.position:
+                        args = ctx.message.content
+                        args = args.replace(bot.command_prefix+"ban <@"+ctx.message.mentions[0].id+">", "")
+                        args = args.replace(bot.command_prefix+"ban <@!"+ctx.message.mentions[0].id+">", "")
                         try:
-                            args = ctx.message.content
-                            args = args.replace(self.bot.command_prefix[0]+"ban <@"+ctx.message.mentions[0].id+">", "")
-                            args = args.replace(self.bot.command_prefix[0]+"ban <@!"+ctx.message.mentions[0].id+">", "")
-                            args = args.replace(self.bot.command_prefix[1]+"ban <@"+ctx.message.mentions[0].id+">", "")
-                            args = args.replace(self.bot.command_prefix[1]+"ban <@!"+ctx.message.mentions[0].id+">", "")
-                            if args == "":
-                                await self.bot.ban(ctx.message.mentions[0], delete_message_days=1)
-                                await self.bot.say(":white_check_mark: Banned **"+str(ctx.message.mentions[0])+"** with reason: Undefined.")
-                            else:
-                                await self.bot.ban(ctx.message.mentions[0], delete_message_days=1)
-                                await self.bot.say(":white_check_mark: Banned **"+str(ctx.message.mentions[0])+"** with reason:"+str(args))
-                        except Exception as e:
-                            await self.bot.say(":x: I can't ban someone equal to or higher than me.")
+                            days = int(args[1:2])
+                            reason = args[3:]
+                        except ValueError:
+                            days = 0
+                            reason = args[1:]
+                        if reason != "":
+                            try:
+                                await self.bot.ban(ctx.message.mentions[0], delete_message_days=days)
+                                await self.bot.say(":white_check_mark: Banned **"+str(member)+"** with reason: "+str(reason))
+                            except discord.Forbidden:
+                                await bot.say("I can't ban someone higher or equal to myself.")
+                        else:
+                            try:
+                                await self.bot.ban(ctx.message.mentions[0], delete_message_days=days)
+                                await self.bot.say(":white_check_mark: Banned **"+str(member)+"** with reason: Undefined")
+                            except discord.Forbidden:
+                                await self.bot.say(":x: I can't ban someone higher or equal to myself.")
                     else:
-                        await self.bot.say(":x: You can't ban someone equal to or higher than yourself.")
+                        await self.bot.say(":x: You can't ban someone higher or equal to yourself.")
             else:
-                await self.bot.say(":x: You cannot ban members.")
+                await self.bot.say(":x: You don't have the permission to do that.")
         else:
-            await self.bot.say(":x: I cannot ban members.")
+            await self.bot.say(":x: I don't have the permission to do that.")
+            
 
     @commands.command(pass_context=True)
     async def softban(self, ctx):
@@ -107,6 +164,7 @@ class Mod():
                 await self.bot.say(":x: You cannot ban members.")
         else:
             await self.bot.say(":x: I cannot ban members.")
+            
 
     @commands.command(pass_context=True, aliases=["purge", "clean"])
     async def prune(self, ctx):
@@ -133,36 +191,7 @@ class Mod():
                 await self.bot.say(":x: You cannot manage messages.")
         else:
             await self.bot.say(":x: I cannot manage messages.")
-
-    @commands.command(pass_context=True)
-    async def hackban(self, ctx):
-        if ctx.message.server.me.server_permissions.ban_members == True:
-            if ctx.message.author.server_permissions.ban_members == True:
-                umsg = ctx.message.content
-                args = umsg.split(' ')
-                try:
-                    uid = int(args[1])
-                    try:
-                        member = await self.bot.get_user_info(uid)
-                    except discord.NotFound:
-                        await self.bot.say("That user doesn't exist.")
-                    else:
-                        reason = umsg.replace(self.bot.command_prefix[0]+"hackban "+args[1], "")
-                        reason = umsg.replace(self.bot.command_prefix[1]+"hackban "+args[1], "")
-                        if reason == "":
-                            await self.bot.http.ban(uid, ctx.message.server.id, delete_message_days=1)
-                            await self.bot.say(":white_check_mark: hackbanned "+str(member)+" with reason: Not defined.")
-                        else:
-                            await self.bot.http.ban(uid, ctx.message.server.id, delete_message_days=1)
-                            await self.bot.say(":white_check_mark: hackbanned {0.name}#{0.discriminator} with reason: {1}".format(member, reason[1:]))
-                except ValueError:
-                    await self.bot.say("That is not an ID.")
-                except IndexError:
-                    await self.bot.say("Usage: `{}hackban <user id> [reason]`".format(self.bot.command_prefix))
-            else:
-                await self.bot.say("You can't ban users.")
-        else:
-            await self.bot.say("I can't ban users.")
+            
 
     @commands.command(pass_context=True)
     async def unban(self, ctx):

@@ -1,6 +1,7 @@
 import discord
 import random
 import time
+import asyncio
 from discord.ext import commands
 
 class Fun():
@@ -22,37 +23,57 @@ class Fun():
         args = ctx.message.content
         args = args.replace(self.bot.command_prefix[0]+"say", "")
         args = args.replace(self.bot.command_prefix[1]+"say", "")
+        args = args.replace("@everyone", "<insert {} trying to mention everyone here>".format(str(ctx.message.author)))
+        args = args.replace("@here", "<insert {} trying to mention everyone here>".format(str(ctx.message.author)))
         args = args[1:]
         if args == "":
             await self.bot.say("I can't send an empty message!")
         elif args.startswith("--s"):
-            if args == "--s":
+            if args == "--s": # --s == silentsay
                 await self.bot.say("You can't silently send an empty message!")
             else:
                 args = args[4:]
                 await self.bot.say(str(args))
+                await self.bot.delete_message(ctx.message)
+        elif args.startswith("--e"):
+            if args == "--e": # --e == edit
+                await self.bot.say("You can't edit nothingness.")
+            try:
+                args = args[4:]
+                mid = args.split(' ')
+                toEdit = await self.bot.get_message(ctx.message.channel, str(mid[0])) 
+                content = args.replace(mid[0]+" ", "")
+                await self.bot.edit_message(toEdit, new_content=content)
+                await self.bot.delete_message(ctx.message)
+            except discord.NotFound:
+                notFound = await self.bot.say("Couldn't find the message.")
+                await asyncio.sleep(5)
+                await self.bot.delete_message(notFound)
+                await self.bot.delete_message(ctx.message)
+            except IndexError:
+                indxErr = await self.bot.say("Usage: `g_say --e <id> <content>`")
+                await asyncio.sleep(5)
+                await self.bot.delete_message(indxErr)
                 await self.bot.delete_message(ctx.message)
         else:
             await self.bot.say(str(args))
 
     @commands.command(pass_context = True)
     async def year(self, ctx):
-        await self.bot.say ("A year has:\n\n12 Months\n52 Weeks\n365 Days\n8760 Hours\n525600 Minutes\n3153600 Seconds\n\nAnd it only takes 1 minute to send " + ctx.message.author.mention + " nudes :3")
+        if len(ctx.message.mentions) > 0:
+            u = ctx.message.mentions[0]
+        else:
+            u = ctx.message.author
+        await self.bot.say ("A year has:\n\n12 Months\n52 Weeks\n365 Days\n8760 Hours\n525600 Minutes\n3153600 Seconds\n\nAnd it only takes 1 minute to send " + u.mention + " nudes :3")
 
     @commands.command(pass_context = True)
     async def f(self, ctx):
         embed = discord.Embed(title='Press F to pay respects!',description='**' + ctx.message.author.display_name + '** has paid their respects successfully :eggplant:',color=ctx.message.author.color).set_footer(text='f')
         await self.bot.send_message(ctx.message.channel, content=None, embed=embed)
-        
-    @commands.command(pass_context = True, aliases=["mb", "8ball"])
-    async def magicball(self, ctx):
-        var = int(random.random() * 20)
 
-        if (ctx.message.content == self.bot.command_prefix +"mb" or ctx.message.content == self.bot.command_prefix+"magicball" or ctx.message.content == self.bot.command_prefix+"8ball"):
-            await self.bot.say("I can't be a magician unless you ask me a question! <:thonk:316105720548556801>")
-        else:
-            ans = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."]
-            await self.bot.say(":crystal_ball: {}".format(ans[var]))
+        
+    # If you're looking for the code for 8ball, it was moved to cog_utils
+
 
     @commands.command(pass_context=True)
     async def slots(self, ctx):
@@ -151,47 +172,50 @@ class Fun():
 
     @commands.command(pass_context=True)
     async def rps(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix[0]+"rps", "")
-        args = args.replace(self.bot.command_prefix[1]+"rps", "")
+        umsg = ctx.message.content
+        args = umsg.split(' ')
+        args = umsg.replace(args[0], "")
+        args = args[1:]
         var = int(random.random() * 3)
-        if args == " paper" or args == " rock" or args == " scissors":
+        if args == "paper" or args == "rock" or args == "scissors":
             if (var == 0):
-                if args == " paper":
+                if args == "paper":
                     await self.bot.send_message(ctx.message.channel, ":moyai: You win!")
-                elif args == " rock":
+                elif args == "rock":
                     await self.bot.send_message(ctx.message.channel, ":moyai: It's a draw!")
-                elif args == " scissors":
+                elif args == "scissors":
                     await self.bot.send_message(ctx.message.channel, ":moyai: You lose!")
             elif (var == 1):
-                if args == " paper":
+                if args == "paper":
                     await self.bot.send_message(ctx.message.channel, ":newspaper: It's a draw!")
-                elif args == " rock":
+                elif args == "rock":
                     await self.bot.send_message(ctx.message.channel, ":newspaper: You lose!")
-                elif args == " scissors":
+                elif args == "scissors":
                     await self.bot.send_message(ctx.message.channel, ":newspaper: You win!")
             elif (var == 2):
-                if args == " paper":
+                if args == "paper":
                     await self.bot.send_message(ctx.message.channel, ":scissors: You lose!")
-                elif args == " rock":
+                elif args == "rock":
                     await self.bot.send_message(ctx.message.channel, ":scissors: You win!")
-                elif args == " scissors":
+                elif args == "scissors":
                     await self.bot.send_message(ctx.message.channel, ":scissors: It's a draw!")
         else:
             await self.bot.say(":x: You must specify either rock, paper, or scissors!")
 
     @commands.command(pass_context = True)
     async def lenny(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"lenny", "")
-        await self.bot.say (str(args)+"( ͡° ͜ʖ ͡°)")
+        umsg = ctx.message.content
+        args = umsg.split(' ')
+        msg = umsg.replace(args[0], "")
+        await self.bot.say (str(msg)+"( ͡° ͜ʖ ͡°)")
         await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context = True)
     async def nonowa(self, ctx):
-        args = ctx.message.content
-        args = args.replace(self.bot.command_prefix+"nonowa", "")
-        await self.bot.say(str(args)+"のワの")
+        umsg = ctx.message.content
+        args = umsg.split(' ')
+        msg = umsg.replace(args[0], "")
+        await self.bot.say(str(msg)+"のワの")
         await self.bot.delete_message(ctx.message)
 			
 def setup(bot):

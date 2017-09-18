@@ -111,15 +111,37 @@ class Owner():
                         await self.bot.edit_profile(username=str(unargs))
                         await self.bot.say("Done! Changed my name successfully to `"+str(unargs)+"`")
                         await self.bot.send_message("`"+str(ctx.message.author)+"` changed my username to `"+str(unargs)+"`")
+
+                elif args[1] == "invite":
+                    try:
+                        serverID = int(args[2])
+                        guild = self.bot.get_server(serverID)
+                        invite = await self.bot.create_invite(guild.id)
+                        await self.bot.say("Success! **{}**".format(invite.code))
+                    except ValueError:
+                        await self.bot.say("That's not a number")
+                    except IndexError:
+                        await self.bot.say(":x: Define a server id.")
+                    except discord.Forbidden:
+                        await self.bot.say(":x: I can't create an invite for that server.")
+                elif args[1] == "bigservers":
+                    m = ""
+                    try:
+                        n = int(args[2])
+                    except (ValueError, IndexError):
+                        n = 1000
+                    for server in sorted(self.bot.servers, key=lambda x: x.name):
+                        if len(server.members) > n:
+                            m += server.name+" - "+str(server.owner)+" - "+str(len(server.members))+"\n"
+                    await self.bot.say("Servers with over {0} members.```\n{1}```".format(n, m))
                 elif args[1] == "eval":
                     try:
                         if args[2] != "":
-                            code = ctx.message.content.replace(self.bot.command_prefix[0]+"owner eval ", "")
-                            code = ctx.message.content.replace(self.bot.command_prefix[1]+"owner eval ", "")
+                            code = ctx.message.content.replace(args[0]+" "+args[1]+" ", "")
                             code = code.strip('` ')
-                            python = '```py\n{}\n```'
+                            python = 'Excecuted successfully and returned: {}'
                             result = None
-
+        
                             env = {
                                 'bot': self.bot,
                                 'ctx': ctx,
@@ -128,7 +150,7 @@ class Owner():
                                 'channel': ctx.message.channel,
                                 'author': ctx.message.author
                             }
-
+    
                             env.update(globals())
 
                             try:
@@ -136,13 +158,17 @@ class Owner():
                                 if inspect.isawaitable(result):
                                     result = await result
                             except Exception as e:
-                                await self.bot.say(python.format(type(e).__name__ + ': ' + str(e)))
+                                await self.bot.send_message(ctx.message.channel, embed=discord.Embed(description="Excecuted and errored: {}".format(type(e).__name__ + ': ' + str(e)),color=0xff0000).set_author(name="Evaluated and errored", icon_url=ctx.message.author.avatar_url.replace("?size=1024", "")).set_footer(text="Executed by: "+str(ctx.message.author)).set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/480px-Red_x.svg.png').add_field(name="Code",value="`{}`".format(code)))
                                 return
-
+    
                             if type(result) is discord.Message:
-                                await self.bot.say(python.format("Successfully evaluated."))
+                                await self.bot.send_message(ctx.message.channel, embed=discord.Embed(description="Executed successfully with no objects returned.",color=0x00ff00).set_author(name="Evaluated with success", icon_url=ctx.message.author.avatar_url.replace("?size=1024", "")).set_footer(text="Executed by: "+str(ctx.message.author)).set_thumbnail(url='http://www.iconsdb.com/icons/preview/green/checked-checkbox-xxl.png').add_field(name="Code",value="`{}`".format(code)))
                             else:
-                                await self.bot.say(python.format(result))
+                                if result is None:
+                                    a = "Executed successfully with no objects returned."
+                                else:
+                                    a = python.format(result)
+                            await self.bot.send_message(ctx.message.channel, embed=discord.Embed(description=a,color=0x00ff00).set_author(name="Evaluated with success", icon_url=ctx.message.author.avatar_url.replace("?size=1024", "")).set_footer(text="Executed by: "+str(ctx.message.author)).set_thumbnail(url='http://www.iconsdb.com/icons/preview/green/checked-checkbox-xxl.png').add_field(name="Code",value="`{}`".format(code)))
                     except IndexError:
                         await self.bot.say(":x: Specify code to evaluate!")
                 else:
