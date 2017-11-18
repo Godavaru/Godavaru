@@ -1,3 +1,4 @@
+[![Discord Bots](https://discordbots.org/api/widget/status/311810096336470017.png)](https://discordbots.org/bot/311810096336470017)[![Discord Bots](https://discordbots.org/api/widget/servers/311810096336470017.png?noavatar=true)](https://discordbots.org/bot/311810096336470017)[![Discord Bots](https://discordbots.org/api/widget/owner/311810096336470017.png?noavatar=true)](https://discordbots.org/bot/311810096336470017)
 # Godavaru
 This is the official GitHub for the Godavaru bot, made by `Desiree#3658` in Python.
 The bot may become a good bot one day, but at the moment, it's a beginner project, primarily for me to learn Python. Hope you enjoy it so far!
