@@ -1,26 +1,38 @@
 [![Discord Bots](https://discordbots.org/api/widget/status/311810096336470017.png)](https://discordbots.org/bot/311810096336470017)[![Discord Bots](https://discordbots.org/api/widget/servers/311810096336470017.png?noavatar=true)](https://discordbots.org/bot/311810096336470017)[![Discord Bots](https://discordbots.org/api/widget/owner/311810096336470017.png?noavatar=true)](https://discordbots.org/bot/311810096336470017)
 # Godavaru
-This is the official GitHub for the Godavaru bot, made by `Desiree#3658` in Python.
-The bot may become a good bot one day, but at the moment, it's a beginner project, primarily for me to learn Python. Hope you enjoy it so far!
-
-You can contact me on Twitter, `@Diallusions` or Discord, `Desiree#3658` or join the support guild [here.]( https://discord.gg/ewvvKHM) 
-
-Get updates on github instantly in the #github channel on my support guild!
+This is the offical repository for the Godavaru discord bot, made and devloped by Desiree#3658. This is a bot that is made with the idea of making your discord experience smoother, more interesting, and overall fun. With this, the bot has: 
+```
+Action Commands
+  -> hug, kiss, even some lewd ones! (usable only in NSFW channels of course)
+Moderation Commands
+  -> Ban, kick, prune, and more!
+Utility Commands
+  -> Urban dictionary search, dictionary search, complex mathematics, and much more!
+Fun Commands
+  -> Slots, trivia, bowling, and other miscellanious features to keep you occupied!
+Informational Commands
+  -> User ID lookup, discriminator lookup, role information, and more!
+```
 
 # Developers
-Our current developers are @Desiiii, @instanceofplayer, @Yuvira, and @jonasbpa. Contact them with any questions/concerns!
+The main developer for this bot is me, Desiree#3658 on discord. Here are the rest of the developers.
+```
+AttributeError#2513
+Jonas B.#9089
+Yuvira#2099
+```
 
 # Utilities
-This bot provieds mostly fun commands, but moderation commands are in the works. If you would like to suggest anything, feel free to do so using `g_request <suggestion>` and it will be sent straight to myself and the other developers.
+The bot provides you with fun commands, moderation, and more. For a list of all commands, you may use `g_help`, and for extended help, `g_help <command>` without the brackets.
 
 # Running the bot
-I do not recommend downloading and running the bot yourself. While it is not a very big bot in file size, it does require the images file, which would take ages for me to upload here to github. If you wish to supply your own images and gifs for the action commands, feel free to download the repository and in main.py, replace `'token'` with your bot's token, replace the command prefix with whatever you want, and you should be good to go. As stated before, this is not recommended, but if you wanted to know, there it is
+Running the bot is not recommended and while it may be quite simple to do, you will not recieve support on recieving API keys, filling in config files, or anything else. This bot is mostly here as a reference to see how I do things, which even so is not the most effective way of doing things.
 
 # Inqueries
 If you'd like to contact me about working together on the bot or some other inquery, contact me via my business email at: `godavaru@gmail.com`
 
 # Thanks ya!
-Thank you for using Godavaru bot, it really means a lot to me! I know it's just a starter project, but with the fact that we just hit 100 guilds, I definitely won't stop developing it. Thanks again!
+Thanks for using the Godavaru bot! It means a lot to see my own personal creation being used in over **150** servers!
 
 # License
 This repository is protected under the MIT license. You can read it [here](https://github.com/Desiiii/Godavaru/blob/master/LICENSE.md).
