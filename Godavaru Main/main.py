@@ -107,7 +107,7 @@ async def on_guild_join(server):
 
 # server leave
 @bot.event
-async def on_guild_leave(server):
+async def on_guild_remove(server):
     server_count = len(bot.guilds)
     member_count = 0
     for server in bot.guilds:

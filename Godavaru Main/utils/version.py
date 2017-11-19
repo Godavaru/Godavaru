@@ -5,7 +5,7 @@ def minor():
     return "5"
 
 def patch():
-    return "2"
+    return "4"
 
 def alpha():
     return False
