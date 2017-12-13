@@ -32,7 +32,7 @@ Running the bot is not recommended and while it may be quite simple to do, you w
 If you'd like to contact me about working together on the bot or some other inquery, contact me via my business email at: `godavaru@gmail.com`
 
 # Thanks ya!
-Thanks for using the Godavaru bot! It means a lot to see my own personal creation being used in over **150** servers!
+Thanks for using the Godavaru bot! It means a lot to see my own personal creation being used in over **200** servers!
 
 # License
 This repository is protected under the MIT license. You can read it [here](https://github.com/Desiiii/Godavaru/blob/master/LICENSE.md).
