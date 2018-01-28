@@ -395,6 +395,7 @@ class Action:
         await ctx.send(content=msg, file=discord.File("./images/blush.gif"))
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def smile(self, ctx, *members: str):
         """\uD83C\uDFB6 You make me smile like the sun, fall outta bed... \uD83C\uDFB6
         What? I wasn't singing!"""
