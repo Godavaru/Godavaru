@@ -1,5 +1,6 @@
 import asyncio
 import random
+import string
 from discord.ext import commands
 from cogs.utils.tools import *
 from cogs.utils import weeb
@@ -102,6 +103,9 @@ class Fun:
 
     @commands.command()
     async def year(self, ctx, *, member: discord.Member = None):
+        # *sheds a tear* my little baby is still alive :)
+        # yes i am crazy
+        # no do not ask
         """The very first command that was ever added.
         It's nothing special, but it's a nice lil joke :eyes:"""
         if member is None:
@@ -114,7 +118,6 @@ class Fun:
         embed = discord.Embed(title='Press F to pay respects!',description='**' + ctx.message.author.display_name + '** has paid their respects successfully :eggplant:',color=ctx.message.author.color).set_footer(text='f')
         await ctx.send(content=None, embed=embed)
 
-        
     # If you're looking for the code for 8ball, it was moved to cog_utils
     # hey Desii from the past... do you really think anyone reads this?
     # If they do, send a message in #general of my bot hub saying: "card games on motorcycles"
@@ -122,7 +125,6 @@ class Fun:
     # why did i make this comment block
     # aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     # memes
-
 
     @commands.command()
     async def slots(self, ctx):
@@ -307,13 +309,6 @@ class Fun:
         em.add_field(name="Difficulty", value=j['results'][0]['difficulty'])
         em.add_field(name="Answers", value=("\n".join(z)), inline=False)
         await ctx.send(embed=em)
-        dif = j['results'][0]['difficulty']
-        if dif == "easy":
-            money = 20
-        elif dif == "medium":
-            money = 40
-        elif dif == "hard":
-            money = 60
 
         def check1(m):
             return m.author.id == ctx.author.id and m.channel == ctx.channel
@@ -321,11 +316,11 @@ class Fun:
         try:
             msg = await self.bot.wait_for('message', check=check1, timeout=120.0)
         except asyncio.TimeoutError:
-            await ctx.send("You didnt answer in time, the correct answer was `{}`".format(corect))
+            await ctx.send("You didnt answer in time, the correct answer was `{}`".format(correct))
             return
         if msg.content.lower() == correct.lower():
-            await ctx.send(":white_check_mark: **{}** got the correct answer and won **${}** credits!".format(
-                ctx.author.display_name, money))
+            await ctx.send(":white_check_mark: **{}** got the correct answer!".format(
+                ctx.author.display_name))
             return
         elif msg.content.lower() == "end":
             await ctx.send(f":ok_hand: Ended your game, the correct answer was `{correct}`")
@@ -343,8 +338,8 @@ class Fun:
                     await ctx.send("You didnt answer in time, the correct answer was `{}`".format(correct))
                     return
                 if msg2.content.lower() == correct.lower():
-                    await ctx.send(":white_check_mark: **{}** got the correct answer and won **${}** credits!".format(
-                        ctx.author.display_name, money))
+                    await ctx.send(":white_check_mark: **{}** got the correct answer!".format(
+                        ctx.author.display_name))
                     return
                 elif msg2.content.lower() == "end":
                     await ctx.send(f":ok_hand: Ended your game, the correct answer was `{correct}`")
@@ -355,61 +350,44 @@ class Fun:
                 await ctx.send(":x: That's not right. The correct answer was `{}`".format(correct))
 
     @commands.command()
-    async def joke(self, ctx):
-        """Make a somewhat Chuck Norris related joke.
-
-        **Usage:** `g_joke [word or phrase]`
-
-        **Permission:** User"""
+    async def joke(self, ctx, *, phrase: str = None):
+        """Make a somewhat Chuck Norris related joke."""
+        if phrase is None:
+            phrase = ctx.author.display_name
         r = requests.get('http://api.icndb.com/jokes/random')
         js = r.json()
         j = str(js['value']['joke'])
-        a = ctx.message.content
-        b = a.split(' ')
-        p = a.replace(b[0], "")
-        p = p[1:]
-        if p == "":
-            p = ctx.message.author.mention
-        j = j.replace("Chuck Norris", p)
-        j = j.replace("Chuck", p)
+        j = j.replace("Chuck Norris", phrase)
+        j = j.replace("Chuck", phrase)
         j = j.replace('&quot;', "\"")
         await ctx.send(j)
 
     @commands.command()
-    async def ttb(self, ctx):
-        """Use the text to brick feature.
+    async def ttb(self, ctx, *, text: str):
+        """Use the text to brick feature."""
+        bricks = "🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿"
+        text = text.lower()
+        for b in bricks:
+            index = bricks.index(b)
+            text = text.replace(string.ascii_lowercase[index], b)
+        # Yes, replace spam here because I can't figure out another way.
+        # If you have one pls tell me.
+        # I'm too tired for this shit.
+        msg1 = text.replace("#", ":hash:")
+        msg2 = msg1.replace("1", ":one:")
+        msg3 = msg2.replace("2", ":two:")
+        msg4 = msg3.replace("3", ":three:")
+        msg5 = msg4.replace("4", ":four:")
+        msg6 = msg5.replace("5", ":five:")
+        msg7 = msg6.replace("6", ":six:")
+        msg8 = msg7.replace("7", ":seven:")
+        msg9 = msg8.replace("8", ":eight:")
+        msg10 = msg9.replace("9", ":nine:")
+        msg11 = msg10.replace("0", ":zero:")
+        msg12 = msg11.replace(" ", "   ")
+        msg13 = msg12.replace("?", ":grey_question:")
+        msg14 = msg13.replace("!", ":grey_exclamation:")
+        await ctx.send(msg14)
 
-        **Usage:** `g_ttb <text>`
-
-        **Permission:** User"""
-        umsg = ctx.message.clean_content.lower()
-        args = umsg.split(' ')
-        l = "abcdefghijklmnopqrstuvwxyz"
-        if len(args) > 1:
-            m = umsg.replace(args[0]+" ", "")
-            msg = ""
-            for x in range(0, len(m)):
-                if m[x:x+1] in l:
-                    msg += ":regional_indicator_{}:".format(m[x:x+1])
-                else:
-                    msg += m[x:x+1]
-            msg1 = msg.replace("#", ":hash:")
-            msg2 = msg1.replace("1", ":one:")
-            msg3 = msg2.replace("2", ":two:")
-            msg4 = msg3.replace("3", ":three:")
-            msg5 = msg4.replace("4", ":four:")
-            msg6 = msg5.replace("5", ":five:")
-            msg7 = msg6.replace("6", ":six:")
-            msg8 = msg7.replace("7", ":seven:")
-            msg9 = msg8.replace("8", ":eight:")
-            msg10 = msg9.replace("9", ":nine:")
-            msg11 = msg10.replace("0", ":zero:")
-            msg12 = msg11.replace(" ", "   ")
-            msg13 = msg12.replace("?", ":grey_question:")
-            msg14 = msg13.replace("!", ":grey_exclamation:")
-            await ctx.send(msg14)
-        else:
-            await ctx.send("Specify words to brickify.")
-			
 def setup(bot):
     bot.add_cog(Fun(bot))
