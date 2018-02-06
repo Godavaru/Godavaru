@@ -17,7 +17,7 @@ class Utils:
     def __init__(self, bot):
         self.bot = bot
 
-    def randomColour(self):
+    def random_colour(self):
         co = ["A", "B", "C", "D", "E", "F", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         a = int(random.random() * len(co))
         b = int(random.random() * len(co))
