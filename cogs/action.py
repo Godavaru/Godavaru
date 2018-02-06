@@ -142,48 +142,29 @@ class Action:
 
     @commands.command()
     @commands.bot_has_permissions(attach_files=True)
-    async def poke(self, ctx):
-        """Do you ever have a friend who just wont stop ignoring you? Just poke them. :eyes:
-
-        **Usage:** `g_poke <user(s)>`
-
-        **Permission:** User"""
-        apiUrl = self.base_url+"?type=poke&hidden=false&nsfw=false&filetype=gif"
-        headers = {"Authorization": "Wolke "+config.weeb_token}
-        r = requests.get(apiUrl, headers=headers)
-        js = r.json()
-        url = js['url']
-        
-        if len(ctx.message.mentions) == 0:
-            await ctx.send(":x: You must mention a user!")
-        elif len(ctx.message.mentions) > 0:
-            o = AppURLopener()
-            d = o.open(url)
-            data = d.read()
-            with open("./images/poke.gif", "wb") as img:
-                img.write(data)
-                img.close()
-            ments = ""
-            for x in range(0, len(ctx.message.mentions)):
-                if ctx.message.mentions[x].id == ctx.message.author.id:
-                    msg = ":eyes: You can't poke nothing! I'll poke you instead!"
-                    await ctx.send(file=discord.File("./images/poke.gif"), content=msg)
-                    return
-                if x == 0:
-                    ments = ctx.message.mentions[x].display_name
-                elif x == len(ctx.message.mentions) - 1:
-                    if len(ctx.message.mentions) == 2:
-                        ments = ments+" and "+ctx.message.mentions[x].display_name
+    async def poke(self, ctx, *members: str):
+        """Do you ever have a friend who just wont stop ignoring you? Just poke them. :eyes:"""
+        l = []
+        for m in members:
+            if m.startswith('<@') and m.endswith('>'):
+                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
+                try:
+                    mem = ctx.guild.get_member(int(mid))
+                    if mem is None or mem.display_name in l:
+                        continue
                     else:
-                        ments = ments+", and "+ctx.message.mentions[x].display_name
-                else:
-                    ments = ments+", "+ctx.message.mentions[x].display_name
-            if len(ctx.message.mentions) == 1:
-                pr = "was"
-            else:
-                pr = "were"
-            msg = ':eyes: **' + ments + '** ' + pr + ' poked by **' + ctx.message.author.display_name +'**!'
-            await ctx.send(file=discord.File("./images/poke.gif"), content=msg)
+                        l.append(ctx.guild.get_member(int(mid)).display_name)
+                except:
+                    continue
+        if len(l) == 0:
+            await ctx.send(":x: You must mention at least one user.")
+            return
+        msg = f"**{ctx.author.display_name}** is poking **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
+        for u in l:
+            if u == ctx.author.display_name:
+                msg = f'*pokes you* hi. *pokes more*'
+        weeb.save_to_image(url=weeb.request_image_as_gif(type="teehee"), name="tease.gif")
+        await ctx.send(content=msg, file=discord.File("./images/tease.gif"))
 
     @commands.command(aliases=["teehee"])
     @commands.bot_has_permissions(attach_files=True)

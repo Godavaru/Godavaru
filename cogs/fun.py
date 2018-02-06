@@ -1,6 +1,7 @@
 import asyncio
 import random
 import string
+import discord
 from discord.ext import commands
 from cogs.utils.tools import *
 from cogs.utils import weeb
@@ -54,6 +55,7 @@ class Fun:
             await ctx.send(str(args))
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def meme(self, ctx):
         """This command gives you a random discord meme, powered by weeb.sh"""
         em = discord.Embed(title="Here's a random discord meme for ya",color=ctx.author.color)
@@ -62,6 +64,7 @@ class Fun:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def delet(self, ctx):
         """This command gives you a random delet this meme, powered by weeb.sh"""
         em = discord.Embed(title="Delet this!!1!",color=ctx.author.color)
@@ -70,6 +73,7 @@ class Fun:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def awoo(self, ctx):
         """This command gives you a random awoo image, powered by weeb.sh"""
         em = discord.Embed(title="Awoo~",color=ctx.author.color)
@@ -78,6 +82,7 @@ class Fun:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def megumin(self, ctx):
         """This command gives you a random megumin image, powered by weeb.sh"""
         em = discord.Embed(color=ctx.author.color)
@@ -86,6 +91,7 @@ class Fun:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def rem(self, ctx):
         """This command gives you a random rem image, powered by weeb.sh"""
         em = discord.Embed(color=ctx.author.color)
@@ -94,6 +100,7 @@ class Fun:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def jojo(self, ctx):
         """This command gives you a random jojo image, powered by weeb.sh"""
         em = discord.Embed(color=ctx.author.color)
@@ -102,6 +109,7 @@ class Fun:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def year(self, ctx, *, member: discord.Member = None):
         # *sheds a tear* my little baby is still alive :)
         # yes i am crazy
@@ -113,6 +121,7 @@ class Fun:
         await ctx.send("A year has:\n\n12 Months\n52 Weeks\n365 Days\n8760 Hours\n525600 Minutes\n3153600 Seconds\n\nAnd it only takes 1 minute to send **"+str(member)+"** nudes :3")
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def f(self, ctx):
         """Pay your respects."""
         embed = discord.Embed(title='Press F to pay respects!',description='**' + ctx.message.author.display_name + '** has paid their respects successfully :eggplant:',color=ctx.message.author.color).set_footer(text='f')
@@ -180,6 +189,7 @@ class Fun:
         await ctx.send(":mega: {}".format(x.text))
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def love(self, ctx, *members: discord.Member):
         """Use some magic numbers to calculate the compatibility between two users.
         If only one user is given, you will be used as the second."""
@@ -289,6 +299,7 @@ class Fun:
         await ctx.send(song)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def trivia(self, ctx, *, difficulty: str = None):
         """Play a game of trivia."""
         url = "https://opentdb.com/api.php?amount=1"
@@ -391,3 +402,5 @@ class Fun:
 
 def setup(bot):
     bot.add_cog(Fun(bot))
+
+# Yes, oddly enough, there are no leftovers in this cog. It was one of the more less effort to convert.

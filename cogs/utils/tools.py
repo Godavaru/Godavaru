@@ -109,3 +109,21 @@ def url_to_bytes(url):
 def get_json_from_url(url, headers=None):
     r = requests.get(url, headers=headers)
     return r.json()
+
+def get_status_emoji(status, number):
+    if status == "online":
+        array = [
+            "💚",
+            "<:online:398856032392183819>"
+        ]
+    elif status == "idle":
+        array = [
+            "💛",
+            "<:idle:398856031360253962>"
+        ]
+    elif status == 'dnd':
+        array = [
+            "❤",
+            "<:dnd:398856030068670477>"
+        ]
+    return str(array[number])
