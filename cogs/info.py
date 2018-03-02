@@ -52,7 +52,7 @@ class Info:
             for _ in server.members:
                 member_count += 1
         em = discord.Embed(title='About Godavaru!', description=about_description, color=0x9B59B6)
-        em.add_field(name='Version Number', value='{}'.format(self.bot.version), inline=False)
+        em.add_field(name='Version', value=self.bot.version + '\n' + self.bot.version_info, inline=False)
         em.add_field(name='Servers', value=str(server_count))
         em.add_field(name='Users', value=f'{member_count} total/{len(self.bot.users)} unique')
         em.add_field(
@@ -106,18 +106,18 @@ class Info:
     @commands.command()
     async def ping(self, ctx):
         """Check my response time and my websocket ping"""
-        before = datetime.datetime.utcnow()
+        before = datetime.utcnow()
         ping_msg = await ctx.send(":mega: If you see this message you are cool... jk. It's just a ping message.")
-        ping = (datetime.datetime.utcnow() - before) * 1000
+        ping = (datetime.utcnow() - before) * 1000
         before2 = time.monotonic()
         await (await self.bot.ws.ping())
         after = time.monotonic()
         ping2 = (after - before2) * 1000
         await ping_msg.edit(
-            content=":mega: Pong! My ping is {:.2f}ms! `Websocket: {0:.0f}ms`".format(ping.total_seconds(), ping2))
+            content=":mega: Pong! My ping is {:.2f}ms! `Websocket: {:.0f}ms`".format(ping.total_seconds(), ping2))
 
     def get_bot_uptime(self, *, brief=False):
-        now = datetime.datetime.utcnow()
+        now = datetime.utcnow()
         delta = now - self.bot.uptime
         hours, remainder = divmod(int(delta.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
@@ -219,7 +219,7 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
             inline=False
         ).add_field(
             name="Days Since Creation",
-            value=(datetime.datetime.now() - g.created_at).days
+            value=(datetime.now() - g.created_at).days
         ).add_field(
             name="Guild Region:",
             value=g.region
@@ -261,8 +261,8 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
         em = discord.Embed(color=user.color)
         em.add_field(name="Joined At:", value=user.joined_at.strftime("%A %d %B %Y at %H:%M:%S"), inline=False)
         em.add_field(name="Created At:", value=user.created_at.strftime("%A %d %B %Y at %H:%M:%S"), inline=False)
-        em.add_field(name="Days Since Join:", value=(datetime.datetime.now() - user.joined_at).days)
-        em.add_field(name="Days Since Creation:", value=(datetime.datetime.now() - user.created_at).days)
+        em.add_field(name="Days Since Join:", value=(datetime.now() - user.joined_at).days)
+        em.add_field(name="Days Since Creation:", value=(datetime.now() - user.created_at).days)
         em.add_field(name="Status:", value=user.status)
         em.add_field(name="Nickname:", value=user.nick)
         em.add_field(name="Voice Channel:", value=user.voice.channel if user.voice is not None else None)

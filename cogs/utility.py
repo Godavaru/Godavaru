@@ -69,12 +69,12 @@ class Utils:
             return
         definition = request['definition']
         if len(definition) > 1000:
-            definition = definition[997:] + "..."
+            definition = definition[:997] + "..."
         if definition == "":
             definition = "None"
         example = request['example']
         if len(example) > 1000:
-            example = example[997:] + "..."
+            example = example[:997] + "..."
         if example == "":
             example = "None"
         em = discord.Embed(description=f"Definition #{num+1}", color=ctx.author.color)

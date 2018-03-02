@@ -9,47 +9,48 @@ from discord.ext import commands
 import config
 from cogs.utils.tools import *
 
-startup_extensions = (
+initial_extensions = (
     "cogs.info",
     "cogs.fun",
     "cogs.action",
     "cogs.owner",
     "cogs.mod",
-    "cogs.utils",
+    "cogs.utility",
 )
 
 class Godavaru(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=config.prefix)
-        self.start_time = datetime.datetime.now()
+        self.start_time = datetime.now()
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token, adapter=discord.RequestsWebhookAdapter())
+        for extension in initial_extensions:
+            try:
+                self.load_extension(extension)
+            except Exception:
+                print(f'Failed to load extension {extension}.')
+                print(traceback.format_exc())
 
     async def on_ready(self):
-        server_count = len(self.guilds)
-        member_count = 0
-        for server in self.guilds:
-            for _ in server.members:
-                member_count += 1
-        if not hasattr(self, 'uptime'):
-            self.uptime = datetime.datetime.utcnow()
+        await self.change_presence(game=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
         if not hasattr(self, 'version'):
             self.version = config.version
-        cmds = len(self.commands)
-        startup_message = """[`{}`][`Godavaru`]
-    ===============
-    Logged in as:
-    {}
-    ===============
-    Ready for use.
-    Servers: `{}`
-    Users: `{}`
-    ===============
-    Loaded up `{}` commands in `{}` cogs in `{:.2f}` seconds.
-    ===============
-    """.format(datetime.datetime.now().strftime("%H:%M:%S"), str(self.user), server_count, member_count, cmds, len(self.cogs),(datetime.datetime.now() - self.start_time).total_seconds())
+        if not hasattr(self, 'version_info'):
+            self.version_info = config.version_description
+        startup_message = f"[`{datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n"\
+                          + "===============\n" \
+                          + 'Logged in as:\n'\
+                          + str(self.user) + '\n'\
+                          + '===============\n'\
+                          + 'Ready for use.\n'\
+                          + f'Servers: `{len(self.guilds)}`\n'\
+                          + f'Users: `{len(self.users)}`\n'\
+                          + '===============\n'\
+                          + f'Loaded up `{len(self.commands)}` commands in `{len(self.cogs)}` cogs in `{(datetime.now() - self.start_time).total_seconds()}` seconds.\n'\
+                          + '==============='
         print(startup_message.replace('`', ''))
         self.webhook.send(startup_message)
-        await self.change_presence(game=discord.Game(name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
+        if not hasattr(self, 'uptime'):
+            self.uptime = datetime.utcnow()
 
     async def on_guild_join(self, server):
         server_count = len(self.guilds)
@@ -60,7 +61,7 @@ class Godavaru(commands.Bot):
         await self.change_presence(game=discord.Game(
             name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':tada: [`' + str(
-            datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I joined the server `' + server.name + '` (' + str(
+            datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I joined the server `' + server.name + '` (' + str(
             server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(
             server.owner.id) + ').')
         guild_count = len(self.guilds)
@@ -78,7 +79,7 @@ class Godavaru(commands.Bot):
                 member_count += 1
         await self.change_presence(game=discord.Game(
             name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
-        self.webhook.send(content=':frowning: [`' + str(datetime.datetime.now().strftime(
+        self.webhook.send(content=':frowning: [`' + str(datetime.now().strftime(
             "%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + server.id + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
         guild_count = len(self.guilds)
         headers = {'Authorization': config.dbotstoken}
@@ -120,13 +121,13 @@ class Godavaru(commands.Bot):
             if message.guild is None:
                 await message.channel.send(
                     "Hey! Weirdo! Stop sending me dms. If you're trying to use commands, use it in a server.")
-                self.webhook.send(content="[`" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
+                self.webhook.send(content="[`" + str(datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
                                      + "[`CommandHandler`][`InterceptDirectMessage`]\n"
                                      + "[`AuthorInformation`]: {} ({})\n".format(str(message.author),
                                                                                  str(message.author.id))
                                      + "[`MessageInformation`]: {} ({})\n".format(message.clean_content, str(message.id))
                                      + "Intercepted direct message and sent alternate message.")
-                print("[" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "][Godavaru]\n"
+                print("[" + str(datetime.now().strftime("%H:%M:%S")) + "][Godavaru]\n"
                       + "[CommandHandler][InterceptDirectMessage]\n"
                       + "[AuthorInformation]: {} ({})\n".format(str(message.author), str(message.author.id))
                       + "[MessageInformation]: {} ({})\n".format(message.clean_content, str(message.id))
@@ -136,12 +137,12 @@ class Godavaru(commands.Bot):
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             pass
-        elif isinstance(error, commands.CheckFailure):
-            await ctx.send(":x: You are not authorized to use this command.")
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send(f':x: You seem to be missing the `{", ".join(error.missing_perms)}` permission(s).')
         elif isinstance(error, commands.BotMissingPermissions):
             await ctx.send(f":x: I need the permission(s) `{', '.join(error.missing_perms)}` to run this command.")
+        elif isinstance(error, commands.CheckFailure):
+            await ctx.send(":x: You are not authorized to use this command.")
         else:
             def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
                 return ''.join(random.choice(chars) for _ in range(size))
@@ -181,7 +182,7 @@ async def on_command_error(ctx, error):
         ":x: I ran into an error! Please report this on the support guild with the error ID, which is **{1}**. ```py\n{0}```".format(
             str(error)[29:], errid))
     webhook.send(content="[`" + str(
-        datetime.datetime.now(pytz.timezone('America/New_York')).strftime("%H:%M:%S")) + "`][`Godavaru`][:x:]\n"
+        datetime.now(pytz.timezone('America/New_York')).strftime("%H:%M:%S")) + "`][`Godavaru`][:x:]\n"
                          + "[`CommandHandler`][`Error`]\n"
                          + "[`ErrorInformation`][`{}`]: {}\n".format(errid, str(error)[29:])
                          + "[`GuildInformation`]: {}\n".format(
@@ -190,7 +191,7 @@ async def on_command_error(ctx, error):
                          + "[`AuthorInformation`]: {} ({})\n".format(str(ctx.message.author),
                                                                      str(ctx.message.author.id))
                          + "[`MessageInformation`]: {} ({})\n".format(ctx.message.clean_content, str(ctx.message.id)))
-    print("[" + str(datetime.datetime.now(pytz.timezone('America/New_York')).strftime("%H:%M:%S")) + "][Godavaru]\n"
+    print("[" + str(datetime.now(pytz.timezone('America/New_York')).strftime("%H:%M:%S")) + "][Godavaru]\n"
           + "[CommandHandler][Error]\n"
           + "[ErrorInformation]: {}\n".format(str(error)[29:])
           + "[GuildInformation]: {}\n".format(
