@@ -1,6 +1,8 @@
 import discord
 import hastebin
 import traceback
+import aiohttp
+import datetime
 import io
 import textwrap
 import json
@@ -22,8 +24,6 @@ class Owner():
     @commands.check(is_owner)
     async def _eval(self, ctx, *, code):
         """Evaluate code. (Bot Owner Only)"""
-        code = code.strip('```py\n')
-        code = code.strip('`')
         env = {
             'self': self,
             'bot': self.bot,
@@ -45,26 +45,44 @@ class Owner():
         try:
             exec(to_compile, env)
         except Exception as e:
-            return await ctx.send(f"```py\n{e.__class__.__name__}: {e}```")
+            err = "; ".join(str(e).split("\n"))
+            return await ctx.send(f"Error while executing: `{e.__class__.__name__}: {err}`")
 
+        before = datetime.datetime.utcnow()
         func = env['func']
         try:
             with redirect_stdout(stdout):
                 ret = await func()
-        except Exception:
-            await ctx.send(f"```py\n{traceback.format_exc()}```")
+        except Exception as e:
+            err = "; ".join(str(e).split("\n"))
+            return await ctx.send(f"Error while executing: `{e.__class__.__name__}: {err}`")
         else:
             value = stdout.getvalue()
             if ret is None:
                 if value:
-                    x = f"{value}"
+                    if isinstance(value, str):
+                        value = "'" + value.replace("'", "\\'") + "'"
+                    content = f"{value}"
                     self.last_result = value
                 else:
-                    x = "Executed successfully with no objects returned."
+                    content = None
             else:
-                x = f"Executed successfully and returned: ```py\n{value}{ret}```"
+                y = ret if not isinstance(ret, str) else "'" + ret.replace("'", "\\'") + "'"
+                content = f"{value}{y}"
                 self.last_result = ret
-            await ctx.send(x)
+            try:
+                await ctx.send(f"*Executed in {((datetime.datetime.utcnow() - before) * 1000).total_seconds()}ms" + (
+                f".* ```py\n{content}```" if content else " with no returns.*"))
+            except discord.HTTPException:
+                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastebin...")
+                async with aiohttp.ClientSession() as session:
+                    async with session.post("https://hastebin.com/documents", data=content.encode('utf-8')) as resp:
+                        if resp.status == 200:
+                            await msg.edit(content="*Executed in {}ms and returned:* https://hastebin.com/".format(
+                                ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + (await resp.json())[
+                                                       "key"])
+                        else:
+                            await msg.edit(content="Error uploading to hastebin :(")
 
     @commands.command()
     @commands.check(is_owner)

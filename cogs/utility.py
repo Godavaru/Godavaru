@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import random
 import urllib
 import pytz
@@ -16,17 +17,6 @@ class AppURLopener(urllib.request.FancyURLopener):
 class Utils:
     def __init__(self, bot):
         self.bot = bot
-
-    def random_colour(self):
-        co = ["A", "B", "C", "D", "E", "F", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        a = int(random.random() * len(co))
-        b = int(random.random() * len(co))
-        c = int(random.random() * len(co))
-        d = int(random.random() * len(co))
-        e = int(random.random() * len(co))
-        f = int(random.random() * len(co))
-        col = "{}{}{}{}{}{}".format(co[a], co[b], co[c], co[d], co[e], co[f])
-        return discord.Colour(int(col, 16))
 
     @commands.command(name="time")
     async def _time(self, ctx, *, timezone: str):
@@ -230,7 +220,7 @@ class Utils:
             except:
                 return await ctx.send(":x: You never gave me an operation. Check the command help.")
         expr = oper[0].replace('/', '%2F')
-        r = requests.get("https://newton.now.sh/"+op+"/"+expr)
+        r = requests.get("https://newton.now.sh/" + op + "/"+expr)
         try:
             js = r.json()
         except json.decoder.JSONDecodeError:
@@ -242,7 +232,22 @@ class Utils:
         em.set_footer(text="Requested by "+str(ctx.message.author))
         em.timestamp = datetime.datetime.now()
         await ctx.send(embed=em)
-        
+
+    @commands.command(aliases=["request"])
+    @commands.cooldown(rate=4, per=43200, type=commands.BucketType.user)
+    async def suggest(self, ctx, *, suggestion: str):
+        """Suggest a feature to be added!
+        Has a cooldown of 2 requests per day to prevent spamming."""
+        request_channel = self.bot.get_channel(316674935898636289)
+        if request_channel is None:  # shouldn't happen but /shrug
+            return await ctx.send(":x: Um, I'm sorry? The suggestions channel seems to be missing. "
+                                  + "My owner must have deleted it. Sorry. :/ "
+                                  + "Feel free to suggest your idea in person at my support server "
+                                  + "in **#{}**! (https://discord.gg/ewvvKHM)".format(self.bot.get_channel(315252572812214273).name))
+        await request_channel.send(f"**User Suggestion By:** {ctx.author} ({ctx.author.id})\n"
+                                   + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
+                                   + f"**Suggestion:** {suggestion.replace('@', '@‍')}")
+        await ctx.send(":ok_hand: Got it! Your suggestion has been sent through cyberspace all the way to my owner!")
 
     @commands.command(aliases=["define"])
     async def dictionary(self, ctx, word: str):
