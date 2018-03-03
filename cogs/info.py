@@ -150,32 +150,33 @@ class Info:
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
-                em = discord.Embed(title="Commands in Category " + cmds[0].cog_name, description=msg)
+                em = discord.Embed(title="Commands in Category " + cmds[0].cog_name, description=msg, color=ctx.author.color)
                 em.set_footer(text=f"For extended help, do {ctx.prefix}help <command>")
                 return await ctx.send(embed=em)
-            em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.description)
+            em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help, color=ctx.author.color)
             comm = cmd.signature.split(' ')[0].split('|')[0].replace('[', '')
             usage = cmd.signature.replace(cmd.signature.split(' ')[0], "")
-            em.add_field(name="Usage", value=f"`{ctx.prefix}{comm}{usage}`")
+            em.add_field(name="Usage", value=f"`{ctx.prefix}{comm}{usage}`", inline=False)
             if len(cmd.aliases) > 0:
-                em.add_field(name="Alias(es)", value="`" + "`, `".join(cmd.aliases) + "`")
+                em.add_field(name="Alias(es)", value="`" + "`, `".join(cmd.aliases) + "`", inline=False)
             if hasattr(cmd, 'commands'):
                 cmds = list(cmd.commands)
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
-                em.add_field(name="Subcommands", value=msg)
+                em.add_field(name="Subcommands", value=msg, inline=False)
             return await ctx.send(embed=em)
         em = discord.Embed(
             title="Godavaru Help",
-            description="Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!")
-        for cog in self.bot.cogs:
-            if cog == "Owner":
+            description="Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!",
+            color=ctx.author.color)
+        for cog in sorted(self.bot.cogs):
+            if str(cog) == "Owner":
                 continue
-            cmds = list(self.bot.get_cog_commands(cog))
+            cmds = sorted(list(self.bot.get_cog_commands(str(cog))), key=lambda c: c.name)
             if len(cmds) == 0:
                 continue
-            em.add_field(name=cog, value=f"`{'`, `'.join(cmds)}`")
+            em.add_field(name=cog, value=f"`{'`, `'.join([c.name for c in cmds])}`", inline=False)
         em.set_footer(text=f"Total commands: {len(self.bot.commands)}")
         await ctx.send(embed=em)
 
