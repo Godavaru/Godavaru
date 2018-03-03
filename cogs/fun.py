@@ -68,7 +68,7 @@ class Fun:
     async def delet(self, ctx):
         """This command gives you a random delet this meme, powered by weeb.sh"""
         em = discord.Embed(title="Delet this!!1!",color=ctx.author.color)
-        em.set_image(url=weeb.request_image("delet_this"))
+        em.set_image(url=await weeb.request_image("delet_this"))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -77,7 +77,7 @@ class Fun:
     async def awoo(self, ctx):
         """This command gives you a random awoo image, powered by weeb.sh"""
         em = discord.Embed(title="Awoo~",color=ctx.author.color)
-        em.set_image(url=weeb.request_image("awoo"))
+        em.set_image(url=await weeb.request_image("awoo"))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -86,7 +86,7 @@ class Fun:
     async def megumin(self, ctx):
         """This command gives you a random megumin image, powered by weeb.sh"""
         em = discord.Embed(color=ctx.author.color)
-        em.set_image(url=weeb.request_image('megumin'))
+        em.set_image(url=await weeb.request_image('megumin'))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -95,7 +95,7 @@ class Fun:
     async def rem(self, ctx):
         """This command gives you a random rem image, powered by weeb.sh"""
         em = discord.Embed(color=ctx.author.color)
-        em.set_image(url=weeb.request_image('rem'))
+        em.set_image(url=await weeb.request_image('rem'))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -104,7 +104,18 @@ class Fun:
     async def jojo(self, ctx):
         """This command gives you a random jojo image, powered by weeb.sh"""
         em = discord.Embed(color=ctx.author.color)
-        em.set_image(url=weeb.request_image('jojo'))
+        em.set_image(url=await weeb.request_image('jojo'))
+        em.set_footer(text="Powered by weeb.sh")
+        await ctx.send(embed=em)
+
+    @commands.command(aliases=["weeb"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def image(self, ctx, type: str):
+        """Get an image with the specified type, powered by weeb.sh"""
+        if type not in self.bot.weeb_types or type.lower() == "types":
+            return await ctx.send(f"Valid types: ```\n{', '.join(self.bot.weeb_types)}")
+        em = discord.Embed(color=ctx.author.color)
+        em.set_image(url=await weeb.request_image(type))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -134,6 +145,7 @@ class Fun:
     # why did i make this comment block
     # aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     # memes
+    # imma just add a single line of comments everytime i see this owo
 
     @commands.command()
     async def slots(self, ctx):

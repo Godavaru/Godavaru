@@ -2,6 +2,7 @@ import datetime
 import random
 import string
 import traceback
+import asyncio
 
 import aiohttp
 from discord.ext import commands
@@ -22,6 +23,8 @@ class Godavaru(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=config.prefix)
         self.start_time = datetime.now()
+        self.version = config.version
+        self.version_info = config.version_description
         self.remove_command('help')
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token, adapter=discord.RequestsWebhookAdapter())
         for extension in initial_extensions:
@@ -33,10 +36,6 @@ class Godavaru(commands.Bot):
 
     async def on_ready(self):
         await self.change_presence(game=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
-        if not hasattr(self, 'version'):
-            self.version = config.version
-        if not hasattr(self, 'version_info'):
-            self.version_info = config.version_description
         startup_message = f"[`{datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n"\
                           + "===============\n" \
                           + 'Logged in as:\n'\
@@ -52,6 +51,13 @@ class Godavaru(commands.Bot):
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
+        url = f"https://api.weeb.sh/images/types"
+        while True:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, headers={"Authorization": config.weeb_token}) as resp:
+                    j = await resp.json()
+                    self.weeb_types = j["types"]
+                    await asyncio.sleep(86400)
 
     async def on_guild_join(self, server):
         server_count = len(self.guilds)

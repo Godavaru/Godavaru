@@ -44,7 +44,7 @@ This repository is protected under the MIT license. You can read it
 [here](https://github.com/Desiiii/Godavaru/blob/master/LICENSE.md).
 
 # Links
-<br>[DBL](https://discordbots.org/bot/311810096336470017)
+[DBL](https://discordbots.org/bot/311810096336470017)
 <br>[DBots](https://bots.discord.pw/bots/311810096336470017)
 <br>[Python 3.6](https://www.python.org/downloads/release/python-360/)
 <br>[discord.py](https://github.com/Rapptz/discord.py)
