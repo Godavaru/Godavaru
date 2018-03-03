@@ -9,454 +9,250 @@ class Action:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def cuddle(self, ctx, *members: str):
+    async def cuddle(self, ctx):
         """For when you just need to cuddle someone uwu"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is cuddling **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is cuddling **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***cuddles with you***'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="cuddle"), name="cuddle.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="cuddle"), name="cuddle.gif")
         await ctx.send(content=msg, file=discord.File("./images/cuddle.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def hug(self, ctx, *members: str):
+    async def hug(self, ctx):
         """Give a person a big fat hug! Awww!"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is hugging **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is hugging **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***hugs*** Are you okay now, **{ctx.author.display_name}**?'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="hug"), name="hug.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="hug"), name="hug.gif")
         await ctx.send(content=msg, file=discord.File("./images/hug.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def slap(self, ctx, *members: str):
+    async def slap(self, ctx):
         """What the hell did you just say to me? I'm gonna slap you to the moon for that comment!"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is slapping **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is slapping **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**Uh, okay. Sure. _slaps_**'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="slap"), name="slap.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="slap"), name="slap.gif")
         await ctx.send(content=msg, file=discord.File("./images/slap.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def kiss(self, ctx, *members: str):
+    async def kiss(self, ctx):
         """Give that special someone a kiss! <3"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is kissing **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is kissing **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'I\'ll kiss you! *kisses*'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="kiss"), name="kiss.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="kiss"), name="kiss.gif")
         await ctx.send(content=msg, file=discord.File("./images/kiss.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def pat(self, ctx, *members: str):
+    async def pat(self, ctx):
         """Send a pat over to a person or a few people. Sometimes a pat speaks words that words cannot.
         Or maybe I just really like pats so I endorse them. Whichever one it is."""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is patting **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is patting **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***pats you***'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="slap"), name="slap.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="slap"), name="slap.gif")
         await ctx.send(content=msg, file=discord.File("./images/slap.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def poke(self, ctx, *members: str):
+    async def poke(self, ctx):
         """Do you ever have a friend who just wont stop ignoring you? Just poke them. :eyes:"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is poking **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is poking **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'*pokes you* hi. *pokes more*'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="teehee"), name="tease.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="teehee"), name="tease.gif")
         await ctx.send(content=msg, file=discord.File("./images/tease.gif"))
 
-    @commands.command(aliases=["teehee"])
+    @commands.command(aliases=["teehee"], usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def tease(self, ctx, *members: str):
+    async def tease(self, ctx):
         """Hehe. The command for when you want to be a little joker and tease someone."""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is teasing **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is teasing **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'*teases you* hehe'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="teehee"), name="tease.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="teehee"), name="tease.gif")
         await ctx.send(content=msg, file=discord.File("./images/tease.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def stare(self, ctx, *members: str):
+    async def stare(self, ctx):
         """The command for when you have no clue what to say to someone, so you just stare..."""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is staring at **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**..."
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is staring at **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**..."
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***stares at you***'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="stare"), name="stare.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="stare"), name="stare.gif")
         await ctx.send(content=msg, file=discord.File("./images/stare.gif"))
-            
-    @commands.command()
+
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def wakeup(self, ctx, *members: str):
+    async def wakeup(self, ctx):
         """A way to get your friends off of their lazy butts and wake up."""
         imgs = ["./images/wakeupa.gif", "./images/wakeupb.gif", "./images/wakeupc.gif", "./images/wakeupd.gif", "./images/wakeupe.gif", "./images/wakeupf.gif", "./images/wakeupg.gif", "./images/wakeuph.gif"]
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is slapping **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is slapping **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**Uh, okay. Sure. _slaps_**'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="slap"), name="slap.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="slap"), name="slap.gif")
         await ctx.send(content=msg, file=discord.File(f"./images/{random.choice(imgs)}.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
-    async def sleep(self, ctx, *members: str):
+    async def sleep(self, ctx):
         """The literal opposite of wakeup. This is also based off of my best friend, Kitty#4867, who would always tell me to go to bed. Love ya, Kat! ~Desii"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is telling **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}** to sleep!"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is telling **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}** to sleep!"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**Self-discipline! I like it! Go sleep!**'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="sleep"), name="sleep.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="sleep"), name="sleep.gif")
         await ctx.send(content=msg, file=discord.File("./images/sleep.gif"))
 
-    @commands.command()
+    @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
-    async def cry(self, ctx, *members: str):
+    async def cry(self, ctx):
         """When life gets at you and you just wanna let it all out."""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is crying!'
         else:
-            msg = f"**{ctx.author.display_name}** is crying because of **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+            msg = f"**{ctx.author.display_name}** is crying because of **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is crying!'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="cry"), name="cry.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="cry"), name="cry.gif")
         await ctx.send(content=msg, file=discord.File("./images/cry.gif"))
 
-    @commands.command()
+    @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
-    async def triggered(self, ctx, *members: str):
+    async def triggered(self, ctx):
         """**T R I G G E R E D**"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is triggered! REEEEEEEEEEEEEE'
         else:
-            msg = f"**{ctx.author.display_name}** is triggered because of **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**"
-        for u in l:
+            msg = f"**{ctx.author.display_name}** is triggered because of **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is triggered! REEEEEEEEEEEEEE'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="triggered"), name="triggered.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="triggered"), name="triggered.gif")
         await ctx.send(content=msg, file=discord.File("./images/triggered.gif"))
 
-    @commands.command()
+    @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
-    async def think(self, ctx, *members: str):
+    async def think(self, ctx):
         """You ever think about stuff, man?"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is thinking...'
         else:
-            msg = f"**{ctx.author.display_name}** is thinking about **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**! o.o"
-        for u in l:
+            msg = f"**{ctx.author.display_name}** is thinking about **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**! o.o"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is thinking...'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="thinking"), name="thinking.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="thinking"), name="thinking.gif")
         await ctx.send(content=msg, file=discord.File("./images/thinking.gif"))
 
-    @commands.command()
+    @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
-    async def blush(self, ctx, *members: str):
+    async def blush(self, ctx):
         """I-it's not like I like you, b-baka!"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is blushing... Who made them blush?'
         else:
-            msg = f"**{ctx.author.display_name}** is blushing because of **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**! o.o"
-        for u in l:
+            msg = f"**{ctx.author.display_name}** is blushing because of **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**! o.o"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is blushing... Who made them blush?'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="blush"), name="blush.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="blush"), name="blush.gif")
         await ctx.send(content=msg, file=discord.File("./images/blush.gif"))
 
-    @commands.command()
+    @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
-    async def smile(self, ctx, *members: str):
+    async def smile(self, ctx):
         """\uD83C\uDFB6 You make me smile like the sun, fall outta bed... \uD83C\uDFB6
         What? I wasn't singing!"""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is smiling.'
         else:
-            msg = f"**{ctx.author.display_name}** is smiling at**{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**!"
-        for u in l:
+            msg = f"**{ctx.author.display_name}** is smiling at**{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**!"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is smiling.'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="smile"), name="smile.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="smile"), name="smile.gif")
         await ctx.send(content=msg, file=discord.File("./images/smile.gif"))
 
-    @commands.command()
+    @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
-    async def shrug(self, ctx, *members: str):
+    async def shrug(self, ctx):
         """When you have no idea what is going on."""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             msg = f'***shrugs***'
         else:
-            msg = f"**{ctx.author.display_name}** is shrugging at **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**!"
-        for u in l:
+            msg = f"**{ctx.author.display_name}** is shrugging at **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**!"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***shrugs***'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="shrug"), name="shrug.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="shrug"), name="shrug.gif")
         await ctx.send(content=msg, file=discord.File("./images/shrug.gif"))
 
-    @commands.command()
+    @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
-    async def confused(self, ctx, *members: str):
+    async def confused(self, ctx):
         """When you still have no idea what is going on."""
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is confused'
         else:
-            msg = f"**{ctx.author.display_name}** is confused with **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}**!"
-        for u in l:
+            msg = f"**{ctx.author.display_name}** is confused with **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**!"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is confused'
-        weeb.save_to_image(url=weeb.request_image_as_gif(type="clagwimoth"), name="clagwimoth.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="clagwimoth"), name="clagwimoth.gif")
         await ctx.send(content=msg, file=discord.File("./images/clagwimoth.gif"))
 
-    @commands.command()
+    @commands.command(usage="<members>")
     @commands.bot_has_permissions(embed_links=True)
-    async def fuck(self, ctx, *members: str):
+    async def fuck(self, ctx):
         """Feeling lewd? Why don't you go and fuck a person :eyes:
         Note: This command does include NSFW content, meaning it can only be used in NSFW marked channels. For a reference on how to set channels as NSFW, [here is a general idea of where the button usually is.](https://i.imgur.com/ZisyibJ.png)"""
         # IMPORTANT: Hey you! Yes you, scrolling through the source code. Be warned that these links contain NSFW gifs.
@@ -483,24 +279,12 @@ class Action:
                 "http://www.tagstube.com/wp-content/uploads/cache-e21155888465eabf55d969bc601f08b2/2016/01/Anime-Hentai-Gif-3.gif",
                 "http://www.tagstube.com/wp-content/uploads/cache-e21155888465eabf55d969bc601f08b2/2016/01/Anime-Hentai-Gif-4.gif",
                 "https://angrygif.com/wp-content/uploads/2017/02/fd5d61e746e1dc4a41b872f4e388753f.gif"]
-        l = []
-        for m in members:
-            if m.startswith('<@') and m.endswith('>'):
-                mid = m.replace('<@!', '').replace('<@', '').replace('>', '')
-                try:
-                    mem = ctx.guild.get_member(int(mid))
-                    if mem is None or mem.display_name in l:
-                        continue
-                    else:
-                        l.append(ctx.guild.get_member(int(mid)).display_name)
-                except:
-                    continue
-        if len(l) == 0:
+        if len(ctx.message.mentions) == 0:
             return await ctx.send(":x: You can't fuck the air... well, you can try.")
         if not ctx.channel.is_nsfw():
             return await ctx.send(":x: Y-you lewdie! Go get a room!")
-        msg = f"**{ctx.author.display_name}** is fucking **{(', '.join(l)).replace(', '+l[len(l)-1], ' and '+l[len(l)-1])}** to sleep!"
-        for u in l:
+        msg = f"**{ctx.author.display_name}** is fucking **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}** to sleep!"
+        for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'Oh, okay. Sure. I\'ll fuck you.'
         em = discord.Embed(

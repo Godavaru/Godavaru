@@ -110,10 +110,10 @@ class Fun:
 
     @commands.command(aliases=["weeb"])
     @commands.bot_has_permissions(embed_links=True)
-    async def image(self, ctx, type: str):
+    async def image(self, ctx, type: str = None):
         """Get an image with the specified type, powered by weeb.sh"""
-        if type not in self.bot.weeb_types or type.lower() == "types":
-            return await ctx.send(f"Valid types: ```\n{', '.join(self.bot.weeb_types)}")
+        if type not in self.bot.weeb_types or type.lower() is None:
+            return await ctx.send(f"Valid types: ```\n{', '.join(self.bot.weeb_types)}\n```")
         em = discord.Embed(color=ctx.author.color)
         em.set_image(url=await weeb.request_image(type))
         em.set_footer(text="Powered by weeb.sh")
