@@ -22,6 +22,7 @@ class Godavaru(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=config.prefix)
         self.start_time = datetime.now()
+        self.remove_command('help')
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token, adapter=discord.RequestsWebhookAdapter())
         for extension in initial_extensions:
             try:

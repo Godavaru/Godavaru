@@ -3,11 +3,12 @@ import platform
 import time
 import discord
 from discord.ext import commands
+import config
 from cogs.utils.tools import *
 
 about_description = """
 **H-hello!~~**
-My name is Godavaru, but you can call me Godava, as many people do. I was named after a community guild, which I am not directly linked to anymore, but you may check out if you wish using the link [here](https://discord.gg/bxDV2yu)! I-I mean, It's not like I want you to join or anything... baka!
+My name is Godavaru, but you can call me Godava, as many people do. I was named after a community guild, which I am not directly linked to anymore, but you may check out if you wish using the link [here](https://discord.gg/QdxDhrz)! I-I mean, It's not like I want you to join or anything... baka!
 Below, you can find a link to the actual support guild for me, where you may tell my mom if I misbehave and throw errors around again. :< Below, you can also find a link to invite me, if you so wish! I promise that I will do you good!
 I have quite a few features; I can list them for you now!
 
@@ -46,23 +47,22 @@ class Info:
     @commands.group()
     async def about(self, ctx):
         """Show the stuff about me! I promise I'm interesting uwu"""
-        member_count = 0
-        server_count = len(self.bot.guilds)
-        for server in self.bot.guilds:
-            for _ in server.members:
-                member_count += 1
-        em = discord.Embed(title='About Godavaru!', description=about_description, color=0x9B59B6)
-        em.add_field(name='Version', value=self.bot.version + '\n' + self.bot.version_info, inline=False)
-        em.add_field(name='Servers', value=str(server_count))
-        em.add_field(name='Users', value=f'{member_count} total/{len(self.bot.users)} unique')
-        em.add_field(
-            name='Invite Me!',
-            value='[Click Here](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/desii)',
-            inline=False)
-        em.set_footer(text="Made with love <3")
-        em.set_thumbnail(
-            url="https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png")
-        await ctx.send(embed=em)
+        if ctx.invoked_subcommand is None:
+            member_count = 0
+            server_count = len(self.bot.guilds)
+            for server in self.bot.guilds:
+                for _ in server.members:
+                    member_count += 1
+            em = discord.Embed(title='About Godavaru!', description=about_description, color=0x9B59B6)
+            em.add_field(name='Version', value=self.bot.version + '\n' + self.bot.version_info, inline=False)
+            em.add_field(name='Servers', value=str(server_count))
+            em.add_field(name='Users', value=f'{member_count} total/{len(self.bot.users)} unique')
+            em.add_field(
+                name='Invite Me!',
+                value='[Click Here](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/desii)',
+                inline=False)
+            em.set_footer(text="Made with love <3")
+            await ctx.send(embed=em)
 
     @about.command()
     async def credits(self, ctx):
@@ -83,6 +83,7 @@ class Info:
             full_credits += f'**{self.bot.get_user(user_id)}** - {desc}\n'
         em = discord.Embed(description=full_credits, color=ctx.author.color)
         em.set_author(name='Credited users', icon_url=ctx.me.avatar_url)
+        em.add_field(name="Server Moderators", value="**" + "\n".join([str(m) for m in mods]) + "**")
         await ctx.send(embed=em)
 
     @commands.command(aliases=["links"])
@@ -135,7 +136,7 @@ class Info:
 
         return fmt.format(d=days, h=hours, m=minutes, s=seconds)
 
-    @commands.command()
+    @commands.command(name="help", aliases=["cmds", "commands", "halp"])
     @commands.bot_has_permissions(embed_links=True)
     async def _help(self, ctx, *, command_or_category: str = None):
         """Shows a list of commands or gives extended help on the command/category you supplied."""
@@ -150,10 +151,14 @@ class Info:
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
-                em = discord.Embed(title="Commands in Category " + cmds[0].cog_name, description=msg, color=ctx.author.color)
-                em.set_footer(text=f"For extended help, do {ctx.prefix}help <command>")
+                em = discord.Embed(title="Commands in Category " + cmds[0].cog_name, description=msg,
+                                   color=ctx.author.color)
+                em.set_footer(
+                    text=f"Requested by {ctx.author.display_name} | For extended help, do {ctx.prefix}help <command>",
+                    icon_url=ctx.author.avatar_url.split('?')[0])
                 return await ctx.send(embed=em)
-            em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help, color=ctx.author.color)
+            em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help,
+                               color=ctx.author.color)
             comm = cmd.signature.split(' ')[0].split('|')[0].replace('[', '')
             usage = cmd.signature.replace(cmd.signature.split(' ')[0], "")
             em.add_field(name="Usage", value=f"`{ctx.prefix}{comm}{usage}`", inline=False)
@@ -165,19 +170,21 @@ class Info:
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
                 em.add_field(name="Subcommands", value=msg, inline=False)
+            em.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url.split('?')[0])
             return await ctx.send(embed=em)
         em = discord.Embed(
             title="Godavaru Help",
             description=f"Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!",
             color=ctx.author.color)
         for cog in sorted(self.bot.cogs):
-            if str(cog) == "Owner":
+            if str(cog) == "Owner" and ctx.author.id not in config.owners:
                 continue
             cmds = sorted(list(self.bot.get_cog_commands(str(cog))), key=lambda c: c.name)
             if len(cmds) == 0:
                 continue
             em.add_field(name=cog, value=f"`{'`, `'.join([c.name for c in cmds])}`", inline=False)
-        em.set_footer(text=f"Total commands: {len(self.bot.commands)}")
+        em.set_footer(text=f"Requested by {ctx.author.display_name} | Total commands: {len(self.bot.commands)}",
+                      icon_url=ctx.author.avatar_url.split('?')[0])
         await ctx.send(embed=em)
 
     @commands.command(pass_context=True)
