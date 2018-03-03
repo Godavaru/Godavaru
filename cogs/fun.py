@@ -26,16 +26,22 @@ class Fun:
             else:
                 args = args[4:]
                 await ctx.send(str(args))
-                await ctx.message.delete()
+                try:
+                    await ctx.message.delete()
+                except:
+                    pass
         elif args.startswith("--e"):
             if args == "--e": # --e == edit
-                await ctx.send("You can't edit nothingness.")
+                return await ctx.send("You can't edit nothingness.")
             try:
                 args = args[4:]
                 mid = args.split(' ')
                 toEdit = await ctx.message.channel.get_message(int(mid[0])) 
                 content = args.replace(mid[0]+" ", "")
-                await toEdit.edit(content=content)
+                try:
+                    await toEdit.edit(content=content)
+                except discord.Forbidden:
+                    await ctx.send("Can't edit that message.")
                 await ctx.message.delete()
             except discord.NotFound:
                 notFound = await ctx.send("Couldn't find the message.")
@@ -54,12 +60,12 @@ class Fun:
         else:
             await ctx.send(str(args))
 
-    @commands.command()
+    @commands.command(aliases=["memes"])
     @commands.bot_has_permissions(embed_links=True)
     async def meme(self, ctx):
         """This command gives you a random discord meme, powered by weeb.sh"""
         em = discord.Embed(title="Here's a random discord meme for ya",color=ctx.author.color)
-        em.set_image(url=weeb.request_image("discord_meme"))
+        em.set_image(url=await weeb.request_image("discord_meme"))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 

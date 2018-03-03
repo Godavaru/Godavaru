@@ -304,7 +304,7 @@ class Action:
             return await ctx.send(":x: Don't kill yourself! You're loved!")
         if member.id == ctx.me.id:
             return await ctx.send(":x: Nice try. <3")
-        await ctx.send(":knife:" + random.choice(quotes).format(member.display_name, ctx.author.display_name))
+        await ctx.send(":knife: " + random.choice(quotes).format(member.display_name, ctx.author.display_name))
         
 def setup(bot):
     bot.add_cog(Action(bot))

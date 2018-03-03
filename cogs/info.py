@@ -97,11 +97,12 @@ class Info:
             color=0x9B59B6)
         em.set_author(
             name='Useful Links for Godavaru!',
-            icon_url='https://cdn.discordapp.com/avatars/311810096336470017/fa4daf0662e13f25bdbd09fd18bdc36d.png')
+            icon_url=ctx.me.avatar_url.split('?')[0])
         em.add_field(name='Invite URL', value='http://is.gd/godavaru')
         em.add_field(name='Support Guild', value='https://discord.gg/ewvvKHM')
         em.add_field(name="Patreon URL", value='https://patreon.com/desii')
         em.add_field(name="Github", value="https://github.com/Desiiii/Godavaru")
+        em.add_field(name="Website", value="https://godavaru.site/")
         await ctx.send(embed=em)
 
     @commands.command()

@@ -1,6 +1,8 @@
 import datetime
 import json
 import os
+import asyncio
+import re
 import random
 import urllib
 import pytz
@@ -29,12 +31,14 @@ class Utils:
                     t = timezone.replace('+', '-')
                 elif timezone.startswith('GMT-'):
                     t = timezone.replace('-', '+')
-                tz = pytz.timezone('Etc/'+t)
+                tz = pytz.timezone('Etc/' + t)
             else:
                 tz = pytz.timezone(timezone)
-            await ctx.send("The time in **{0}** is {1}".format(timezone, datetime.datetime.now(tz).strftime("`%H:%M:%S` on `%d-%b-%Y`")))
+            await ctx.send("The time in **{0}** is {1}".format(timezone, datetime.datetime.now(tz).strftime(
+                "`%H:%M:%S` on `%d-%b-%Y`")))
         except pytz.UnknownTimeZoneError:
-            await ctx.send('Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
+            await ctx.send(
+                'Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
 
     @commands.command()
     async def urban(self, ctx, *, params):
@@ -111,7 +115,7 @@ class Utils:
         em.set_thumbnail(url="https://8ball.delegator.com/images/8ball.png")
         em.set_author(name="You consult the magic 8 ball...", icon_url=ctx.author.avatar_url.replace("?size=1024", ""))
         em.set_footer(text="Powered by 8ball.delegator.com")
-        em.timestamp = datetime.datetime.now()
+        em.timestamp = datetime.now()
         await ctx.send(embed=em)
 
     @commands.command()
@@ -120,7 +124,8 @@ class Utils:
         colours = [0x1abc9c, 0x11806a, 0x2ecc71, 0x1f8b4c, 0x3498db, 0x206694, 0x9b59b6, 0x71368a, 0xe91e63, 0xad1457,
                    0xf1c40f, 0xc27c0e, 0xa84300, 0xe74c3c, 0x992d22, 0x95a5a6, 0x607d8b, 0x979c9f, 0x546e7a]
         col = int(random.random() * len(colours))
-        content = [";w; Don't be sad, here's a cat!", "You seem lonely, {0.mention}. Here, have a cat".format(ctx.author),
+        content = [";w; Don't be sad, here's a cat!",
+                   "You seem lonely, {0.mention}. Here, have a cat".format(ctx.author),
                    "Meeeooowwww!", "Awww, so cute! Look at the kitty!!1!", "Woof... wait wrong animal."]
         con = int(random.random() * len(content))
         r = requests.get('http://random.cat/meow')
@@ -128,7 +133,6 @@ class Utils:
         em = discord.Embed(color=colours[col])
         em.set_image(url=js['file'])
         await ctx.send(content=content[con], embed=em)
-
 
     @commands.command()
     async def dog(self, ctx):
@@ -141,10 +145,12 @@ class Utils:
                 pass
             else:
                 is_video = False
-        colours = [0x1abc9c, 0x11806a, 0x2ecc71, 0x1f8b4c, 0x3498db, 0x206694, 0x9b59b6, 0x71368a, 0xe91e63, 0xad1457, 0xf1c40f, 0xc27c0e, 0xa84300, 0xe74c3c, 0x992d22, 0x95a5a6, 0x607d8b, 0x979c9f, 0x546e7a]
+        colours = [0x1abc9c, 0x11806a, 0x2ecc71, 0x1f8b4c, 0x3498db, 0x206694, 0x9b59b6, 0x71368a, 0xe91e63, 0xad1457,
+                   0xf1c40f, 0xc27c0e, 0xa84300, 0xe74c3c, 0x992d22, 0x95a5a6, 0x607d8b, 0x979c9f, 0x546e7a]
         col = int(random.random() * len(colours))
         content = [":dog: Don't be sad! This doggy wants to play with you!",
-                   "You seem lonely, {0.display_name}. Here, have a dog. They're not as nice as cats, but enjoy!".format(ctx.author),
+                   "You seem lonely, {0.display_name}. Here, have a dog. They're not as nice as cats, but enjoy!".format(
+                       ctx.author),
                    "Weuf, woof, woooooooooof. Woof you.", "Pupper!", "Meow... wait wrong animal."]
         con = int(random.random() * len(content))
         em = discord.Embed(color=colours[col])
@@ -155,12 +161,8 @@ class Utils:
     async def jumbo(self, ctx, emote: str):
         """Get a larger version of a custom emote."""
         e = emote.split(':')
-        anim = False
-        if e[0] == '<a':
-            anim = True
-        suffix = ".png"
-        if anim is True:
-            suffix = ".gif"
+        anim = False if e[0] != '<a' else True
+        suffix = ".png" if not anim else ".gif"
         url = f"https://cdn.discordapp.com/emojis/{e[2].replace('>', '')}{suffix}"
         weeb.save_to_image(url=url, name=e[1] + suffix)
         await ctx.send(file=discord.File(f'./images/{e[1]}{suffix}'))
@@ -197,7 +199,7 @@ class Utils:
             msg += f'{user} ({user.id})\n'
         if msg == "":
             return await ctx.send("Found no users with that discriminator.")
-        em = discord.Embed(title="Sorted with: User tag (User id)",description=msg, color=ctx.author.color)
+        em = discord.Embed(title="Sorted with: User tag (User id)", description=msg, color=ctx.author.color)
         em.set_author(
             name="First 6 users found matching discriminator #{}".format(discrim),
             icon_url=ctx.author.avatar_url.replace("?size=1024", ""))
@@ -209,7 +211,8 @@ class Utils:
         """Evaluate complex mathematical equations (or simple ones, whatever you prefer).
         The available operations are as follows:
         `simplify, factor, derive, integrate, zeroes, tangent, area, cos, tan, arccos, arcsin, arctan, abs, log`"""
-        available_endpoints = ["simplify", "factor", "derive", "integrate", "zeroes", "tangent", "area", "cos", "tan", "arccos", "arcsin", "arctan", "abs", "log"]
+        available_endpoints = ["simplify", "factor", "derive", "integrate", "zeroes", "tangent", "area", "cos", "tan",
+                               "arccos", "arcsin", "arctan", "abs", "log"]
         oper = expression.split(' -operation ')
         if len(oper) > 1:
             try:
@@ -220,16 +223,16 @@ class Utils:
             except:
                 return await ctx.send(":x: You never gave me an operation. Check the command help.")
         expr = oper[0].replace('/', '%2F')
-        r = requests.get("https://newton.now.sh/" + op + "/"+expr)
+        r = requests.get("https://newton.now.sh/" + op + "/" + expr)
         try:
             js = r.json()
         except json.decoder.JSONDecodeError:
             return await ctx.send(":x: I-I'm sorry! Something happened with the api.")
-        em = discord.Embed(title="Expression Evaluation",color=ctx.message.author.color)
-        em.add_field(name="Operation",value=js['operation'],inline=False)
-        em.add_field(name="Expression",value=js['expression'],inline=False)
-        em.add_field(name="Result",value=js['result'],inline=False)
-        em.set_footer(text="Requested by "+str(ctx.message.author))
+        em = discord.Embed(title="Expression Evaluation", color=ctx.message.author.color)
+        em.add_field(name="Operation", value=js['operation'], inline=False)
+        em.add_field(name="Expression", value=js['expression'], inline=False)
+        em.add_field(name="Result", value=js['result'], inline=False)
+        em.set_footer(text="Requested by " + str(ctx.message.author))
         em.timestamp = datetime.datetime.now()
         await ctx.send(embed=em)
 
@@ -243,7 +246,8 @@ class Utils:
             return await ctx.send(":x: Um, I'm sorry? The suggestions channel seems to be missing. "
                                   + "My owner must have deleted it. Sorry. :/ "
                                   + "Feel free to suggest your idea in person at my support server "
-                                  + "in **#{}**! (https://discord.gg/ewvvKHM)".format(self.bot.get_channel(315252572812214273).name))
+                                  + "in **#{}**! (https://discord.gg/ewvvKHM)".format(
+                self.bot.get_channel(315252572812214273).name))
         await request_channel.send(f"**User Suggestion By:** {ctx.author} ({ctx.author.id})\n"
                                    + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
                                    + f"**Suggestion:** {suggestion.replace('@', '@‍')}")
@@ -252,7 +256,7 @@ class Utils:
     @commands.command(aliases=["define"])
     async def dictionary(self, ctx, word: str):
         """Define a word."""
-        r = requests.get('http://api.pearson.com/v2/dictionaries/laes/entries?headword='+word)
+        r = requests.get('http://api.pearson.com/v2/dictionaries/laes/entries?headword=' + word)
         js = r.json()
         if len(js['results']) > 0:
             try:
@@ -260,17 +264,55 @@ class Utils:
                 pos = js['results'][0]['part_of_speech']
                 ex = js['results'][0]['senses'][0]['translations'][0]['example'][0]['text']
                 word = js['results'][0]['headword']
-                em = discord.Embed(description="**Part Of Speech:** `{1}`\n**Headword:** `{0}`".format(word, pos),color=0x8181ff)
+                em = discord.Embed(description="**Part Of Speech:** `{1}`\n**Headword:** `{0}`".format(word, pos),
+                                   color=0x8181ff)
                 em.set_thumbnail(url="https://www.shareicon.net/download/2016/05/30/575440_dictionary_512x512.png")
-                em.set_footer(text="Requested by {} | Powered by http://api.pearson.com/".format(str(ctx.message.author)))
-                em.add_field(name="Definition",value="**{}**".format(define))
-                em.add_field(name="Example",value="**{}**".format(ex))
-                em.set_author(name="Definition for {}".format(word), icon_url=ctx.message.author.avatar_url.replace('?size=1024', ''))
+                em.set_footer(
+                    text="Requested by {} | Powered by http://api.pearson.com/".format(str(ctx.message.author)))
+                em.add_field(name="Definition", value="**{}**".format(define))
+                em.add_field(name="Example", value="**{}**".format(ex))
+                em.set_author(name="Definition for {}".format(word),
+                              icon_url=ctx.message.author.avatar_url.replace('?size=1024', ''))
                 await ctx.send(embed=em)
             except KeyError:
                 await ctx.send(":x: No results found.")
         else:
             await ctx.send(":x: No results found.")
+
+    @commands.command()
+    async def remindme(self, ctx, time: str, *, msg: str):
+        """Remind yourself of something!"""
+        days_match = re.compile(r'(\d*) ?d')
+        hours_match = re.compile(r'(\d*) ?h')
+        minutes_match = re.compile(r'(\d*) ?m')
+        seconds_match = re.compile(r'(\d*) ?s')
+        days = days_match.match(time)
+        hours = hours_match.match(time)
+        minutes = minutes_match.match(time)
+        seconds = seconds_match.match(time)
+        total = 0
+        if days:
+            total += int(days.group(1)) * 86400
+        if hours:
+            total += int(hours.group(1)) * 3600
+        if minutes:
+            total += int(minutes.group(1)) * 60
+        if seconds:
+            total += int(seconds.group(1))
+        if total <= 10:
+            return await ctx.send(":x: That's too little time!")
+        m, s = divmod(total, 60)
+        h, m = divmod(m, 60)
+        d, h = divmod(h, 12)
+        dys = round(d)
+        hrs = round(h)
+        mnts = round(m)
+        scnds = round(s)
+        t = (f"{dys} days " if dys > 0 else "") + (f"{hrs} hours " if hrs > 0 else "") + (
+        f"{mnts} minutes " if mnts > 0 else "") + (f"and " if mnts > 0 else "") + f"{scnds} seconds."
+        await ctx.send(f":ok_hand: Okay! I'll remind you in " + t)
+        await asyncio.sleep(total)
+        await ctx.author.send(":wave: You asked me to remind you of: " + msg)
 
 
 def setup(bot):
@@ -437,4 +479,3 @@ def setup(bot):
         else:
             await ctx.send(":x: You need at least one argument, split with `|` (guide coming soon)")
 """
-
