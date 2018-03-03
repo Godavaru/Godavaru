@@ -168,7 +168,7 @@ class Info:
             return await ctx.send(embed=em)
         em = discord.Embed(
             title="Godavaru Help",
-            description="Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!",
+            description=f"Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!",
             color=ctx.author.color)
         for cog in sorted(self.bot.cogs):
             if str(cog) == "Owner":
