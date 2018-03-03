@@ -135,6 +135,50 @@ class Info:
 
         return fmt.format(d=days, h=hours, m=minutes, s=seconds)
 
+    @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def _help(self, ctx, *, command_or_category: str = None):
+        """Shows a list of commands or gives extended help on the command/category you supplied."""
+        if command_or_category:
+            cmd = self.bot.all_commands.get(command_or_category)
+            if cmd is None:
+                if self.bot.get_cog(command_or_category) is None:
+                    return await ctx.send(":x: I did not find that command or category.")
+                cmds = list(self.bot.get_cog_commands(command_or_category))
+                if len(cmds) == 0:  # Shouldn't happen, but it's a failsafe
+                    return await ctx.send(":x: There are no commands in that category.")
+                msg = ""
+                for i in range(len(cmds)):
+                    msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
+                em = discord.Embed(title="Commands in Category " + cmds[0].cog_name, description=msg)
+                em.set_footer(text=f"For extended help, do {ctx.prefix}help <command>")
+                return await ctx.send(embed=em)
+            em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.description)
+            comm = cmd.signature.split(' ')[0].split('|')[0].replace('[', '')
+            usage = cmd.signature.replace(cmd.signature.split(' ')[0], "")
+            em.add_field(name="Usage", value=f"`{ctx.prefix}{comm}{usage}`")
+            if len(cmd.aliases) > 0:
+                em.add_field(name="Alias(es)", value="`" + "`, `".join(cmd.aliases) + "`")
+            if hasattr(cmd, 'commands'):
+                cmds = list(cmd.commands)
+                msg = ""
+                for i in range(len(cmds)):
+                    msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
+                em.add_field(name="Subcommands", value=msg)
+            return await ctx.send(embed=em)
+        em = discord.Embed(
+            title="Godavaru Help",
+            description="Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!")
+        for cog in self.bot.cogs:
+            if cog == "Owner":
+                continue
+            cmds = list(self.bot.get_cog_commands(cog))
+            if len(cmds) == 0:
+                continue
+            em.add_field(name=cog, value=f"`{'`, `'.join(cmds)}`")
+        em.set_footer(text=f"Total commands: {len(self.bot.commands)}")
+        await ctx.send(embed=em)
+
     @commands.command(pass_context=True)
     async def info(self, ctx):
         """Show some of the more statistical information about me.
@@ -174,8 +218,8 @@ Users              :  {8}
 Channels           :  {9}
 Hostname           :  {10}
 OS                 :  {11}```""".format(commands, cogs, self.bot.version, version, pversion, ping,
-                                          self.get_bot_uptime(), server_count, member_count, channel_count,
-                                                      platform.node(), platform.system()))
+                                        self.get_bot_uptime(), server_count, member_count, channel_count,
+                                        platform.node(), platform.system()))
 
     @commands.command()
     async def avatar(self, ctx, *, user: discord.Member):
@@ -212,7 +256,7 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
             value=g.created_at.strftime("%A %d %B %Y at %H:%M:%S"),
             inline=False
         ).add_field(
-            name="Users - "+str(len(g.members)),
+            name="Users - " + str(len(g.members)),
             value=f"{get_status_emoji('online', num)} Online: {online}\n"
                   + f"{get_status_emoji('idle', num)} Idle: {idle}\n"
                   + f"{get_status_emoji('dnd', num)} DnD: {dnd}",
@@ -303,7 +347,7 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
     async def changelog(self, ctx):
         """Check the most recent changelog for all of the newer features!"""
         changelog_channel = discord.utils.get(discord.utils.get(self.bot.guilds, id=315251940999299072).channels,
-                                             id=315602734235516928)
+                                              id=315602734235516928)
         async for m in changelog_channel.history(limit=1):
             changelog = m.clean_content
             desii = m.author
