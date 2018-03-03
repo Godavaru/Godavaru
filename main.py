@@ -19,6 +19,7 @@ initial_extensions = (
     "cogs.utility",
 )
 
+
 class Godavaru(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=config.prefix)
@@ -26,7 +27,8 @@ class Godavaru(commands.Bot):
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
-        self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token, adapter=discord.RequestsWebhookAdapter())
+        self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
+                                               adapter=discord.RequestsWebhookAdapter())
         for extension in initial_extensions:
             try:
                 self.load_extension(extension)
@@ -35,17 +37,18 @@ class Godavaru(commands.Bot):
                 print(traceback.format_exc())
 
     async def on_ready(self):
-        await self.change_presence(game=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
-        startup_message = f"[`{datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n"\
+        await self.change_presence(
+            game=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
+        startup_message = f"[`{datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
                           + "===============\n" \
-                          + 'Logged in as:\n'\
-                          + str(self.user) + '\n'\
-                          + '===============\n'\
-                          + 'Ready for use.\n'\
-                          + f'Servers: `{len(self.guilds)}`\n'\
-                          + f'Users: `{len(self.users)}`\n'\
-                          + '===============\n'\
-                          + f'Loaded up `{len(self.commands)}` commands in `{len(self.cogs)}` cogs in `{(datetime.now() - self.start_time).total_seconds()}` seconds.\n'\
+                          + 'Logged in as:\n' \
+                          + str(self.user) + '\n' \
+                          + '===============\n' \
+                          + 'Ready for use.\n' \
+                          + f'Servers: `{len(self.guilds)}`\n' \
+                          + f'Users: `{len(self.users)}`\n' \
+                          + '===============\n' \
+                          + f'Loaded up `{len(self.commands)}` commands in `{len(self.cogs)}` cogs in `{(datetime.now() - self.start_time).total_seconds()}` seconds.\n' \
                           + '==============='
         print(startup_message.replace('`', ''))
         self.webhook.send(startup_message)
@@ -97,7 +100,8 @@ class Godavaru(commands.Bot):
 
     async def on_message_edit(self, before, after):
         if after.content.startswith(self.command_prefix[0]):
-            if after.guild.name is not None and str(after.content) != str(before.content) and before.author.bot is False:
+            if after.guild.name is not None and str(after.content) != str(
+                    before.content) and before.author.bot is False:
                 await self.process_commands(after)
 
     async def on_message(self, message):
@@ -129,11 +133,12 @@ class Godavaru(commands.Bot):
                 await message.channel.send(
                     "Hey! Weirdo! Stop sending me dms. If you're trying to use commands, use it in a server.")
                 self.webhook.send(content="[`" + str(datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
-                                     + "[`CommandHandler`][`InterceptDirectMessage`]\n"
-                                     + "[`AuthorInformation`]: {} ({})\n".format(str(message.author),
-                                                                                 str(message.author.id))
-                                     + "[`MessageInformation`]: {} ({})\n".format(message.clean_content, str(message.id))
-                                     + "Intercepted direct message and sent alternate message.")
+                                          + "[`CommandHandler`][`InterceptDirectMessage`]\n"
+                                          + "[`AuthorInformation`]: {} ({})\n".format(str(message.author),
+                                                                                      str(message.author.id))
+                                          + "[`MessageInformation`]: {} ({})\n".format(message.clean_content,
+                                                                                       str(message.id))
+                                          + "Intercepted direct message and sent alternate message.")
                 print("[" + str(datetime.now().strftime("%H:%M:%S")) + "][Godavaru]\n"
                       + "[CommandHandler][InterceptDirectMessage]\n"
                       + "[AuthorInformation]: {} ({})\n".format(str(message.author), str(message.author.id))
@@ -150,19 +155,32 @@ class Godavaru(commands.Bot):
             await ctx.send(f":x: I need the permission(s) `{', '.join(error.missing_perms)}` to run this command.")
         elif isinstance(error, commands.CheckFailure):
             await ctx.send(":x: You are not authorized to use this command.")
+        elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error,
+                                                                               commands.BadArgument) or isinstance(
+                error, commands.UserInputError):
+            await ctx.send(f":x: Improper arguments, check `{ctx.prefix}help {ctx.command}`")
+            ctx.command.reset_cooldown(ctx)
+        elif isinstance(error, commands.CommandOnCooldown):
+            m, s = divmod(error.retry_after, 60)
+            h, m = divmod(m, 60)
+            await ctx.send(
+                f':x: You can use this command again in {"%d hours, %02d minutes and %02d seconds" % (h, m, s)}'
+                + (" (about now)." if error.retry_after == 0 else "."))
         else:
             def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
                 return ''.join(random.choice(chars) for _ in range(size))
+
             errid = id_generator()
-            await ctx.send(f":x: Unhandled exception. Report this on my support guild (https://discord.gg/ewvvKHM) with the ID **{errid}**")
+            await ctx.send(
+                f":x: Unhandled exception. Report this on my support guild (https://discord.gg/ewvvKHM) with the ID **{errid}**")
             self.webhook.send(f"Unhandled exception on command `{ctx.command}`\n"
                               + f"**Content:** {ctx.message.clean_content}\n"
                               + f"**Author:** {ctx.author} ({ctx.author.id})\n"
                               + f"**Guild:** {ctx.guild} ({ctx.guild.name})\n"
                               + f"**Traceback:** ```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}\n```")
 
-Godavaru().run(config.token)
 
+Godavaru().run(config.token)
 
 """
                                         =================================
