@@ -14,7 +14,7 @@ Nah, I don't feel like killing anyone today.
 **{0}** fell down a cliff.
 You lost your weapon. :c
 While trying to kill **{0}**, **{1}** abruptly exploded.
-**{0}** died by **{1}**'s knife, but got resurrected and then killed **[1}** in revenge.
+**{0}** died by **{1}**'s knife, but got resurrected and then killed **{1}** in revenge.
 **{1}** tried to kill **{0}**, but accidentally fell and their knife went in their face.
 **{0}** succumbed to the bad memes of iFunny, they died long ago.
 **{1}** let **{0}** borrow their notebook, but then **{0}** "somehow" tripped and died.
