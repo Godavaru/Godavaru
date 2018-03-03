@@ -293,6 +293,18 @@ class Action:
         em.set_image(url=random.choice(gifs))
         em.set_footer(text="You lewdie o.o")
         await ctx.send(embed=em)
+
+    @commands.command()
+    async def kill(self, ctx, *, member: discord.Member):
+        """Kill a user!
+        Note this command is just for fun. Nobody died in the making of this command... well maybe. *runs*"""
+        with open('killquotes.txt') as f:
+            quotes = f.readlines()
+        if ctx.author.id == member.id:
+            return await ctx.send(":x: Don't kill yourself! You're loved!")
+        if member.id == ctx.me.id:
+            return await ctx.send(":x: Nice try. <3")
+        await ctx.send(":knife:" + random.choice(quotes).format(member.display_name, ctx.author.display_name))
         
 def setup(bot):
     bot.add_cog(Action(bot))
