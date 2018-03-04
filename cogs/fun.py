@@ -1,7 +1,10 @@
 import asyncio
 import random
 import string
+import aiohttp
 import discord
+import config
+import os
 from discord.ext import commands
 from cogs.utils.tools import *
 from cogs.utils import weeb
@@ -78,14 +81,93 @@ class Fun:
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
-    @commands.command()
+    @commands.command(aliases=["awooo"])
     @commands.bot_has_permissions(embed_links=True)
-    async def awoo(self, ctx):
-        """This command gives you a random awoo image, powered by weeb.sh"""
-        em = discord.Embed(title="Awoo~",color=ctx.author.color)
-        em.set_image(url=await weeb.request_image("awoo"))
-        em.set_footer(text="Powered by weeb.sh")
-        await ctx.send(embed=em)
+    async def awoo(self, ctx, face_colour: str = None, hair_colour: str = None):
+        """Generate an awoo image with customizable face & hair colours.
+        The colours must be hex codes."""
+        url = 'https://api.weeb.sh/auto-image/generate?type=awooo'
+        valid = False
+        if face_colour:
+            face_colour = face_colour.lower().replace('#', '')
+            if len(face_colour) == 6:
+                for i in range(6):
+                    if face_colour[i] in 'abcdef0123456789':
+                        if i == 5:
+                            valid = True
+                            break
+                        else:
+                            continue
+                    else:
+                        valid = False
+                        break
+            else:
+                valid = False
+        if hair_colour:
+            hair_colour = hair_colour.lower().replace('#', '')
+            if len(hair_colour) == 6:
+                for i in range(6):
+                    if hair_colour[i] in 'abcdef0123456789':
+                        if i == 5:
+                            valid = True
+                            break
+                        else:
+                            continue
+                    else:
+                        valid = False
+                        break
+            else:
+                valid = False
+        if valid is True:
+            url += f'&face={face_colour}&hair={hair_colour}'
+        else:
+            url += '&face=fff0d3&hair=cc817c'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers={"Authorization": config.weeb_token}) as resp:
+                data = await resp.read()
+        with open("./images/awoo.png", "wb") as img:
+            img.write(data)
+            img.close()
+        await ctx.send(file=discord.File('./images/awoo.png'))
+        os.remove('./images/awoo.png')
+
+    @commands.command()
+    async def eyes(self, ctx):
+        """Generate some random facing eyes!"""
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://api.weeb.sh/auto-image/generate?type=eyes", headers={"Authorization": config.weeb_token}) as resp:
+                data = await resp.read()
+        with open("./images/eyes.png", "wb") as img:
+            img.write(data)
+            img.close()
+        await ctx.send(file=discord.File('./images/eyes.png'))
+        os.remove('./images/eyes.png')
+
+    @commands.command()
+    async def won(self, ctx):
+        """Generate a won image with randomly facing eyes."""
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://api.weeb.sh/auto-image/generate?type=won", headers={"Authorization": config.weeb_token}) as resp:
+                data = await resp.read()
+        with open("./images/won.png", "wb") as img:
+            img.write(data)
+            img.close()
+        await ctx.send(file=discord.File('./images/won.png'))
+        os.remove('./images/won.png')
+
+    @commands.command(aliases=['insult', 'waifu', 'shitwaifu', 'garbage'])
+    async def waifuinsult(self, ctx, *, member: discord.Member = None):
+        """Generate a waifu insult of someone."""
+        if member is None:
+            member = ctx.author
+        async with aiohttp.ClientSession() as session:
+            async with session.post("https://api.weeb.sh/auto-image/waifu-insult", headers={"Authorization": config.weeb_token}, data={"avatar": member.avatar_url}) as resp:
+                data = await resp.read()
+        with open("./images/waifuinsult.png", "wb") as img:
+            img.write(data)
+            img.close()
+        await ctx.send(file=discord.File('./images/waifuinsult.png'))
+        os.remove('./images/waifuinsult.png')
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
@@ -152,6 +234,7 @@ class Fun:
     # aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     # memes
     # imma just add a single line of comments everytime i see this owo
+    # im a meme
 
     @commands.command()
     async def slots(self, ctx):
