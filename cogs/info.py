@@ -152,7 +152,7 @@ class Info:
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
-                em = discord.Embed(title=f"Commands in Category {cmds[0].cog_name} - [{{len(cmds)}}]", description=msg,
+                em = discord.Embed(title=f"Commands in Category {cmds[0].cog_name} - [{len(cmds)}]", description=msg,
                                    color=ctx.author.color)
                 em.set_footer(
                     text=f"Requested by {ctx.author.display_name} | For extended help, do {ctx.prefix}help <command>",
@@ -251,9 +251,9 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
         num = 0
         if ctx.channel.permissions_for(ctx.me).external_emojis:
             num = 1
-        online = len([m.name for m in g.members if m.status == discord.Status("online")])
-        idle = len([m.name for m in g.members if m.status == discord.Status("idle")])
-        dnd = len([m.name for m in g.members if m.status == discord.Status("dnd")])
+        online = len([m for m in g.members if m.status == discord.Status("online")])
+        idle = len([m for m in g.members if m.status == discord.Status("idle")])
+        dnd = len([m for m in g.members if m.status == discord.Status("dnd")])
         guild_embed = discord.Embed(
             title=g.name,
             description=f"Guild ID: {g.id}",
@@ -275,7 +275,7 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
             value=(datetime.now() - g.created_at).days
         ).add_field(
             name="Guild Region:",
-            value=g.region
+            value=g.region.capitalize()
         ).add_field(
             name="AFK Timeout",
             value=f"{int(g.afk_timeout/60)} minutes"
@@ -296,13 +296,16 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
             value=len([c.name for c in g.channels if isinstance(c, discord.VoiceChannel)])
         ).add_field(
             name="Verification Level",
-            value=g.verification_level
+            value=g.verification_level.capitalize()
         ).add_field(
             name="Explicit Content Filter",
-            value=g.explicit_content_filter
+            value=g.explicit_content_filter.capitalize()
         ).add_field(
             name=f"Roles - {len(g.roles)-1}",
             value=", ".join([r.name for r in sorted(g.roles, key=lambda x: -x.position) if not r.is_default()])
+        ).add_field(
+            name=f"Emotes - {len(g.emojis)}",
+            value=" ".join([str(e) for e in g.emojis]) if len(g.emojis) > 0 else "No emotes are in this guild."
         )
         await ctx.send(embed=guild_embed)
 

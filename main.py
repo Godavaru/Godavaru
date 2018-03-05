@@ -17,6 +17,7 @@ initial_extensions = (
     "cogs.owner",
     "cogs.mod",
     "cogs.utility",
+    "cogs.nsfw",
 )
 
 
