@@ -282,23 +282,15 @@ class Utils:
     @commands.command()
     async def remindme(self, ctx, time: str, *, msg: str):
         """Remind yourself of something!"""
-        days_match = re.compile(r'(\d*) ?d')
-        hours_match = re.compile(r'(\d*) ?h')
-        minutes_match = re.compile(r'(\d*) ?m')
-        seconds_match = re.compile(r'(\d*) ?s')
-        days = days_match.match(time)
-        hours = hours_match.match(time)
-        minutes = minutes_match.match(time)
-        seconds = seconds_match.match(time)
-        total = 0
-        if days:
-            total += int(days.group(1)) * 86400
-        if hours:
-            total += int(hours.group(1)) * 3600
-        if minutes:
-            total += int(minutes.group(1)) * 60
-        if seconds:
-            total += int(seconds.group(1))
+        days_match = re.search("(\d*) ?d", time)
+        hours_match = re.search("(\d*) ?h", time)
+        minutes_match = re.search("(\d*) ?m", time)
+        seconds_match = re.search("(\d*) ?s", time)
+        days = int(days_match[1]) if days_match is not None else 0
+        hours = int(hours_match[1]) if hours_match is not None else 0
+        minutes = int(minutes_match[1]) if minutes_match is not None else 0
+        seconds = int(seconds_match[1]) if seconds_match is not None else 0
+        total = (days * 86400) + (hours * 3600) + (minutes * 60) + seconds
         if total <= 10:
             return await ctx.send(":x: That's too little time!")
         m, s = divmod(total, 60)
@@ -308,8 +300,10 @@ class Utils:
         hrs = round(h)
         mnts = round(m)
         scnds = round(s)
-        t = (f"{dys} days " if dys > 0 else "") + (f"{hrs} hours " if hrs > 0 else "") + (
-        f"{mnts} minutes " if mnts > 0 else "") + (f"and " if mnts > 0 else "") + f"{scnds} seconds."
+        t = (f"{dys} day{'s' if dys > 1 else ''} " if dys > 0 else "") + (
+        f"{hrs} hour{'s' if hrs > 1 else ''} " if hrs > 0 else "") + (
+                f"{mnts} minute{'s' if mnts > 1 else ''} " if mnts > 0 else "") + (
+            f"{scnds} second{'s' if scnds > 1 else ''} " if scnds > 0 else "")
         await ctx.send(f":ok_hand: Okay! I'll remind you in " + t)
         await asyncio.sleep(total)
         await ctx.author.send(":wave: You asked me to remind you of: " + msg)

@@ -152,7 +152,7 @@ class Info:
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
-                em = discord.Embed(title="Commands in Category " + cmds[0].cog_name, description=msg,
+                em = discord.Embed(title=f"Commands in Category {cmds[0].cog_name} - [{{len(cmds)}}]", description=msg,
                                    color=ctx.author.color)
                 em.set_footer(
                     text=f"Requested by {ctx.author.display_name} | For extended help, do {ctx.prefix}help <command>",
@@ -183,7 +183,7 @@ class Info:
             cmds = sorted(list(self.bot.get_cog_commands(str(cog))), key=lambda c: c.name)
             if len(cmds) == 0:
                 continue
-            em.add_field(name=cog, value=f"`{'`, `'.join([c.name for c in cmds])}`", inline=False)
+            em.add_field(name=f'[{len(cmds)}] - {cog}', value=f"`{'`, `'.join([c.name for c in cmds])}`", inline=False)
         em.set_footer(text=f"Requested by {ctx.author.display_name} | Total commands: {len(self.bot.commands)}",
                       icon_url=ctx.author.avatar_url.split('?')[0])
         await ctx.send(embed=em)
