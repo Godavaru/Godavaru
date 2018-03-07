@@ -23,7 +23,7 @@ initial_extensions = (
 
 class Godavaru(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=config.prefix)
+        super().__init__(command_prefix=config.prefix, case_insensitive=True)
         self.start_time = datetime.now()
         self.version = config.version
         self.version_info = config.version_description
@@ -39,7 +39,7 @@ class Godavaru(commands.Bot):
 
     async def on_ready(self):
         await self.change_presence(
-            game=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
+            activity=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
         startup_message = f"[`{datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
                           + "===============\n" \
                           + 'Logged in as:\n' \
@@ -69,7 +69,7 @@ class Godavaru(commands.Bot):
         for server in self.guilds:
             for _ in server.members:
                 member_count += 1
-        await self.change_presence(game=discord.Game(
+        await self.change_presence(activity=discord.Game(
             name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':tada: [`' + str(
             datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I joined the server `' + server.name + '` (' + str(
@@ -88,7 +88,7 @@ class Godavaru(commands.Bot):
         for server in self.guilds:
             for _ in server.members:
                 member_count += 1
-        await self.change_presence(game=discord.Game(
+        await self.change_presence(activity=discord.Game(
             name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(content=':frowning: [`' + str(datetime.now().strftime(
             "%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + server.id + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')

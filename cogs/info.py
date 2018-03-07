@@ -323,7 +323,7 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
         em.add_field(name="Nickname:", value=user.nick)
         em.add_field(name="Voice Channel:", value=user.voice.channel if user.voice is not None else None)
         em.add_field(name="Is Bot:", value=user.bot)
-        em.add_field(name="Game:", value=user.game, inline=False)
+        em.add_field(name="Game:", value=user.activity, inline=False)
         em.add_field(name="Top Role:", value=user.top_role.name)
         em.add_field(name="Highest Position:", value=user.top_role.position)
         em.add_field(name=f"Roles [{len(user.roles) - 1}]:", value=", ".join(
@@ -336,23 +336,46 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
         await ctx.send(embed=em)
 
     @commands.command()
-    async def status(self, ctx, *, user: discord.Member):
+    async def status(self, ctx, *, user: discord.Member = None):
         """Display the current status of the specified member.
         If the member is not specified or an invalid member argument is passed, the member is the author."""
-        if len(ctx.message.mentions) == 0:
+        a = " is "
+        if not user:
             user = ctx.message.author
             a = ", you are "
+        if user.activity is None:
+            return await ctx.send('You are' if user is None else 'That person is' + ' not playing anything!')
         else:
-            user = ctx.message.mentions[0]
-            a = " is "
-        if user.game is None:
-            game = "Nothing."
-            footer = "Maybe you should get out into the world. Meet some people. Could be good for you."
-        else:
-            game = str(user.game)
-            footer = "Hope it's a fun one!"
-        em = discord.Embed(title=user.display_name + a + "playing:", description="`{}`".format(game), color=user.color)
-        em.set_footer(text=footer)
+            game = user.activity
+            if game.type == discord.ActivityType.listening:
+                b = "listening to:"
+            elif game.type == discord.ActivityType.streaming:
+                b = "streaming:"
+            elif game.type == discord.ActivityType.watching:
+                b = "watching:"
+            else:
+                b = "playing:" # should only fire an else on playing, but "generally" is not very confident (https://lars-is-the-love.of-my.life/kNCNqh.png)
+            em = discord.Embed(title=user.display_name + a + b, description=game.name, colour=user.color)
+            if isinstance(game, discord.Spotify):
+                em.add_field(name='Title', value='`' + game.title + '`')
+                em.add_field(name="Album", value='`' + game.album + '`')
+                em.add_field(name="Track ID", value='`' + game.track_id + '`', inline=False)
+                em.add_field(name="Party ID", value='`' + game.party_id + '`', inline=False)
+                em.add_field(name="Artist" + ("s" if len(game.artists) > 1 else ""), value='`' + "; ".join(game.artists) + '`')
+                m, s = divmod((datetime.utcnow() - game.start).total_seconds(), 60)
+                m2, s2 = divmod(game.duration.total_seconds(), 60)
+                em.add_field(name="Duration", value="`%02d:%02d/%02d:%02d`" % (m, s, m2, s2))
+                em.set_thumbnail(url=game.album_cover_url)
+            elif hasattr(game, 'assets'):
+                ###################################################
+                # UNFINISHED COMMAND, WILL FINISH AT A LATER DATE #
+                ###################################################
+                em.add_field(name="Large Text", value=game.assets['large_text'])
+                em.add_field(name="Small Text", value=game.assets['small_text'])
+                em.add_field(name="State", value=game.state)
+                em.add_field(name="Details", value=game.details)
+                em.set_thumbnail(url=game.assets['large_image'])
+            em.set_footer(text="Hope you enjoy it!")
         await ctx.send(embed=em)
 
     @commands.command()

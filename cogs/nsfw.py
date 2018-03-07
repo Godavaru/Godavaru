@@ -79,6 +79,33 @@ class NSFW:
         else:
             await ctx.send(":x: This is not an NSFW channel.")
 
+    @commands.command()
+    async def yandere(self, ctx, tag: str, rating: str = None):
+        """Search for an image on yande.re!
+        Note: To use this command, the channel must be NSFW."""
+        rating = rating.lower() if rating else None
+        if ctx.channel.is_nsfw():
+            url = 'https://yande.re/post.json?tags=rating:' + (rating if rating in ['safe', 'questionable', 'explicit'] else 'safe') + '%20' + tag
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    js = await resp.json()
+            if len(js) > 0:
+                non_loli = list(filter(lambda x: 'loli' not in x['tags'] and 'shota' not in x['tags'] and 'deletethistag' not in x['tags'], js))
+                if len(non_loli) == 0:
+                    return await ctx.send(":warning: All results included loli/shota content; this search is invalid.")
+                response = non_loli[random.randint(0, len(non_loli))]
+                img = response['file_url']
+                tags = response['tags'].split(' ')
+                em = discord.Embed(description=f'**Rating:** {(rating if rating in ["safe", "questionable", "explicit"] else "safe")}\n`{", ".join(tags)}`', colour=0xff0000)
+                em.set_image(url=img)
+                em.set_author(name='Found Image! Click me if it doesn\'t load!', url=img)
+                await ctx.send(embed=em)
+            else:
+                await ctx.send(":x: No image found. Sorry :/")
+        elif rating == "safe" and not ctx.channel.is_nsfw():
+            await ctx.send(":warning: Sorry! I know that this image is marked as `safe`, but yande.re sometimes returns lewd images in the safe rating. Please use an NSFW channel.")
+        else:
+            await ctx.send(":x: This is not an NSFW channel.")
 
 def setup(bot):
     bot.add_cog(NSFW(bot))
