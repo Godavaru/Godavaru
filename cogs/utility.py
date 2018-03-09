@@ -214,6 +214,7 @@ class Utils:
         available_endpoints = ["simplify", "factor", "derive", "integrate", "zeroes", "tangent", "area", "cos", "tan",
                                "arccos", "arcsin", "arctan", "abs", "log"]
         oper = expression.split(' -operation ')
+        op = "simplify"
         if len(oper) > 1:
             try:
                 if oper[1].lower() in available_endpoints:
@@ -295,7 +296,7 @@ class Utils:
             return await ctx.send(":x: That's too little time!")
         m, s = divmod(total, 60)
         h, m = divmod(m, 60)
-        d, h = divmod(h, 12)
+        d, h = divmod(h, 24)
         dys = round(d)
         hrs = round(h)
         mnts = round(m)

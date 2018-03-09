@@ -68,7 +68,7 @@ class Fun:
     async def meme(self, ctx):
         """This command gives you a random discord meme, powered by weeb.sh"""
         em = discord.Embed(title="Here's a random discord meme for ya",color=ctx.author.color)
-        em.set_image(url=await weeb.request_image("discord_meme"))
+        em.set_image(url=await weeb.request_image("discord_memes"))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -383,12 +383,12 @@ class Fun:
         await ctx.send(f"{emotes[bot_index]} You {'won' if win is True else 'lost'}!")
 
     @commands.command()
-    async def lenny(self, ctx, *, msg: str = None):
+    async def lenny(self, ctx, *, msg: str = ""):
         """Make a lenny face."""
         await ctx.send(msg + " ( ͡° ͜ʖ ͡°)")
 
     @commands.command()
-    async def nonowa(self, ctx, *, msg: str = None):
+    async def nonowa(self, ctx, *, msg: str = ""):
         """Make a nonowa face."""
         await ctx.send(msg + " のワの")
 

@@ -275,7 +275,7 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
             value=(datetime.now() - g.created_at).days
         ).add_field(
             name="Guild Region:",
-            value=g.region.capitalize()
+            value=str(g.region).capitalize()
         ).add_field(
             name="AFK Timeout",
             value=f"{int(g.afk_timeout/60)} minutes"
@@ -296,10 +296,10 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
             value=len([c.name for c in g.channels if isinstance(c, discord.VoiceChannel)])
         ).add_field(
             name="Verification Level",
-            value=g.verification_level.capitalize()
+            value=str(g.verification_level).capitalize()
         ).add_field(
             name="Explicit Content Filter",
-            value=g.explicit_content_filter.capitalize()
+            value=str(g.explicit_content_filter).capitalize()
         ).add_field(
             name=f"Roles - {len(g.roles)-1}",
             value=", ".join([r.name for r in sorted(g.roles, key=lambda x: -x.position) if not r.is_default()])

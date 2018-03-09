@@ -16,7 +16,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is cuddling **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is cuddling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***cuddles with you***'
@@ -30,7 +30,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is hugging **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is hugging **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***hugs*** Are you okay now, **{ctx.author.display_name}**?'
@@ -44,7 +44,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is slapping **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is slapping **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**Uh, okay. Sure. _slaps_**'
@@ -58,7 +58,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is kissing **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is kissing **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'I\'ll kiss you! *kisses*'
@@ -73,12 +73,12 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is patting **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is patting **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***pats you***'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="slap"), name="slap.gif")
-        await ctx.send(content=msg, file=discord.File("./images/slap.gif"))
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="pat"), name="pat.gif")
+        await ctx.send(content=msg, file=discord.File("./images/pat.gif"))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -87,7 +87,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is poking **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is poking **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'*pokes you* hi. *pokes more*'
@@ -101,7 +101,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is teasing **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is teasing **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'*teases you* hehe'
@@ -115,7 +115,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is staring at **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**..."
+        msg = f"**{ctx.author.display_name}** is staring at **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**..."
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***stares at you***'
@@ -130,12 +130,11 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is slapping **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+        msg = f"**{ctx.author.display_name}** is telling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}** to wake up!"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
-                msg = f'**Uh, okay. Sure. _slaps_**'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="slap"), name="slap.gif")
-        await ctx.send(content=msg, file=discord.File(f"./images/{random.choice(imgs)}.gif"))
+                msg = 'Uh, don\'t you need to be awake to send a message? Oh well. Wake up!'
+        await ctx.send(content=msg, file=discord.File(random.choice(imgs)))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -144,11 +143,11 @@ class Action:
         if len(ctx.message.mentions) == 0:
             await ctx.send(":x: You must mention at least one user.")
             return
-        msg = f"**{ctx.author.display_name}** is telling **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}** to sleep!"
+        msg = f"**{ctx.author.display_name}** is telling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}** to sleep!"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**Self-discipline! I like it! Go sleep!**'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="sleep"), name="sleep.gif")
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="sleepy"), name="sleep.gif")
         await ctx.send(content=msg, file=discord.File("./images/sleep.gif"))
 
     @commands.command(usage="[members]")
@@ -158,7 +157,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is crying!'
         else:
-            msg = f"**{ctx.author.display_name}** is crying because of **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+            msg = f"**{ctx.author.display_name}** is crying because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is crying!'
@@ -172,7 +171,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is triggered! REEEEEEEEEEEEEE'
         else:
-            msg = f"**{ctx.author.display_name}** is triggered because of **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**"
+            msg = f"**{ctx.author.display_name}** is triggered because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is triggered! REEEEEEEEEEEEEE'
@@ -186,7 +185,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is thinking...'
         else:
-            msg = f"**{ctx.author.display_name}** is thinking about **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**! o.o"
+            msg = f"**{ctx.author.display_name}** is thinking about **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is thinking...'
@@ -200,7 +199,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is blushing... Who made them blush?'
         else:
-            msg = f"**{ctx.author.display_name}** is blushing because of **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**! o.o"
+            msg = f"**{ctx.author.display_name}** is blushing because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is blushing... Who made them blush?'
@@ -215,7 +214,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is smiling.'
         else:
-            msg = f"**{ctx.author.display_name}** is smiling at**{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**!"
+            msg = f"**{ctx.author.display_name}** is smiling at**{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is smiling.'
@@ -229,7 +228,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             msg = f'***shrugs***'
         else:
-            msg = f"**{ctx.author.display_name}** is shrugging at **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**!"
+            msg = f"**{ctx.author.display_name}** is shrugging at **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'***shrugs***'
@@ -243,7 +242,7 @@ class Action:
         if len(ctx.message.mentions) == 0:
             msg = f'**{ctx.author.display_name}** is confused'
         else:
-            msg = f"**{ctx.author.display_name}** is confused with **{(', '.join(ctx.message.mentions)).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1], ' and '+ctx.message.mentions[len(ctx.message.mentions)-1])}**!"
+            msg = f"**{ctx.author.display_name}** is confused with **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
         for u in ctx.message.mentions:
             if u == ctx.author.display_name:
                 msg = f'**{ctx.author.display_name}** is confused'

@@ -90,8 +90,10 @@ class Godavaru(commands.Bot):
                 member_count += 1
         await self.change_presence(activity=discord.Game(
             name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
-        self.webhook.send(content=':frowning: [`' + str(datetime.now().strftime(
-            "%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + server.id + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + server.owner.id + ')')
+        self.webhook.send(':frowning: [`' + str(
+            datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + str(
+            server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(
+            server.owner.id) + ').')
         guild_count = len(self.guilds)
         headers = {'Authorization': config.dbotstoken}
         data = {'server_count': guild_count}
@@ -177,7 +179,7 @@ class Godavaru(commands.Bot):
             self.webhook.send(f"Unhandled exception on command `{ctx.command}`\n"
                               + f"**Content:** {ctx.message.clean_content}\n"
                               + f"**Author:** {ctx.author} ({ctx.author.id})\n"
-                              + f"**Guild:** {ctx.guild} ({ctx.guild.name})\n"
+                              + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
                               + f"**Traceback:** ```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}\n```")
 
 
