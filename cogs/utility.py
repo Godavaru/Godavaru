@@ -24,6 +24,7 @@ class Utils:
         timezone = timezone.upper()
         try:
             if timezone.startswith('GMT'):
+                t = timezone
                 if timezone.startswith('GMT+'):
                     t = timezone.replace('+', '-')
                 elif timezone.startswith('GMT-'):
@@ -126,7 +127,7 @@ class Utils:
                    "Woof... wait wrong animal."]
         async with aiohttp.ClientSession() as session:
             async with session.get('https://random.cat/meow') as resp:
-                if resp.status() == 200:
+                if 300 > resp.status >= 200:
                     js = await resp.json()
                     em = discord.Embed(
                         color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
@@ -139,20 +140,23 @@ class Utils:
     async def dog(self, ctx):
         """Get a random cat image!"""
         is_video = True
+        url = None
         while is_video:
             r = requests.get('https://random.dog/woof.json')
             js = r.json()
             if js['url'].endswith('.mp4'):
                 pass
             else:
+                url = js['url']
                 is_video = False
         content = [":dog: Don't be sad! This doggy wants to play with you!",
                    "You seem lonely, {0.display_name}. Here, have a dog. They're not as nice as cats, but enjoy!".format(
                        ctx.author),
                    "Weuf, woof, woooooooooof. Woof you.", "Pupper!", "Meow... wait wrong animal."]
         con = int(random.random() * len(content))
-        em = discord.Embed(color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
-        em.set_image(url=js['url'])
+        em = discord.Embed(
+            color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
+        em.set_image(url=url)
         await ctx.send(content=content[con], embed=em)
 
     @commands.command()
@@ -187,7 +191,7 @@ class Utils:
     async def discrim(self, ctx, *, discrim: str):
         """Find users with the discriminator provided.
         If you are unaware, a discriminator is the 4 digit number following your discord name, as seen [here](https://i.imgur.com/kdbY9Nx.png)."""
-        discrim = discrim.replace('#')
+        discrim = discrim.replace('#', '')
         num = 0
         msg = ""
         for user in self.bot.users.filter(lambda u: u.discriminator == discrim):

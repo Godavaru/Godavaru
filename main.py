@@ -28,6 +28,7 @@ class Godavaru(commands.Bot):
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
+        self.weeb_types = []
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
         for extension in initial_extensions:
@@ -37,6 +38,7 @@ class Godavaru(commands.Bot):
                 print(f'Failed to load extension {extension}.')
                 print(traceback.format_exc())
 
+    # noinspection PyAttributeOutsideInit
     async def on_ready(self):
         await self.change_presence(
             activity=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))

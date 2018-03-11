@@ -1,13 +1,15 @@
 import asyncio
+import os
 import random
 import string
+
 import aiohttp
-import discord
-import config
-import os
 from discord.ext import commands
-from cogs.utils.tools import *
+
+import config
 from cogs.utils import weeb
+from cogs.utils.tools import *
+
 
 class Fun:
     def __init__(self, bot):
@@ -24,7 +26,7 @@ class Fun:
         args = args.replace("@everyone", "<insert {} trying to mention everyone here>".format(str(ctx.message.author)))
         args = args.replace("@here", "<insert {} trying to mention everyone here>".format(str(ctx.message.author)))
         if args.startswith("--s"):
-            if args == "--s": # --s == silentsay
+            if args == "--s":  # --s == silentsay
                 await ctx.send("You can't silently send an empty message!")
             else:
                 args = args[4:]
@@ -34,13 +36,13 @@ class Fun:
                 except:
                     pass
         elif args.startswith("--e"):
-            if args == "--e": # --e == edit
+            if args == "--e":  # --e == edit
                 return await ctx.send("You can't edit nothingness.")
             try:
                 args = args[4:]
                 mid = args.split(' ')
                 to_edit = await ctx.message.channel.get_message(int(mid[0]))
-                content = args.replace(mid[0]+" ", "")
+                content = args.replace(mid[0] + " ", "")
                 try:
                     await to_edit.edit(content=content)
                 except discord.Forbidden:
@@ -67,7 +69,7 @@ class Fun:
     @commands.bot_has_permissions(embed_links=True)
     async def meme(self, ctx):
         """This command gives you a random discord meme, powered by weeb.sh"""
-        em = discord.Embed(title="Here's a random discord meme for ya",color=ctx.author.color)
+        em = discord.Embed(title="Here's a random discord meme for ya", color=ctx.author.color)
         em.set_image(url=await weeb.request_image("discord_memes"))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
@@ -76,7 +78,7 @@ class Fun:
     @commands.bot_has_permissions(embed_links=True)
     async def delet(self, ctx):
         """This command gives you a random delet this meme, powered by weeb.sh"""
-        em = discord.Embed(title="Delet this!!1!",color=ctx.author.color)
+        em = discord.Embed(title="Delet this!!1!", color=ctx.author.color)
         em.set_image(url=await weeb.request_image("delet_this"))
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
@@ -135,7 +137,8 @@ class Fun:
     async def eyes(self, ctx):
         """Generate some random facing eyes!"""
         async with aiohttp.ClientSession() as session:
-            async with session.get("https://api.weeb.sh/auto-image/generate?type=eyes", headers={"Authorization": config.weeb_token}) as resp:
+            async with session.get("https://api.weeb.sh/auto-image/generate?type=eyes",
+                                   headers={"Authorization": config.weeb_token}) as resp:
                 data = await resp.read()
         with open("./images/eyes.png", "wb") as img:
             img.write(data)
@@ -147,7 +150,8 @@ class Fun:
     async def won(self, ctx):
         """Generate a won image with randomly facing eyes."""
         async with aiohttp.ClientSession() as session:
-            async with session.get("https://api.weeb.sh/auto-image/generate?type=won", headers={"Authorization": config.weeb_token}) as resp:
+            async with session.get("https://api.weeb.sh/auto-image/generate?type=won",
+                                   headers={"Authorization": config.weeb_token}) as resp:
                 data = await resp.read()
         with open("./images/won.png", "wb") as img:
             img.write(data)
@@ -161,7 +165,9 @@ class Fun:
         if member is None:
             member = ctx.author
         async with aiohttp.ClientSession() as session:
-            async with session.post("https://api.weeb.sh/auto-image/waifu-insult", headers={"Authorization": config.weeb_token}, data={"avatar": member.avatar_url}) as resp:
+            async with session.post("https://api.weeb.sh/auto-image/waifu-insult",
+                                    headers={"Authorization": config.weeb_token},
+                                    data={"avatar": member.avatar_url}) as resp:
                 data = await resp.read()
         with open("./images/waifuinsult.png", "wb") as img:
             img.write(data)
@@ -217,13 +223,17 @@ class Fun:
         It's nothing special, but it's a nice lil joke :eyes:"""
         if member is None:
             member = ctx.author
-        await ctx.send("A year has:\n\n12 Months\n52 Weeks\n365 Days\n8760 Hours\n525600 Minutes\n3153600 Seconds\n\nAnd it only takes 1 minute to send **"+str(member)+"** nudes :3")
+        await ctx.send(
+            "A year has:\n\n12 Months\n52 Weeks\n365 Days\n8760 Hours\n525600 Minutes\n3153600 Seconds\n\nAnd it only takes 1 minute to send **" + str(
+                member) + "** nudes :3")
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def f(self, ctx):
         """Pay your respects."""
-        embed = discord.Embed(title='Press F to pay respects!',description='**' + ctx.message.author.display_name + '** has paid their respects successfully :eggplant:',color=ctx.message.author.color).set_footer(text='f')
+        embed = discord.Embed(title='Press F to pay respects!',
+                              description='**' + ctx.message.author.display_name + '** has paid their respects successfully :eggplant:',
+                              color=ctx.message.author.color).set_footer(text='f')
         await ctx.send(content=None, embed=embed)
 
     # If you're looking for the code for 8ball, it was moved to cog_utils
@@ -235,6 +245,7 @@ class Fun:
     # memes
     # imma just add a single line of comments everytime i see this owo
     # im a meme
+    # Lars is cute
 
     @commands.command()
     async def slots(self, ctx):
@@ -253,35 +264,41 @@ class Fun:
             msg = "**You won!**"
         else:
             msg = "**You lost!**"
-        await ctx.send("{0}\n\n{1}{2}{3}\n{4}{5}{6} :arrow_left:\n{7}{8}{9}".format(msg, col[var1], col[var2], col[var3], col[var4], col[var5], col[var6], col[var7], col[var8], col[var9]))
+        await ctx.send(
+            "{0}\n\n{1}{2}{3}\n{4}{5}{6} :arrow_left:\n{7}{8}{9}".format(msg, col[var1], col[var2], col[var3],
+                                                                         col[var4], col[var5], col[var6], col[var7],
+                                                                         col[var8], col[var9]))
 
     @commands.command()
     async def bowling(self, ctx):
         """Play a game of bowling!"""
         init = int(random.random() * 10) + 1
-        if (init == 10):
+        if init == 10:
             await ctx.send(":bowling: It's a strike! You hit all the pins on your first try.")
             return
         else:
-            await ctx.send(":bowling: You knocked down `{}` pins. Let's try to knock the other `{}` down.".format(init, 10 - init))
+            await ctx.send(
+                ":bowling: You knocked down `{}` pins. Let's try to knock the other `{}` down.".format(init, 10 - init))
             await asyncio.sleep(2)
             finisher = int(random.random() * (10 - init)) + 1
-            if (finisher + init >= 10):
+            if finisher + init >= 10:
                 await ctx.send(":bowling: You won! You knocked down all pins on the second try.")
             else:
-                await ctx.send(":bowling: You didn't win, but you tried and knocked down `{}/10` in the meantime.".format(finisher + init))
+                await ctx.send(
+                    ":bowling: You didn't win, but you tried and knocked down `{}/10` in the meantime.".format(
+                        finisher + init))
 
     @commands.command(aliases=["number"])
-    async def numbers(self, ctx, num = None):
+    async def numbers(self, ctx, num=None):
         """Get a random fact about a number or specify a number to get a fact about it.
         If your number is invalid, a random number will be used."""
         if num:
             try:
                 num = int(num)
             except:
-                num = int(random.random() * 2000)+1
+                num = int(random.random() * 2000) + 1
         else:
-            num = int(random.random() * 2000)+1
+            num = int(random.random() * 2000) + 1
         if num > 100:
             types = ["math", "year"]
         else:
@@ -376,7 +393,7 @@ class Fun:
         bot_index = opts.index(bot_choice)
         user_index = opts.index(user_choice)
         win = False
-        if bot_index < user_index and user_index != 2:
+        if bot_index < user_index != 2:
             win = True
         elif user_index == 2 and bot_index == 1:
             win = True
@@ -500,6 +517,7 @@ class Fun:
         msg13 = msg12.replace("?", ":grey_question:")
         msg14 = msg13.replace("!", ":grey_exclamation:")
         await ctx.send(msg14)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))

@@ -1,8 +1,9 @@
 import datetime
 import platform
 import time
-import discord
+
 from discord.ext import commands
+
 import config
 from cogs.utils.tools import *
 
@@ -188,11 +189,11 @@ class Info:
                       icon_url=ctx.author.avatar_url.split('?')[0])
         await ctx.send(embed=em)
 
-    @commands.command(pass_context=True)
+    @cmds.command(pass_context=True)
     async def info(self, ctx):
         """Show some of the more statistical information about me.
         This information includes the current version(s), number of commands, amount of servers, channels, users, uptime, and average websocket ping."""
-        commands = len(self.bot.commands)
+        cmds = len(self.bot.commands)
         cogs = len(self.bot.cogs)
         version = discord.__version__
         before = time.monotonic()
@@ -226,7 +227,7 @@ Guilds             :  {7}
 Users              :  {8}
 Channels           :  {9}
 Hostname           :  {10}
-OS                 :  {11}```""".format(commands, cogs, self.bot.version, version, pversion, ping,
+OS                 :  {11}```""".format(cmds, cogs, self.bot.version, version, pversion, ping,
                                         self.get_bot_uptime(), server_count, member_count, channel_count,
                                         platform.node(), platform.system()))
 
@@ -354,14 +355,15 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
             elif game.type == discord.ActivityType.watching:
                 b = "watching:"
             else:
-                b = "playing:" # should only fire an else on playing, but "generally" is not very confident (https://lars-is-the-love.of-my.life/kNCNqh.png)
+                b = "playing:"  # should only fire an else on playing, but "generally" is not very confident (https://lars-is-the-love.of-my.life/kNCNqh.png)
             em = discord.Embed(title=user.display_name + a + b, description=game.name, colour=user.color)
             if isinstance(game, discord.Spotify):
                 em.add_field(name='Title', value='`' + game.title + '`')
                 em.add_field(name="Album", value='`' + game.album + '`')
                 em.add_field(name="Track ID", value='`' + game.track_id + '`', inline=False)
                 em.add_field(name="Party ID", value='`' + game.party_id + '`', inline=False)
-                em.add_field(name="Artist" + ("s" if len(game.artists) > 1 else ""), value='`' + "; ".join(game.artists) + '`')
+                em.add_field(name="Artist" + ("s" if len(game.artists) > 1 else ""),
+                             value='`' + "; ".join(game.artists) + '`')
                 m, s = divmod((datetime.utcnow() - game.start).total_seconds(), 60)
                 m2, s2 = divmod(game.duration.total_seconds(), 60)
                 em.add_field(name="Duration", value="`%02d:%02d/%02d:%02d`" % (m, s, m2, s2))
@@ -381,6 +383,7 @@ OS                 :  {11}```""".format(commands, cogs, self.bot.version, versio
     @commands.command()
     async def changelog(self, ctx):
         """Check the most recent changelog for all of the newer features!"""
+        global last_update, desii, changelog
         changelog_channel = discord.utils.get(discord.utils.get(self.bot.guilds, id=315251940999299072).channels,
                                               id=315602734235516928)
         async for m in changelog_channel.history(limit=1):

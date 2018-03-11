@@ -1,21 +1,21 @@
-import discord
-import hastebin
-import traceback
-import aiohttp
 import datetime
 import io
 import textwrap
-import json
-import requests
+import traceback
 from contextlib import redirect_stdout
+
+import aiohttp
+import discord
 from discord.ext import commands
+
 import config
+
 
 def is_owner(ctx):
     return ctx.author.id in config.owners
 
 
-class Owner():
+class Owner:
     def __init__(self, bot):
         self.bot = bot
         self.last_result = None
@@ -72,7 +72,7 @@ class Owner():
                 self.last_result = ret
             try:
                 await ctx.send(f"*Executed in {((datetime.datetime.utcnow() - before) * 1000).total_seconds()}ms" + (
-                f".* ```py\n{content}```" if content else " with no returns.*"))
+                    f".* ```py\n{content}```" if content else " with no returns.*"))
             except discord.HTTPException:
                 msg = await ctx.send("Unable to send returns due to the length. Uploading to hastebin...")
                 async with aiohttp.ClientSession() as session:
@@ -92,7 +92,7 @@ class Owner():
             self.bot.unload_extension('cogs.' + extension)
             self.bot.load_extension('cogs.' + extension)
             await ctx.send(f":ok_hand: Reloaded /cogs/{extension}.py")
-        except Exception as e:
+        except Exception:
             await ctx.send(f":sob: I-I'm sorry, I couldn't reload the `{extension}` module >w< "
                            + f"```py\n{traceback.format_exc()}```")
 
@@ -110,13 +110,14 @@ class Owner():
         try:
             self.bot.load_extension("cogs." + extension)
             await ctx.send(f":ok_hand: Loaded /cogs/{extension}.py")
-        except Exception as e:
+        except Exception:
             await ctx.send(f":sob: I-I'm sorry, I couldn't load the `{extension}` module >w< "
                            + f"```py\n{traceback.format_exc()}```")
 
 
 def setup(bot):
     bot.add_cog(Owner(bot))
+
 
 """
                                         ===================================
