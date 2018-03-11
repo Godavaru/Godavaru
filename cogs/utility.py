@@ -1,19 +1,16 @@
+import asyncio
 import datetime
 import json
 import os
-import asyncio
-import re
 import random
-import urllib
+import urllib.parse
+
+import aiohttp
 import pytz
 from discord.ext import commands
 
-from cogs.utils.tools import *
 from cogs.utils import weeb
-
-
-class AppURLopener(urllib.request.FancyURLopener):
-    version = "Mozilla/5.0"
+from cogs.utils.tools import *
 
 
 class Utils:
@@ -105,7 +102,7 @@ class Utils:
     @commands.command(name="8ball", aliases=['mb', 'magicball'])
     async def _8ball(self, ctx, *, question):
         """Consult the magic 8ball with a question!"""
-        url = 'https://8ball.delegator.com/magic/JSON/' + question.replace('/', '\/').replace('.', '\.')
+        url = 'https://8ball.delegator.com/magic/JSON/' + urllib.parse.quote_plus(question)
         r = requests.get(url)
         j = r.json()
         q = j['magic']['question']
@@ -121,18 +118,22 @@ class Utils:
     @commands.command()
     async def cat(self, ctx):
         """Get a random cat image!"""
-        colours = [0x1abc9c, 0x11806a, 0x2ecc71, 0x1f8b4c, 0x3498db, 0x206694, 0x9b59b6, 0x71368a, 0xe91e63, 0xad1457,
-                   0xf1c40f, 0xc27c0e, 0xa84300, 0xe74c3c, 0x992d22, 0x95a5a6, 0x607d8b, 0x979c9f, 0x546e7a]
-        col = int(random.random() * len(colours))
+        # TODO: Find another random cat api or make a catimgs.txt and store there /shrug. random.cat is not reliable
         content = [";w; Don't be sad, here's a cat!",
-                   "You seem lonely, {0.mention}. Here, have a cat".format(ctx.author),
-                   "Meeeooowwww!", "Awww, so cute! Look at the kitty!!1!", "Woof... wait wrong animal."]
-        con = int(random.random() * len(content))
-        r = requests.get('http://random.cat/meow')
-        js = r.json()
-        em = discord.Embed(color=colours[col])
-        em.set_image(url=js['file'])
-        await ctx.send(content=content[con], embed=em)
+                   "You seem lonely, {0.display_name}. Here, have a cat".format(ctx.author),
+                   "Meeeooowwww!",
+                   "Awww, so cute! Look at the kitty!!1!",
+                   "Woof... wait wrong animal."]
+        async with aiohttp.ClientSession() as session:
+            async with session.get('https://random.cat/meow') as resp:
+                if resp.status() == 200:
+                    js = await resp.json()
+                    em = discord.Embed(
+                        color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
+                    em.set_image(url=js['file'])
+                    await ctx.send(content=random.choice(content), embed=em)
+                else:
+                    await ctx.send(":x: random.cat is down :< Try again later.")
 
     @commands.command()
     async def dog(self, ctx):
@@ -145,15 +146,12 @@ class Utils:
                 pass
             else:
                 is_video = False
-        colours = [0x1abc9c, 0x11806a, 0x2ecc71, 0x1f8b4c, 0x3498db, 0x206694, 0x9b59b6, 0x71368a, 0xe91e63, 0xad1457,
-                   0xf1c40f, 0xc27c0e, 0xa84300, 0xe74c3c, 0x992d22, 0x95a5a6, 0x607d8b, 0x979c9f, 0x546e7a]
-        col = int(random.random() * len(colours))
         content = [":dog: Don't be sad! This doggy wants to play with you!",
                    "You seem lonely, {0.display_name}. Here, have a dog. They're not as nice as cats, but enjoy!".format(
                        ctx.author),
                    "Weuf, woof, woooooooooof. Woof you.", "Pupper!", "Meow... wait wrong animal."]
         con = int(random.random() * len(content))
-        em = discord.Embed(color=colours[col])
+        em = discord.Embed(color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
         em.set_image(url=js['url'])
         await ctx.send(content=content[con], embed=em)
 
@@ -163,7 +161,7 @@ class Utils:
         e = emote.split(':')
         anim = False if e[0] != '<a' else True
         suffix = ".png" if not anim else ".gif"
-        url = f"https://cdn.discordapp.com/emojis/{e[2].replace('>', '')}{suffix}"
+        url = f"https://cdn.discordapp.com/emojis/{e[2].replace('>', '')}{suffix}?size=1024"
         weeb.save_to_image(url=url, name=e[1] + suffix)
         await ctx.send(file=discord.File(f'./images/{e[1]}{suffix}'))
         os.remove(f'./images/{e[1]}{suffix}')
@@ -182,7 +180,7 @@ class Utils:
         c = discord.Color(int(colour, 16))
         em = discord.Embed(color=c)
         em.set_image(url='https://www.colorcombos.com/images/colors/' + colour + '.png')
-        em.set_author(name="Here is a preview of your colour.", icon_url=get_friendly_avatar(ctx.author))
+        em.set_author(name="Here is a preview of your colour.", icon_url=ctx.author.avatar_url_as(format='png'))
         await ctx.send(embed=em)
 
     @commands.command()
@@ -234,7 +232,7 @@ class Utils:
         em.add_field(name="Expression", value=js['expression'], inline=False)
         em.add_field(name="Result", value=js['result'], inline=False)
         em.set_footer(text="Requested by " + str(ctx.message.author))
-        em.timestamp = datetime.datetime.now()
+        em.timestamp = datetime.now()
         await ctx.send(embed=em)
 
     @commands.command(aliases=["request"])
@@ -302,9 +300,9 @@ class Utils:
         mnts = round(m)
         scnds = round(s)
         t = (f"{dys} day{'s' if dys > 1 else ''} " if dys > 0 else "") + (
-        f"{hrs} hour{'s' if hrs > 1 else ''} " if hrs > 0 else "") + (
+            f"{hrs} hour{'s' if hrs > 1 else ''} " if hrs > 0 else "") + (
                 f"{mnts} minute{'s' if mnts > 1 else ''} " if mnts > 0 else "") + (
-            f"{scnds} second{'s' if scnds > 1 else ''} " if scnds > 0 else "")
+                f"{scnds} second{'s' if scnds > 1 else ''} " if scnds > 0 else "")
         await ctx.send(f":ok_hand: Okay! I'll remind you in " + t)
         await asyncio.sleep(total)
         await ctx.author.send(":wave: You asked me to remind you of: " + msg)

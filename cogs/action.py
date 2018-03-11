@@ -1,8 +1,9 @@
-import config
 import random
+
 from discord.ext import commands
-from cogs.utils.tools import *
+
 from cogs.utils import weeb
+from cogs.utils.tools import *
 
 
 class Action:
@@ -17,9 +18,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is cuddling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'***cuddles with you***'
+        if ctx.author in ctx.message.mentions:
+            msg = f'***cuddles with you***'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="cuddle"), name="cuddle.gif")
         await ctx.send(content=msg, file=discord.File("./images/cuddle.gif"))
 
@@ -31,9 +31,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is hugging **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'***hugs*** Are you okay now, **{ctx.author.display_name}**?'
+        if ctx.author in ctx.message.mentions:
+            msg = f'***hugs*** Are you okay now, **{ctx.author.display_name}**?'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="hug"), name="hug.gif")
         await ctx.send(content=msg, file=discord.File("./images/hug.gif"))
 
@@ -45,9 +44,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is slapping **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**Uh, okay. Sure. _slaps_**'
+        if ctx.author in ctx.message.mentions:
+            msg = f'**Uh, okay. Sure. _slaps_**'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="slap"), name="slap.gif")
         await ctx.send(content=msg, file=discord.File("./images/slap.gif"))
 
@@ -59,9 +57,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is kissing **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'I\'ll kiss you! *kisses*'
+        if ctx.author in ctx.message.mentions:
+            msg = f'I\'ll kiss you! *kisses*'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="kiss"), name="kiss.gif")
         await ctx.send(content=msg, file=discord.File("./images/kiss.gif"))
 
@@ -74,9 +71,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is patting **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'***pats you***'
+        if ctx.author in ctx.message.mentions:
+            msg = f'***pats you***'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="pat"), name="pat.gif")
         await ctx.send(content=msg, file=discord.File("./images/pat.gif"))
 
@@ -88,9 +84,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is poking **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'*pokes you* hi. *pokes more*'
+        if ctx.author in ctx.message.mentions:
+            msg = f'*pokes you* hi. *pokes more*'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="teehee"), name="tease.gif")
         await ctx.send(content=msg, file=discord.File("./images/tease.gif"))
 
@@ -102,9 +97,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is teasing **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'*teases you* hehe'
+        if ctx.author in ctx.message.mentions:
+            msg = f'*teases you* hehe'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="teehee"), name="tease.gif")
         await ctx.send(content=msg, file=discord.File("./images/tease.gif"))
 
@@ -116,9 +110,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is staring at **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**..."
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'***stares at you***'
+        if ctx.author in ctx.message.mentions:
+            msg = f'***stares at you***'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="stare"), name="stare.gif")
         await ctx.send(content=msg, file=discord.File("./images/stare.gif"))
 
@@ -131,9 +124,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is telling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}** to wake up!"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = 'Uh, don\'t you need to be awake to send a message? Oh well. Wake up!'
+        if ctx.author in ctx.message.mentions:
+            msg = 'Uh, don\'t you need to be awake to send a message? Oh well. Wake up!'
         await ctx.send(content=msg, file=discord.File(random.choice(imgs)))
 
     @commands.command(usage="<members>")
@@ -144,9 +136,8 @@ class Action:
             await ctx.send(":x: You must mention at least one user.")
             return
         msg = f"**{ctx.author.display_name}** is telling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}** to sleep!"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**Self-discipline! I like it! Go sleep!**'
+        if ctx.author in ctx.message.mentions:
+            msg = f'**Self-discipline! I like it! Go sleep!**'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="sleepy"), name="sleep.gif")
         await ctx.send(content=msg, file=discord.File("./images/sleep.gif"))
 
@@ -154,13 +145,10 @@ class Action:
     @commands.bot_has_permissions(attach_files=True)
     async def cry(self, ctx):
         """When life gets at you and you just wanna let it all out."""
-        if len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0 or ctx.author in ctx.message.mentions:
             msg = f'**{ctx.author.display_name}** is crying!'
         else:
             msg = f"**{ctx.author.display_name}** is crying because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**{ctx.author.display_name}** is crying!'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="cry"), name="cry.gif")
         await ctx.send(content=msg, file=discord.File("./images/cry.gif"))
 
@@ -168,13 +156,10 @@ class Action:
     @commands.bot_has_permissions(attach_files=True)
     async def triggered(self, ctx):
         """**T R I G G E R E D**"""
-        if len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0 or ctx.author in ctx.message.mentions:
             msg = f'**{ctx.author.display_name}** is triggered! REEEEEEEEEEEEEE'
         else:
             msg = f"**{ctx.author.display_name}** is triggered because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**{ctx.author.display_name}** is triggered! REEEEEEEEEEEEEE'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="triggered"), name="triggered.gif")
         await ctx.send(content=msg, file=discord.File("./images/triggered.gif"))
 
@@ -182,13 +167,10 @@ class Action:
     @commands.bot_has_permissions(attach_files=True)
     async def think(self, ctx):
         """You ever think about stuff, man?"""
-        if len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0 or ctx.author in ctx.message.mentions:
             msg = f'**{ctx.author.display_name}** is thinking...'
         else:
             msg = f"**{ctx.author.display_name}** is thinking about **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**{ctx.author.display_name}** is thinking...'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="thinking"), name="thinking.gif")
         await ctx.send(content=msg, file=discord.File("./images/thinking.gif"))
 
@@ -196,13 +178,10 @@ class Action:
     @commands.bot_has_permissions(attach_files=True)
     async def blush(self, ctx):
         """I-it's not like I like you, b-baka!"""
-        if len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0 or ctx.author in ctx.message.mentions:
             msg = f'**{ctx.author.display_name}** is blushing... Who made them blush?'
         else:
             msg = f"**{ctx.author.display_name}** is blushing because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**{ctx.author.display_name}** is blushing... Who made them blush?'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="blush"), name="blush.gif")
         await ctx.send(content=msg, file=discord.File("./images/blush.gif"))
 
@@ -211,13 +190,10 @@ class Action:
     async def smile(self, ctx):
         """\uD83C\uDFB6 You make me smile like the sun, fall outta bed... \uD83C\uDFB6
         What? I wasn't singing!"""
-        if len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0 or ctx.author in ctx.message.mentions:
             msg = f'**{ctx.author.display_name}** is smiling.'
         else:
             msg = f"**{ctx.author.display_name}** is smiling at**{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**{ctx.author.display_name}** is smiling.'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="smile"), name="smile.gif")
         await ctx.send(content=msg, file=discord.File("./images/smile.gif"))
 
@@ -225,13 +201,10 @@ class Action:
     @commands.bot_has_permissions(attach_files=True)
     async def shrug(self, ctx):
         """When you have no idea what is going on."""
-        if len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0 or ctx.author in ctx.message.mentions:
             msg = f'***shrugs***'
         else:
             msg = f"**{ctx.author.display_name}** is shrugging at **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'***shrugs***'
         weeb.save_to_image(url=await weeb.request_image_as_gif(type="shrug"), name="shrug.gif")
         await ctx.send(content=msg, file=discord.File("./images/shrug.gif"))
 
@@ -239,15 +212,12 @@ class Action:
     @commands.bot_has_permissions(attach_files=True)
     async def confused(self, ctx):
         """When you still have no idea what is going on."""
-        if len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0 or ctx.author in ctx.message.mentions:
             msg = f'**{ctx.author.display_name}** is confused'
         else:
             msg = f"**{ctx.author.display_name}** is confused with **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'**{ctx.author.display_name}** is confused'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="clagwimoth"), name="clagwimoth.gif")
-        await ctx.send(content=msg, file=discord.File("./images/clagwimoth.gif"))
+        weeb.save_to_image(url=await weeb.request_image_as_gif(type="clagwimoth"), name="confused.gif")
+        await ctx.send(content=msg, file=discord.File("./images/confused.gif"))
 
     @commands.command()
     async def kill(self, ctx, *, member: discord.Member):

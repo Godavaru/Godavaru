@@ -39,22 +39,22 @@ class Fun:
             try:
                 args = args[4:]
                 mid = args.split(' ')
-                toEdit = await ctx.message.channel.get_message(int(mid[0])) 
+                to_edit = await ctx.message.channel.get_message(int(mid[0]))
                 content = args.replace(mid[0]+" ", "")
                 try:
-                    await toEdit.edit(content=content)
+                    await to_edit.edit(content=content)
                 except discord.Forbidden:
                     await ctx.send("Can't edit that message.")
                 await ctx.message.delete()
             except discord.NotFound:
-                notFound = await ctx.send("Couldn't find the message.")
+                not_found = await ctx.send("Couldn't find the message.")
                 await asyncio.sleep(5)
-                await notFound.delete()
+                await not_found.delete()
                 await ctx.message.delete()
             except (IndexError, ValueError):
-                indxErr = await ctx.send("Usage: `g_say --e <id> <content>`")
+                indx_err = await ctx.send("Usage: `g_say --e <id> <content>`")
                 await asyncio.sleep(5)
-                await indxErr.delete()
+                await indx_err.delete()
                 await ctx.message.delete()
             except discord.Forbidden:
                 err = await ctx.send("I don't have permission to delete your message.")

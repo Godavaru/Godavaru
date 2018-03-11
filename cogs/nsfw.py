@@ -44,9 +44,8 @@ class NSFW:
         if not ctx.channel.is_nsfw():
             return await ctx.send(":x: Y-you lewdie! Go get a room!")
         msg = f"**{ctx.author.display_name}** is fucking **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
-        for u in ctx.message.mentions:
-            if u == ctx.author.display_name:
-                msg = f'Oh, okay. Sure. I\'ll fuck you.'
+        if ctx.author in ctx.message.mentions:
+            msg = 'Oh, okay. Sure. I\'ll fuck you.'
         em = discord.Embed(
             description=":eggplant: " + msg,
             color=ctx.message.author.color)
@@ -67,7 +66,7 @@ class NSFW:
                 non_loli = list(filter(lambda x: 'loli' not in x['tags'] and 'shota' not in x['tags'], js))
                 if len(non_loli) == 0:
                     return await ctx.send(":warning: All results included loli/shota content; this search is invalid.")
-                response = non_loli[random.randint(0, len(non_loli))]
+                response = non_loli[random.randint(0, len(non_loli)-1)]
                 img = f"https://img.rule34.xxx/images/{response['directory']}/{response['image']}"
                 tags = response['tags'].split(' ')
                 em = discord.Embed(description=f'`{", ".join(tags)}`', colour=0xff0000)
@@ -93,7 +92,7 @@ class NSFW:
                 non_loli = list(filter(lambda x: 'loli' not in x['tags'] and 'shota' not in x['tags'] and 'deletethistag' not in x['tags'], js))
                 if len(non_loli) == 0:
                     return await ctx.send(":warning: All results included loli/shota content; this search is invalid.")
-                response = non_loli[random.randint(0, len(non_loli))]
+                response = non_loli[random.randint(0, len(non_loli)-1)]
                 img = response['file_url']
                 tags = response['tags'].split(' ')
                 em = discord.Embed(description=f'**Rating:** {(rating if rating in ["safe", "questionable", "explicit"] else "safe")}\n`{", ".join(tags)}`', colour=0xff0000)
