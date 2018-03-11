@@ -2,7 +2,9 @@ import asyncio
 import datetime
 import json
 import os
+import cairosvg
 import random
+import urllib
 import urllib.parse
 
 import aiohttp
@@ -161,13 +163,23 @@ class Utils:
     @commands.command()
     async def jumbo(self, ctx, emote: str):
         """Get a larger version of a custom emote."""
-        e = emote.split(':')
-        anim = False if e[0] != '<a' else True
-        suffix = ".png" if not anim else ".gif"
-        url = f"https://cdn.discordapp.com/emojis/{e[2].replace('>', '')}{suffix}?size=1024"
-        weeb.save_to_image(url=url, name=e[1] + suffix)
-        await ctx.send(file=discord.File(f'./images/{e[1]}{suffix}'))
-        os.remove(f'./images/{e[1]}{suffix}')
+        match = re.compile(r"<(a)?:(\w*):(\d*)>").match(emote)
+        if match:
+            anim = False if not match.group(1) else True
+            suffix = ".png" if not anim else ".gif"
+            url = f"https://cdn.discordapp.com/emojis/{match.group(3)}{suffix}?size=1024"
+            weeb.save_to_image(url=url, name=match.group(2) + suffix)
+            await ctx.send(file=discord.File(f'./images/{match.group(2)}{suffix}'))
+            os.remove(f'./images/{match.group(2)}{suffix}')
+        else:
+            try:
+                em = str(emote.encode('unicode_escape'))
+                uni = em[2:len(em)-1].replace('\\\\u', '-').replace('\\\\U000', '-')[1:]
+                cairosvg.svg2png(url="https://twemoji.maxcdn.com/2/svg/{}.svg".format(uni), write_to="./images/emote.png", parent_width=256, parent_height=256)
+                await ctx.send(file=discord.File('./images/emote.png'))
+                os.remove('./images/emote.png')
+            except urllib.error.HTTPError:
+                await ctx.send(":x: That is not a custom or unicode emoji!")
 
     @commands.command(aliases=["color"])
     async def colour(self, ctx, hexcode: str):
@@ -309,6 +321,13 @@ class Utils:
         await ctx.send(f":ok_hand: Okay! I'll remind you in " + t)
         await asyncio.sleep(total)
         await ctx.author.send(":wave: You asked me to remind you of: " + msg)
+
+    @commands.command()
+    async def unicode(self, ctx, *, character: str):
+        """Get the unicodes for the input you give me!"""
+        b_string = str(character.encode('unicode_escape'))
+        unicode_chars = b_string[2:len(b_string)-1]
+        await ctx.send(f"The unicode for `{character}` is: `{unicode_chars}`")
 
 
 def setup(bot):

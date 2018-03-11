@@ -25,6 +25,7 @@ class Godavaru(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=config.prefix, case_insensitive=True)
         self.start_time = datetime.datetime.now()
+        self.token = 'no u'  # yes this is a necessary change
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
