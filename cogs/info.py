@@ -109,9 +109,9 @@ class Info:
     @commands.command()
     async def ping(self, ctx):
         """Check my response time and my websocket ping"""
-        before = datetime.utcnow()
+        before = datetime.datetime.utcnow()
         ping_msg = await ctx.send(":mega: If you see this message you are cool... jk. It's just a ping message.")
-        ping = (datetime.utcnow() - before) * 1000
+        ping = (datetime.datetime.utcnow() - before) * 1000
         before2 = time.monotonic()
         await (await self.bot.ws.ping())
         after = time.monotonic()
@@ -120,7 +120,7 @@ class Info:
             content=":mega: Pong! My ping is {:.2f}ms! `Websocket: {:.0f}ms`".format(ping.total_seconds(), ping2))
 
     def get_bot_uptime(self, *, brief=False):
-        now = datetime.utcnow()
+        now = datetime.datetime.utcnow()
         delta = now - self.bot.uptime
         hours, remainder = divmod(int(delta.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
@@ -273,7 +273,7 @@ OS                 :  {11}```""".format(cmds, cogs, self.bot.version, version, p
             inline=False
         ).add_field(
             name="Days Since Creation",
-            value=(datetime.now() - g.created_at).days
+            value=(datetime.datetime.now() - g.created_at).days
         ).add_field(
             name="Guild Region:",
             value=str(g.region).capitalize()
@@ -318,8 +318,8 @@ OS                 :  {11}```""".format(cmds, cogs, self.bot.version, version, p
         em = discord.Embed(color=user.color)
         em.add_field(name="Joined At:", value=user.joined_at.strftime("%A %d %B %Y at %H:%M:%S"), inline=False)
         em.add_field(name="Created At:", value=user.created_at.strftime("%A %d %B %Y at %H:%M:%S"), inline=False)
-        em.add_field(name="Days Since Join:", value=(datetime.now() - user.joined_at).days)
-        em.add_field(name="Days Since Creation:", value=(datetime.now() - user.created_at).days)
+        em.add_field(name="Days Since Join:", value=(datetime.datetime.now() - user.joined_at).days)
+        em.add_field(name="Days Since Creation:", value=(datetime.datetime.now() - user.created_at).days)
         em.add_field(name="Status:", value=user.status)
         em.add_field(name="Nickname:", value=user.nick)
         em.add_field(name="Voice Channel:", value=user.voice.channel if user.voice is not None else None)
@@ -364,7 +364,7 @@ OS                 :  {11}```""".format(cmds, cogs, self.bot.version, version, p
                 em.add_field(name="Party ID", value='`' + game.party_id + '`', inline=False)
                 em.add_field(name="Artist" + ("s" if len(game.artists) > 1 else ""),
                              value='`' + "; ".join(game.artists) + '`')
-                m, s = divmod((datetime.utcnow() - game.start).total_seconds(), 60)
+                m, s = divmod((datetime.datetime.utcnow() - game.start).total_seconds(), 60)
                 m2, s2 = divmod(game.duration.total_seconds(), 60)
                 em.add_field(name="Duration", value="`%02d:%02d/%02d:%02d`" % (m, s, m2, s2))
                 em.set_thumbnail(url=game.album_cover_url)

@@ -24,7 +24,7 @@ initial_extensions = (
 class Godavaru(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=config.prefix, case_insensitive=True)
-        self.start_time = datetime.now()
+        self.start_time = datetime.datetime.now()
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
@@ -42,7 +42,7 @@ class Godavaru(commands.Bot):
     async def on_ready(self):
         await self.change_presence(
             activity=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
-        startup_message = f"[`{datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
+        startup_message = f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
                           + "===============\n" \
                           + 'Logged in as:\n' \
                           + str(self.user) + '\n' \
@@ -51,7 +51,7 @@ class Godavaru(commands.Bot):
                           + f'Servers: `{len(self.guilds)}`\n' \
                           + f'Users: `{len(self.users)}`\n' \
                           + '===============\n' \
-                          + f'Loaded up `{len(self.commands)}` commands in `{len(self.cogs)}` cogs in `{(datetime.now() - self.start_time).total_seconds()}` seconds.\n' \
+                          + f'Loaded up `{len(self.commands)}` commands in `{len(self.cogs)}` cogs in `{(datetime.datetime.now() - self.start_time).total_seconds()}` seconds.\n' \
                           + '==============='
         print(startup_message.replace('`', ''))
         self.webhook.send(startup_message)
@@ -74,7 +74,7 @@ class Godavaru(commands.Bot):
         await self.change_presence(activity=discord.Game(
             name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':tada: [`' + str(
-            datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I joined the server `' + server.name + '` (' + str(
+            datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I joined the server `' + server.name + '` (' + str(
             server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(
             server.owner.id) + ').')
         guild_count = len(self.guilds)
@@ -93,7 +93,7 @@ class Godavaru(commands.Bot):
         await self.change_presence(activity=discord.Game(
             name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':frowning: [`' + str(
-            datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + str(
+            datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + str(
             server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(
             server.owner.id) + ').')
         guild_count = len(self.guilds)
@@ -137,14 +137,14 @@ class Godavaru(commands.Bot):
             if message.guild is None:
                 await message.channel.send(
                     "Hey! Weirdo! Stop sending me dms. If you're trying to use commands, use it in a server.")
-                self.webhook.send(content="[`" + str(datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
+                self.webhook.send(content="[`" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
                                           + "[`CommandHandler`][`InterceptDirectMessage`]\n"
                                           + "[`AuthorInformation`]: {} ({})\n".format(str(message.author),
                                                                                       str(message.author.id))
                                           + "[`MessageInformation`]: {} ({})\n".format(message.clean_content,
                                                                                        str(message.id))
                                           + "Intercepted direct message and sent alternate message.")
-                print("[" + str(datetime.now().strftime("%H:%M:%S")) + "][Godavaru]\n"
+                print("[" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "][Godavaru]\n"
                       + "[CommandHandler][InterceptDirectMessage]\n"
                       + "[AuthorInformation]: {} ({})\n".format(str(message.author), str(message.author.id))
                       + "[MessageInformation]: {} ({})\n".format(message.clean_content, str(message.id))

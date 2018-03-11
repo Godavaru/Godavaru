@@ -113,28 +113,27 @@ class Utils:
         em.set_thumbnail(url="https://8ball.delegator.com/images/8ball.png")
         em.set_author(name="You consult the magic 8 ball...", icon_url=ctx.author.avatar_url.replace("?size=1024", ""))
         em.set_footer(text="Powered by 8ball.delegator.com")
-        em.timestamp = datetime.now()
+        em.timestamp = datetime.datetime.now()
         await ctx.send(embed=em)
 
     @commands.command()
     async def cat(self, ctx):
         """Get a random cat image!"""
-        # TODO: Find another random cat api or make a catimgs.txt and store there /shrug. random.cat is not reliable
         content = [";w; Don't be sad, here's a cat!",
                    "You seem lonely, {0.display_name}. Here, have a cat".format(ctx.author),
                    "Meeeooowwww!",
                    "Awww, so cute! Look at the kitty!!1!",
                    "Woof... wait wrong animal."]
         async with aiohttp.ClientSession() as session:
-            async with session.get('https://random.cat/meow') as resp:
-                if 300 > resp.status >= 200:
+            async with session.get('https://nekos.life/api/v2/img/meow') as resp:
+                try:
                     js = await resp.json()
                     em = discord.Embed(
                         color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
-                    em.set_image(url=js['file'])
+                    em.set_image(url=js['url'])
                     await ctx.send(content=random.choice(content), embed=em)
-                else:
-                    await ctx.send(":x: random.cat is down :< Try again later.")
+                except:
+                    await ctx.send(":x: Error retrieving cat image :<")
 
     @commands.command()
     async def dog(self, ctx):
@@ -236,7 +235,7 @@ class Utils:
         em.add_field(name="Expression", value=js['expression'], inline=False)
         em.add_field(name="Result", value=js['result'], inline=False)
         em.set_footer(text="Requested by " + str(ctx.message.author))
-        em.timestamp = datetime.now()
+        em.timestamp = datetime.datetime.now()
         await ctx.send(embed=em)
 
     @commands.command(aliases=["request"])
