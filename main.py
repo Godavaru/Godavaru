@@ -57,7 +57,7 @@ class Godavaru(commands.Bot):
         print(startup_message.replace('`', ''))
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
-            self.uptime = datetime.utcnow()
+            self.uptime = datetime.datetime.utcnow()
         url = f"https://api.weeb.sh/images/types"
         while True:
             async with aiohttp.ClientSession() as session:

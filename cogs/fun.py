@@ -246,6 +246,7 @@ class Fun:
     # imma just add a single line of comments everytime i see this owo
     # im a meme
     # Lars is cute
+    # hello there human being
 
     @commands.command()
     async def slots(self, ctx):
@@ -379,6 +380,29 @@ class Fun:
     async def roll(self, ctx):
         """Roll a generic six-sided die."""
         await ctx.send(":game_die: You rolled a **{}**!".format(random.randint(1, 6)))
+
+    @commands.command()
+    async def person(self, ctx):
+        """Generate a random person's information.
+        Note: This information is 100% fake and provided by randomuser.me."""
+        async with aiohttp.ClientSession() as session:
+            async with session.get('https://randomuser.me/api') as resp:
+                js = await resp.json()
+        person = js['results'][0]
+        em = discord.Embed(colour=int("".join([random.choice('ABCDEF0123456789') for _ in range(6)]), 16)) \
+            .set_author(
+            name=f"{person['name']['title'].capitalize()} {person['name']['first'].capitalize()} {person['name']['last'].capitalize()}",
+            icon_url=person['picture']['thumbnail']) \
+            .set_thumbnail(url=person['picture']['large']) \
+            .add_field(name="Gender", value=person['gender'].capitalize()) \
+            .add_field(name="Date of Birth", value=person['dob']) \
+            .add_field(name="Location", value=", ".join(
+            [string.capwords(person['location']['street']), string.capwords(person['location']['city']),
+             string.capwords(person['location']['state']), str(person['location']['postcode']), person['nat']])) \
+            .add_field(name="Email", value=person['email']) \
+            .add_field(name="Account", value="**Username:** {}\n**Password:** {}\n**Registered At:** {}".format(person['login']['username'], person['login']['password'], person['registered'])) \
+            .add_field(name="Phone", value=f"**Home:** {person['phone']}\n**Cell:** {person['cell']}")
+        await ctx.send(embed=em)
 
     @commands.command()
     async def rps(self, ctx, choice: str):
