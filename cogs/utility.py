@@ -11,7 +11,7 @@ import aiohttp
 import pytz
 from discord.ext import commands
 
-from cogs.utils import weeb
+from cogs.utils import image
 from cogs.utils.tools import *
 
 
@@ -96,9 +96,8 @@ class Utils:
             if not string.lower().endswith('--bypass'):
                 await ctx.send("\N{CROSS MARK} That is too " + ("small" if 'lars' not in string.lower() else 'long'))
             else:
-                await ctx.send(
-                    "\N{WHITE HEAVY CHECK MARK} That string is `{}` characters long (excluding the bypass)".format(
-                        len(string) - 9))
+                await ctx.send(f"\N{WHITE HEAVY CHECK MARK} That string is `{len(string) - 9}` characters long "
+                               "(excluding the bypass)")
         else:
             await ctx.send(f"\N{WHITE HEAVY CHECK MARK} The string you gave me is `{len(string)}` characters long.")
 
@@ -168,7 +167,7 @@ class Utils:
             anim = False if not match.group(1) else True
             suffix = ".png" if not anim else ".gif"
             url = f"https://cdn.discordapp.com/emojis/{match.group(3)}{suffix}?size=1024"
-            weeb.save_to_image(url=url, name=match.group(2) + suffix)
+            image.save_to_image(url=url, name=match.group(2) + suffix)
             await ctx.send(file=discord.File(f'./images/{match.group(2)}{suffix}'))
             os.remove(f'./images/{match.group(2)}{suffix}')
         else:

@@ -2,7 +2,7 @@ import random
 
 from discord.ext import commands
 
-from cogs.utils import weeb
+from cogs.utils import image
 from cogs.utils.tools import *
 
 
@@ -20,7 +20,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is cuddling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         if ctx.author in ctx.message.mentions:
             msg = f'***cuddles with you***'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="cuddle"), name="cuddle.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="cuddle", filetype="gif")[0], name="cuddle.gif")
         await ctx.send(content=msg, file=discord.File("./images/cuddle.gif"))
 
     @commands.command(usage="<members>")
@@ -33,7 +33,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is hugging **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         if ctx.author in ctx.message.mentions:
             msg = f'***hugs*** Are you okay now, **{ctx.author.display_name}**?'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="hug"), name="hug.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="hug", filetype="gif")[0], name="hug.gif")
         await ctx.send(content=msg, file=discord.File("./images/hug.gif"))
 
     @commands.command(usage="<members>")
@@ -46,7 +46,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is slapping **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         if ctx.author in ctx.message.mentions:
             msg = f'**Uh, okay. Sure. _slaps_**'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="slap"), name="slap.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="slap", filetype="gif")[0], name="slap.gif")
         await ctx.send(content=msg, file=discord.File("./images/slap.gif"))
 
     @commands.command(usage="<members>")
@@ -59,7 +59,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is kissing **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         if ctx.author in ctx.message.mentions:
             msg = f'I\'ll kiss you! *kisses*'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="kiss"), name="kiss.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="kiss", filetype="gif")[0], name="kiss.gif")
         await ctx.send(content=msg, file=discord.File("./images/kiss.gif"))
 
     @commands.command(usage="<members>")
@@ -73,7 +73,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is patting **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         if ctx.author in ctx.message.mentions:
             msg = f'***pats you***'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="pat"), name="pat.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="pat", filetype="gif")[0], name="pat.gif")
         await ctx.send(content=msg, file=discord.File("./images/pat.gif"))
 
     @commands.command(usage="<members>")
@@ -86,8 +86,8 @@ class Action:
         msg = f"**{ctx.author.display_name}** is poking **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         if ctx.author in ctx.message.mentions:
             msg = f'*pokes you* hi. *pokes more*'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="teehee"), name="tease.gif")
-        await ctx.send(content=msg, file=discord.File("./images/tease.gif"))
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="poke", filetype="gif")[0], name="poke.gif")
+        await ctx.send(content=msg, file=discord.File("./images/poke.gif"))
 
     @commands.command(aliases=["teehee"], usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -99,7 +99,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is teasing **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         if ctx.author in ctx.message.mentions:
             msg = f'*teases you* hehe'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="teehee"), name="tease.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="teehee", filetype="gif")[0], name="tease.gif")
         await ctx.send(content=msg, file=discord.File("./images/tease.gif"))
 
     @commands.command(usage="<members>")
@@ -112,7 +112,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is staring at **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**..."
         if ctx.author in ctx.message.mentions:
             msg = f'***stares at you***'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="stare"), name="stare.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="stare", filetype="gif")[0], name="stare.gif")
         await ctx.send(content=msg, file=discord.File("./images/stare.gif"))
 
     @commands.command(usage="<members>")
@@ -138,7 +138,7 @@ class Action:
         msg = f"**{ctx.author.display_name}** is telling **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}** to sleep!"
         if ctx.author in ctx.message.mentions:
             msg = f'**Self-discipline! I like it! Go sleep!**'
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="sleepy"), name="sleep.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="sleepy", filetype="gif")[0], name="sleep.gif")
         await ctx.send(content=msg, file=discord.File("./images/sleep.gif"))
 
     @commands.command(usage="[members]")
@@ -149,7 +149,7 @@ class Action:
             msg = f'**{ctx.author.display_name}** is crying!'
         else:
             msg = f"**{ctx.author.display_name}** is crying because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="cry"), name="cry.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="cry", filetype="gif")[0], name="cry.gif")
         await ctx.send(content=msg, file=discord.File("./images/cry.gif"))
 
     @commands.command(usage="[members]")
@@ -160,7 +160,7 @@ class Action:
             msg = f'**{ctx.author.display_name}** is triggered! REEEEEEEEEEEEEE'
         else:
             msg = f"**{ctx.author.display_name}** is triggered because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="triggered"), name="triggered.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="triggered", filetype="gif")[0], name="triggered.gif")
         await ctx.send(content=msg, file=discord.File("./images/triggered.gif"))
 
     @commands.command(usage="[members]")
@@ -171,7 +171,7 @@ class Action:
             msg = f'**{ctx.author.display_name}** is thinking...'
         else:
             msg = f"**{ctx.author.display_name}** is thinking about **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="thinking"), name="thinking.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="thinking", filetype="gif")[0], name="thinking.gif")
         await ctx.send(content=msg, file=discord.File("./images/thinking.gif"))
 
     @commands.command(usage="[members]")
@@ -182,7 +182,7 @@ class Action:
             msg = f'**{ctx.author.display_name}** is blushing... Who made them blush?'
         else:
             msg = f"**{ctx.author.display_name}** is blushing because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="blush"), name="blush.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="blush", filetype="gif")[0], name="blush.gif")
         await ctx.send(content=msg, file=discord.File("./images/blush.gif"))
 
     @commands.command(usage="[members]")
@@ -194,7 +194,7 @@ class Action:
             msg = f'**{ctx.author.display_name}** is smiling.'
         else:
             msg = f"**{ctx.author.display_name}** is smiling at**{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="smile"), name="smile.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="smile", filetype="gif")[0], name="smile.gif")
         await ctx.send(content=msg, file=discord.File("./images/smile.gif"))
 
     @commands.command(usage="[members]")
@@ -205,7 +205,7 @@ class Action:
             msg = f'***shrugs***'
         else:
             msg = f"**{ctx.author.display_name}** is shrugging at **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="shrug"), name="shrug.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="shrug", filetype="gif")[0], name="shrug.gif")
         await ctx.send(content=msg, file=discord.File("./images/shrug.gif"))
 
     @commands.command(usage="[members]")
@@ -216,7 +216,7 @@ class Action:
             msg = f'**{ctx.author.display_name}** is confused'
         else:
             msg = f"**{ctx.author.display_name}** is confused with **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
-        weeb.save_to_image(url=await weeb.request_image_as_gif(type="clagwimoth"), name="confused.gif")
+        image.save_to_image(url=await self.bot.weeb.request_image(imgtype="clagwimoth", filetype="gif")[0], name="confused.gif")
         await ctx.send(content=msg, file=discord.File("./images/confused.gif"))
 
     @commands.command()

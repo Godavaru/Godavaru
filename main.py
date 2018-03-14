@@ -3,6 +3,7 @@ import random
 import string
 import traceback
 import asyncio
+import weeb
 
 import aiohttp
 from discord.ext import commands
@@ -29,6 +30,7 @@ class Godavaru(commands.Bot):
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
+        self.weeb = weeb.Client(token=config.weeb_token, user_agent='Godavaru/'+self.version)
         self.weeb_types = []
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
@@ -58,13 +60,9 @@ class Godavaru(commands.Bot):
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
-        url = f"https://api.weeb.sh/images/types"
         while True:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers={"Authorization": config.weeb_token}) as resp:
-                    j = await resp.json()
-                    self.weeb_types = j["types"]
-                    await asyncio.sleep(86400)
+            self.weeb_types = await self.weeb.get_types()
+            await asyncio.sleep(86400)
 
     async def on_guild_join(self, server):
         server_count = len(self.guilds)
