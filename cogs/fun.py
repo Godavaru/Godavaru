@@ -70,7 +70,7 @@ class Fun:
     async def meme(self, ctx):
         """This command gives you a random discord meme, powered by weeb.sh"""
         em = discord.Embed(title="Here's a random discord meme for ya", color=ctx.author.color)
-        em.set_image(url=await self.bot.weeb.request_image("discord_memes")[0])
+        em.set_image(url=(await self.bot.weeb.get_image("discord_memes"))[0])
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -79,7 +79,7 @@ class Fun:
     async def delet(self, ctx):
         """This command gives you a random delet this meme, powered by weeb.sh"""
         em = discord.Embed(title="Delet this!!1!", color=ctx.author.color)
-        em.set_image(url=await self.bot.weeb.request_image("delet_this")[0])
+        em.set_image(url=(await self.bot.weeb.get_image("delet_this"))[0])
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -91,10 +91,10 @@ class Fun:
         face_colour = face_colour.replace('#', '') if face_colour else ''
         hair_colour = hair_colour.replace('#', '') if hair_colour else ''
         face = 'fff0d3'
-        if len(face_colour) == 6 and not re.compile(r'.*[g-zG-Z].*').match(face_colour):
+        if re.compile(r'^[0-9a-fA-F]{6}$').match(face_colour):
             face = face_colour
         hair = 'cc817c'
-        if len(hair_colour) == 6 and not re.compile(r'.*[g-zG-Z].*').match(hair_colour):
+        if re.compile(r'^[0-9a-fA-F]{6}$').match(hair_colour):
             hair = hair_colour
         with open("./images/awoo.png", "wb") as img:
             img.write(await self.bot.weeb.generate_image(imgtype="awooo", face=face, hair=hair))
@@ -138,7 +138,7 @@ class Fun:
         if type not in self.bot.weeb_types or type.lower() is None:
             return await ctx.send(f"Valid types: ```\n{', '.join(self.bot.weeb_types)}\n``` Use these like `{ctx.prefix}{ctx.command} <type>`")
         em = discord.Embed(color=ctx.author.color)
-        em.set_image(url=await self.bot.weeb.request_image(type.lower()))
+        em.set_image(url=(await self.bot.weeb.get_image(type.lower()))[0])
         em.set_footer(text="Powered by weeb.sh")
         await ctx.send(embed=em)
 
@@ -178,6 +178,8 @@ class Fun:
     # hello there human being
     # oh my gOD I MADE AN API WRAPPER
     # no im not crazy dont look at me like that
+    # awau
+    # hi
 
     @commands.command()
     async def slots(self, ctx):
