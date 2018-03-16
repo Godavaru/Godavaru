@@ -1,6 +1,7 @@
 import datetime
 import platform
 import time
+import discord
 
 from discord.ext import commands
 
