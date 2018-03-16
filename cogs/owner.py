@@ -84,6 +84,11 @@ class Owner:
                         else:
                             await msg.edit(content="Error uploading to hastebin :(")
 
+    @commands.command(name="exec")
+    @commands.check(is_owner)
+    async def _exec(self, ctx):
+        await ctx.send("hi i dont exist yet")
+
     @commands.command()
     @commands.check(is_owner)
     async def reload(self, ctx, *, extension: str):
