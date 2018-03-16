@@ -93,9 +93,9 @@ class Owner:
         out, err = sp.communicate()
         msg = "Executing...\n"
         if out:
-            msg += 'Success! ```\n{}```\n'.format(out)
+            msg += 'Success! ```\n{}```\n'.format(out.decode())
         if err:
-            msg += 'Error! ```\n{}```\n'.format(err)
+            msg += 'Error! ```\n{}```\n'.format(err.decode())
         msg += "Returncode: {}".format(sp.returncode)
         await ctx.send(msg)
 
