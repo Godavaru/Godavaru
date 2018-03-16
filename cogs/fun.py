@@ -332,7 +332,7 @@ class Fun:
             .add_field(name="Location", value=", ".join(
             [string.capwords(person['location']['street']), string.capwords(person['location']['city']),
              string.capwords(person['location']['state']), str(person['location']['postcode']), person['nat']])) \
-            .add_field(name="Email", value=person['email']) \
+            .add_field(name="Email", value=person['email'].replace('example.com', 'gmail.com')) \
             .add_field(name="Account", value="**Username:** {}\n**Password:** {}\n**Registered At:** {}".format(person['login']['username'], person['login']['password'], person['registered'])) \
             .add_field(name="Phone", value=f"**Home:** {person['phone']}\n**Cell:** {person['cell']}")
         await ctx.send(embed=em)

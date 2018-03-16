@@ -232,17 +232,24 @@ OS                 :  {11}```""".format(cmds, cogs, self.bot.version, version, p
                                         platform.node(), platform.system()))
 
     @commands.command()
-    async def avatar(self, ctx, *, user: discord.Member):
-        """Get a user-friendly image of the specified user's avatar.
-        If no user is specified, the user is the author.
-        You can also search for a user's name. The name can have an optional discriminator argument, e.g. “Jake#0001” or “Jake” will both do the lookup. However the former will give a more precise result. Note that the discriminator must have all 4 digits for this to work.
-        If a nickname is passed, then it is looked up via the nickname. Note however, that a nickname + discriminator combo will not lookup the nickname but rather the username + discriminator combo due to nickname + discriminator not being unique."""
-        avi = user.avatar_url
-        avi = avi.replace("gif?size=1024", "gif?size=1024&.gif")
-        avi = avi.replace("webp?size=1024", "png?size=1024")
-        embed = discord.Embed(title=user.display_name + "'s avatar!", description="Click [here](" + avi + ")!",
-                              color=ctx.author.color).set_image(url=avi).set_footer(icon_url=avi,
-                                                                                    text="Requested by " + ctx.author.display_name)
+    async def avatar(self, ctx, *, user: discord.Member = None):
+        """Get the avatar of a user!
+        If the user is none, it will grab your avatar. If the user is not found, this message will be shown."""
+        if user is None:
+            user = ctx.author
+        url = user.avatar_url + ('&.gif' if user.avatar.startswith('a_') else '')
+        embed = discord.Embed(
+            color=ctx.author.color
+        ).set_image(
+            url=url
+        ).set_footer(
+            icon_url=url,
+            text=f"Requested by {ctx.author.display_name}"
+        ).set_author(
+            icon_url=url,
+            url=url,
+            name=f"{user.display_name}'s avatar"
+        )
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["guild", "ginfo", "server", "serverinfo", "sinfo"])
