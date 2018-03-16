@@ -98,6 +98,7 @@ class Owner:
             msg += 'Error/Info/Warn! ```\n{}```\n'.format(err.decode())
         msg += "Returncode: {}".format(sp.returncode)
         await ctx.send(msg)
+        # my commit names are meme btw
 
     @commands.command()
     @commands.check(is_owner)
