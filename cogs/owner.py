@@ -2,6 +2,7 @@ import datetime
 import io
 import textwrap
 import traceback
+import subprocess
 from contextlib import redirect_stdout
 
 import aiohttp
@@ -86,8 +87,17 @@ class Owner:
 
     @commands.command(name="exec")
     @commands.check(is_owner)
-    async def _exec(self, ctx):
-        await ctx.send("hi i dont exist yet")
+    async def _exec(self, ctx, *, code: str):
+        """Execute code in a command shell. (Bot Owner Only)"""
+        sp = subprocess.Popen(code, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = sp.communicate()
+        msg = "Executing...\n"
+        if out:
+            msg += 'Success! ```\n{}```\n'.format(out)
+        if err:
+            msg += 'Error! ```\n{}```\n'.format(err)
+        msg += "Returncode: {}".format(sp.returncode)
+        await ctx.send(msg)
 
     @commands.command()
     @commands.check(is_owner)
