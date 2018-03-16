@@ -4,6 +4,7 @@ import string
 import traceback
 import asyncio
 import weeb
+import discord
 
 import aiohttp
 from discord.ext import commands
