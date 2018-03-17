@@ -41,7 +41,7 @@ servers!
 
 # License
 This repository is protected under the MIT license. You can read it
-[here](https://github.com/Desiiii/Godavaru/blob/master/LICENSE.md).
+[here](https://github.com/Godavaru/Godavaru/blob/master/LICENSE.md).
 
 # Links
 [DBL](https://discordbots.org/bot/311810096336470017)
