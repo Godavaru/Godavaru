@@ -4,6 +4,7 @@ import random
 import string
 import discord
 import re
+import requests
 import aiohttp
 from discord.ext import commands
 
