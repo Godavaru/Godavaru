@@ -3,7 +3,6 @@ import discord
 from discord.ext import commands
 
 from cogs.utils import image
-from cogs.utils.tools import *
 
 
 class Action:
@@ -234,53 +233,3 @@ class Action:
 
 def setup(bot):
     bot.add_cog(Action(bot))
-
-"""
-                                    =================================
-                                    VERSION 1.0 LEFTOVERS STARTS HERE
-                                    =================================
-                                    
-    @commands.command()
-    async def kill(self, ctx):
-        ""\"Attempt to kill people. Has a chance of failing. Also, you may only kill one user at a time, so this command does not (and will never) have multi mention support.
-
-        **Usage:** `g_kill <user>`
-
-        **Permission:** User""\"
-
-        if len(ctx.message.mentions) == 0:
-            await ctx.send(":x: You must mention a user!")
-        elif len(ctx.message.mentions) > 0:
-            killmsg = ["**"+ctx.message.mentions[0].display_name+"** was stabbed by **"+ctx.message.author.display_name+"**", "You tried to kill **"+ctx.message.mentions[0].display_name+"**, but you got caught by the police :<", "**"+ctx.message.mentions[0].display_name+"** disintegrated.", "While trying to kill **"+ctx.message.mentions[0].display_name+"**, **"+ctx.message.author.display_name+"** accidentally killed themselves.", "**"+ctx.message.mentions[0].display_name+"** drowned.", "Hahahaha nice try. You just tried to kill a cop. You're in jail now.", "While trying to kill **"+ctx.message.mentions[0].display_name+"**, you accidentally pinged b1nzy. Ouch.", "You pushed **"+ctx.message.mentions[0].display_name+"** into a river with crocodiles.", "You made **"+ctx.message.mentions[0].display_name+"** listen to KidzBop, so they bled out of their ears and died.", "Meh. I don't feel like helping a murder today. Try again.", "**"+ctx.message.mentions[0].display_name+"** was thrown into a pit of snakes.", "**"+ctx.message.author.display_name+"** threw **"+ctx.message.mentions[0].display_name+"** into a pit of snakes, but fell in as well.", "**"+ctx.message.mentions[0].display_name+"** was given the death sentence after **"+ctx.message.author.display_name+"** framed them for murder.", "**"+ctx.message.mentions[0].display_name+"** was forced to use Kotlin by **"+ctx.message.author.display_name+"**, so they died.", "**"+ctx.message.author.display_name+"** tried to kill someone, but found their way into Mantaro Hub and gave into the memes.", "**"+ctx.message.mentions[0].display_name+"** was killed by a sentient robot... Why are you looking at me? I didn't do it...", "**"+ctx.message.author.display_name+"** tried to kill someone and got away from the police. However, the FBI jailed them.", "You don't have a weapon. Oops. Was I supposed to bring it? I think I was...", "When **"+ctx.message.author.display_name+"** tried to kill **"+ctx.message.mentions[0].display_name+"**, they were disappointed to find they were already dead.", "**"+ctx.message.mentions[0].display_name+"** took an arrow to the knee! Well, actually it was a gunshot. And it was actually to the heart."]
-            var = int(random.random() * len(killmsg))
-            if ctx.message.mentions[0].id == ctx.message.author.id:
-                await ctx.send("Don't kill yourself! I love you!")
-            elif ctx.message.mentions[0].id == ctx.message.guild.me.id:
-                await ctx.send("You tried to kill me, but you realised I'm a bot. So I killed you instead.")
-            else:
-                await ctx.send(killmsg[var])
-        else:
-            await ctx.send("An unexpected error occurred. Please report this to Desiree#3658 on the support guild, link found in g!about.") # just in case. You never know shrug
-            
-    
-    @commands.command()
-    async def dab(self, ctx):
-        ""\"Dab on the haterz
-
-        **Usage: `g_dab`
-
-        **Permission:** User""\"
-        apiUrl = self.base_url+"?type=dab&hidden=false&nsfw=false&filetype=gif"
-        headers = {"Authorization": "Wolke "+config.weeb_token}
-        r = requests.get(apiUrl, headers=headers)
-        js = r.json()
-        url = js['url']
-        o = AppURLopener()
-        d = o.open(url)
-        data = d.read()
-        with open("./images/dab.gif", "wb") as img:
-            img.write(data)
-            img.close()
-        await ctx.send(file=discord.File("./images/dab.gif"), content=f"<:blobdab:353520064017858560> **{ctx.author.display_name}** is dabbing... I am disappointed.")
-
-"""

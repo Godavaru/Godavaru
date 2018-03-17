@@ -146,34 +146,3 @@ class Mod:
 
 def setup(bot):
     bot.add_cog(Mod(bot))
-
-"""                                     ==============================
-                                        BIG SURPRISE, V1.0.0 LEFTOVERS
-                                        ==============================
-
-    @commands.command(pass_context=True,aliases=["dc", "getthefuckoutofthatvoicechannel"])
-    async def disconnect(self, ctx):
-        ""\"Disconnect a user from a voice channel by creating a voice channel, moving the user to it, then deleting it.""\"
-        if ctx.message.guild.me.guild_permissions.manage_channels == True and ctx.message.guild.me.guild_permissions.move_members == True:
-            if ctx.message.author.guild_permissions.move_members == True:
-                if len(ctx.message.mentions) > 0:
-                    if ctx.message.author.top_role.position > ctx.message.mentions[0].top_role.position:
-                        if ctx.message.mentions[0].voice.channel is not None:
-                            v = await ctx.message.guild.create_voice_channel('wew')
-                            await ctx.message.mentions[0].move_to(v)
-                            await v.delete()
-                            b = ctx.message.content
-                            a = b.split(' ')
-                            m = b.replace(a[0]+" "+a[1], "")
-                            m = m[1:]
-                            if m == "":
-                                await ctx.send(":white_check_mark: disconnected {} from their voice channel.".format(str(ctx.message.mentions[0])))
-                            else:
-                                await ctx.send(":ok_hand: disconnected {0} from their voice channel. (`{1}`)".format(str(ctx.message.mentions[0]), m))
-                        else:
-                            await ctx.send(':x: That person is not in a voice channel.')
-                    else:
-                        await ctx.send(':x: You can\'t disconnect someone with a higher than or equal role.')
-                else:
-                    await ctx.send(":x: Mention a user.")
-    """
