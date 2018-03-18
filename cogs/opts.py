@@ -16,6 +16,8 @@ class Settings:
     @commands.command()
     @commands.check(is_owner_or_manage)
     async def prefix(self, ctx, prefix: str = None):
+        """Change the guild prefix.
+        Note: to use this command, you must have the `MANAGE_GUILD` permission. If you wish to have a prefix with spaces, surround it in "quotes" """
         if not prefix:
             try:
                 return await ctx.send(f'My prefix here is `{self.bot.prefixes_dict[str(ctx.guild.id)]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
