@@ -26,7 +26,7 @@ initial_extensions = (
 class Godavaru(commands.Bot):
     def __init__(self):
         self.start_time = datetime.datetime.now()
-        self.prefix_dict = {}
+        self.prefixes_dict = {}
         super().__init__(command_prefix=get_prefix, case_insensitive=True)
         self.token = 'no u'  # yes this is a necessary change
         self.version = config.version
