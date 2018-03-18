@@ -6,7 +6,7 @@ from cogs.utils.db import *
 
 
 def is_owner_or_manage(ctx):
-    return ctx.author.id in config.owners or commands.has_permissions(manage_guild=True)
+    return ctx.author.id in config.owners or ctx.author.guild_permissions.manage_guild
 
 
 class Settings:
