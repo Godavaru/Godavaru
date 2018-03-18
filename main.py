@@ -47,7 +47,7 @@ class Godavaru(commands.Bot):
     # noinspection PyAttributeOutsideInit
     async def on_ready(self):
         await self.change_presence(
-            activity=discord.Game(name=self.command_prefix[0] + "help | {} guilds".format(len(self.guilds))))
+            activity=discord.Game(name=config.prefix[0] + "help | {} guilds".format(len(self.guilds))))
         startup_message = f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
                           + "===============\n" \
                           + 'Logged in as:\n' \
@@ -74,7 +74,7 @@ class Godavaru(commands.Bot):
             for _ in server.members:
                 member_count += 1
         await self.change_presence(activity=discord.Game(
-            name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
+            name=config.prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':tada: [`' + str(
             datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I joined the server `' + server.name + '` (' + str(
             server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(
@@ -93,7 +93,7 @@ class Godavaru(commands.Bot):
             for _ in server.members:
                 member_count += 1
         await self.change_presence(activity=discord.Game(
-            name=self.command_prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
+            name=config.prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':frowning: [`' + str(
             datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + str(
             server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(
@@ -106,7 +106,7 @@ class Godavaru(commands.Bot):
             await session.post(api_url, data=data, headers=headers)
 
     async def on_message_edit(self, before, after):
-        if after.content.startswith(self.command_prefix[0]):
+        if after.content.startswith(config.prefix[0]):
             if after.guild.name is not None and str(after.content) != str(
                     before.content) and before.author.bot is False:
                 await self.process_commands(after)
@@ -123,7 +123,7 @@ class Godavaru(commands.Bot):
                 elif message.author.id == 267207628965281792:
                     await channel.send("You're cute, Desii.")
             elif message.content == message.guild.me.mention:
-                prefix = self.command_prefix[0]
+                prefix = config.prefix[0]
                 prefix_messages = [
                     f"H-hi there! If you're trying to use one of my commands, my prefix is `{prefix}`! Use it like: `{prefix}help`",
                     f"Greetings! Attempting to use a command? My prefix is `{prefix}`! For example: `{prefix}help`",
