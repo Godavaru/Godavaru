@@ -5,8 +5,8 @@ from discord.ext import commands
 from cogs.utils.db import *
 
 
-def is_owner(ctx):
-    return ctx.author.id in config.owners
+def is_owner_or_manage(ctx):
+    return ctx.author.id in config.owners or commands.has_permissions(manage_guild=True)
 
 
 class Settings:
@@ -14,8 +14,7 @@ class Settings:
         self.bot = bot
 
     @commands.command()
-    @commands.has_permissions(manage_guild=True)
-    @commands.check(is_owner)
+    @commands.check(is_owner_or_manage)
     async def prefix(self, ctx, prefix: str = None):
         if not prefix:
             try:
