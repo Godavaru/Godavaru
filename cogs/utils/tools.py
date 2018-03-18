@@ -19,3 +19,12 @@ def get_status_emoji(status, number):
         ]
     }
     return status_dict[status][number]
+
+
+def get_prefix(bot, msg):
+    prefixes = []
+    try:
+        prefixes.append(bot.prefixes_dict[str(msg.guild.id)])
+    except KeyError:
+        pass
+    prefixes.append(config.prefix)
