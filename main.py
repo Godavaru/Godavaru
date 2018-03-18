@@ -11,6 +11,7 @@ from discord.ext import commands
 
 import config
 from cogs.utils.tools import *
+from cogs.utils.db import *
 
 initial_extensions = (
     "cogs.info",
@@ -26,7 +27,7 @@ initial_extensions = (
 class Godavaru(commands.Bot):
     def __init__(self):
         self.start_time = datetime.datetime.now()
-        self.prefixes_dict = {}
+        self.prefixes_dict = get_all_prefixes()
         super().__init__(command_prefix=get_prefix, case_insensitive=True)
         self.token = 'no u'  # yes this is a necessary change
         self.version = config.version
