@@ -107,10 +107,9 @@ class Godavaru(commands.Bot):
             await session.post(api_url, data=data, headers=headers)
 
     async def on_message_edit(self, before, after):
-        if after.content.startswith(config.prefix[0]):
-            if after.guild.name is not None and str(after.content) != str(
-                    before.content) and before.author.bot is False:
-                await self.process_commands(after)
+        if after.guild.name is not None and str(after.content) != str(
+                before.content) and before.author.bot is False:
+            await self.process_commands(after)
 
     async def on_message(self, message):
         channel = message.channel

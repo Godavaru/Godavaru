@@ -18,9 +18,9 @@ class Settings:
     async def prefix(self, ctx, prefix: str = None):
         if not prefix:
             try:
-                return await ctx.send(f'My prefix here is `{self.bot.prefixes_dict[str(ctx.guild.id)]}`')
+                return await ctx.send(f'My prefix here is `{self.bot.prefixes_dict[str(ctx.guild.id)]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
             except KeyError:
-                return await ctx.send(f'I have no custom prefix here. Set one with `{ctx.prefix}prefix <prefix>`')
+                return await ctx.send(f'My prefix here is `{config.prefix[0]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
         db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
         cur = db.cursor()
         cur.execute(
