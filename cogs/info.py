@@ -163,8 +163,9 @@ class Info:
             em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help,
                                color=ctx.author.color)
             comm = cmd.signature.split(' ')[0].split('|')[0].replace('[', '')
-            usage = cmd.signature.split(' ').pop(1)
-            em.add_field(name="Usage", value=f"`{ctx.prefix}{comm} {usage}`", inline=False)
+            usage = cmd.signature.split(' ')
+            del usage[0]
+            em.add_field(name="Usage", value=f"`{ctx.prefix}{comm} {' '.join(usage)}`", inline=False)
             if len(cmd.aliases) > 0:
                 em.add_field(name="Alias(es)", value="`" + "`, `".join(cmd.aliases) + "`", inline=False)
             if hasattr(cmd, 'commands'):
