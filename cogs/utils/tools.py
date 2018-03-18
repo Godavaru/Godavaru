@@ -33,3 +33,4 @@ def get_prefix(bot, msg):
     except KeyError:
         pass
     prefixes.append(config.prefix)
+    return prefixes
