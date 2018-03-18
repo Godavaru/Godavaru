@@ -9,6 +9,6 @@ def get_all_prefixes():
     results = cur.fetchall()
     d = dict()
     for row in results:
-        d[row[0]] = row[1]
+        d[str(row[0])] = row[1]
     db.close()
     return d
