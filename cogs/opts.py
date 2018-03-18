@@ -30,3 +30,7 @@ class Settings:
         db.close()
         self.bot.prefixes_dict = get_all_prefixes()
         await ctx.send(f':ok_hand: Successfully set my prefix here to `{prefix}`')
+
+
+def setup(bot):
+    bot.add_cog(Settings(bot))
