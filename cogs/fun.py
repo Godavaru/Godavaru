@@ -286,10 +286,13 @@ class Fun:
             title="Love Meter",
             description=f"\N{TWO HEARTS} **{l[0].display_name}**\n\N{TWO HEARTS} **{l[1].display_name}**",
             color=ctx.author.color)
+        with open('love.png', 'wb') as f:
+            f.write(await self.bot.weeb.generate_love_ship(l[0].avatar_url, l[1].avatar_url))
+            f.close()
         em.add_field(name="Result", value=f"**{sum}%**\n`{msg}`", inline=False)
         em.add_field(name="Shipname", value=shipname)
         em.set_thumbnail(url="https://www.emojibase.com/resources/img/emojis/hangouts/1f49c.png")
-        await ctx.send(embed=em)
+        await ctx.send(file=discord.File('love.png'), embed=em.set_image(url="attachment://love.png"))
 
     @commands.command()
     async def flip(self, ctx, *, user: discord.Member):
