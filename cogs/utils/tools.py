@@ -25,7 +25,9 @@ def get_status_emoji(status, number):
 
 
 def get_prefix(bot, msg):
-    prefixes = config.prefix
+    prefixes = []
+    for p in config.prefix:
+        prefixes.append(p)
     try:
         pref = bot.prefixes_dict[str(msg.guild.id)]
         if not pref is None and not len(pref) == 0 and not pref == "":
