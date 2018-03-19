@@ -207,7 +207,7 @@ class Utils:
         discrim = discrim.replace('#', '')
         num = 0
         msg = ""
-        for user in self.bot.users.filter(lambda u: u.discriminator == discrim):
+        for user in filter(lambda u: u.discriminator == discrim, self.bot.users):
             num += 1
             if num == 6:
                 break
