@@ -188,18 +188,6 @@ class Godavaru(commands.Bot):
                               + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
                               + f"**Traceback:** ```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}\n```")
 
-    def query_db(self, query):
-        db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
-        cur = db.cursor()
-        cur.execute(query)
-        res = str(cur.description) + '\n'
-        for row in cur.fetchall():
-            res += str(row) + "\n"
-        db.commit()
-        cur.close()
-        db.close()
-        return res
-
     def gracefully_disconnect(self, signal, frame):
         print("Gracefully disconnecting...")
         self.logout()

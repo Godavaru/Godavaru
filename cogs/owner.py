@@ -4,6 +4,7 @@ import sys
 import textwrap
 import traceback
 import subprocess
+import pymysql
 from contextlib import redirect_stdout
 
 import aiohttp
@@ -22,7 +23,7 @@ class Owner:
         self.bot = bot
         self.last_result = None
 
-    @commands.command(name="eval")
+    @commands.command(name="eval", aliases=["ev", "debug"])
     @commands.check(is_owner)
     async def _eval(self, ctx, *, code):
         """Evaluate code. (Bot Owner Only)"""
@@ -101,11 +102,30 @@ class Owner:
         await ctx.send(msg)
 
     @commands.command(aliases=["die", "reboot"])
+    @commands.check(is_owner)
     async def shutdown(self, ctx):
         """Shutdown the bot. Thanks to PM2, this also reboots it. (Bot Owner Only)"""
         await ctx.send(":wave: Shutting down...")
         self.bot.logout()
         sys.exit()
+
+    @commands.command(aliases=['db', 'dbquery'])
+    @commands.check(is_owner)
+    async def query(self, ctx, *, query: str):
+        """Query the MySQL database. (Bot Owner Only)"""
+        try:
+            db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
+            cur = db.cursor()
+            cur.execute(query)
+            res = ""
+            for row in cur.fetchall():
+                res += f"| {' | '.join(list(row))} |\n"
+            db.commit()
+            cur.close()
+            db.close()
+            await ctx.send(f"```\n{res}```" if res != "" else "Nothing was returned in this query.")
+        except pymysql.err.ProgrammingError as e:
+            await ctx.send(f'{type(e).__name__}: {e}')
 
     @commands.command()
     @commands.check(is_owner)
