@@ -193,7 +193,7 @@ class Godavaru(commands.Bot):
         cur = db.cursor()
         cur.execute(query)
         res = str(cur.description) + '\n'
-        for row in cur:
+        for row in cur.fetchall():
             res += str(row) + "\n"
         db.commit()
         cur.close()
