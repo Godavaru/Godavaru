@@ -29,7 +29,7 @@ def get_prefix(bot, msg):
     for p in config.prefix:
         prefixes.append(p)
     try:
-        pref = bot.prefixes_dict[str(msg.guild.id)]
+        pref = bot.prefixes[str(msg.guild.id)]
         if not pref is None and not len(pref) == 0 and not pref == "":
             prefixes.append(pref)
     except KeyError:

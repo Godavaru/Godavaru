@@ -1,5 +1,6 @@
 import datetime
 import io
+import sys
 import textwrap
 import traceback
 import subprocess
@@ -98,7 +99,13 @@ class Owner:
             msg += 'Error/Info/Warn! ```\n{}```\n'.format(err.decode())
         msg += "Returncode: {}".format(sp.returncode)
         await ctx.send(msg)
-        # my commit names are meme btw
+
+    @commands.command(aliases=["die", "reboot"])
+    async def shutdown(self, ctx):
+        """Shutdown the bot. Thanks to PM2, this also reboots it. (Bot Owner Only)"""
+        await ctx.send(":wave: Shutting down...")
+        self.bot.logout()
+        sys.exit()
 
     @commands.command()
     @commands.check(is_owner)

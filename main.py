@@ -28,7 +28,7 @@ initial_extensions = (
 class Godavaru(commands.Bot):
     def __init__(self):
         self.start_time = datetime.datetime.now()
-        self.prefixes_dict = get_all_prefixes()
+        self.prefixes = get_all_prefixes()
         super().__init__(command_prefix=get_prefix, case_insensitive=True)
         self.token = 'no u'  # yes this is a necessary change
         self.version = config.version
@@ -185,6 +185,16 @@ class Godavaru(commands.Bot):
                               + f"**Author:** {ctx.author} ({ctx.author.id})\n"
                               + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
                               + f"**Traceback:** ```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}\n```")
+
+    def query_db(self, query):
+        db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
+        cur = db.cursor()
+        cur.execute(query)
+        res = cur.description + '\n' + ("\n".join([row for row in cur]))
+        db.commit()
+        cur.close()
+        db.close()
+        return res
 
 
 Godavaru().run(config.token)
