@@ -6,6 +6,8 @@ import asyncio
 import weeb
 import discord
 import pymysql
+import signal
+import sys
 import aiohttp
 from discord.ext import commands
 
@@ -190,11 +192,20 @@ class Godavaru(commands.Bot):
         db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
         cur = db.cursor()
         cur.execute(query)
-        res = cur.description + '\n' + ("\n".join([row for row in cur]))
+        res = cur.description + '\n' + "\n".join([row for row in cur])
         db.commit()
         cur.close()
         db.close()
         return res
 
+    def gracefully_disconnect(self, signal, frame):
+        print("Gracefully disconnecting...")
+        self.logout()
+        sys.exit(0)
 
-Godavaru().run(config.token)
+
+bot = Godavaru()
+bot.run(config.token)
+signal.signal(signal.SIGINT, bot.gracefully_disconnect)
+signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
+signal.pause()
