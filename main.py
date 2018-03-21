@@ -192,7 +192,9 @@ class Godavaru(commands.Bot):
         db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
         cur = db.cursor()
         cur.execute(query)
-        res = cur.description + '\n' + "\n".join([row for row in cur])
+        res = str(cur.description) + '\n'
+        for row in cur:
+            res += row + "\n"
         db.commit()
         cur.close()
         db.close()
