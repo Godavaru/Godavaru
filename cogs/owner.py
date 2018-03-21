@@ -10,6 +10,7 @@ from contextlib import redirect_stdout
 import aiohttp
 import discord
 from discord.ext import commands
+from .utils.tools import *
 
 import config
 
@@ -123,9 +124,9 @@ class Owner:
             db.commit()
             cur.close()
             db.close()
-            await ctx.send(f"```\n{res}```" if res != "" else "Nothing was returned in this query.")
+            await ctx.send(f"```\n{res}```" if res != "" else ":x: Nothing was returned in this query.")
         except pymysql.err.ProgrammingError as e:
-            await ctx.send(f'{type(e).__name__}: {e}')
+            await ctx.send(f'{list(tuple(e))[0]}')
 
     @commands.command()
     @commands.check(is_owner)
