@@ -194,7 +194,7 @@ class Godavaru(commands.Bot):
         cur.execute(query)
         res = str(cur.description) + '\n'
         for row in cur:
-            res += row + "\n"
+            res += str(row) + "\n"
         db.commit()
         cur.close()
         db.close()
