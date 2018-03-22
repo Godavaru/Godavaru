@@ -126,7 +126,7 @@ class Owner:
             db.close()
             await ctx.send(f"```\n{res}```" if res != "" else ":x: Nothing was returned in this query.")
         except pymysql.err.ProgrammingError as e:
-            await ctx.send(list(e)[1])
+            await ctx.send(f':x: {e.split(",")[1].replace(")")}')
 
     @commands.command()
     @commands.check(is_owner)
