@@ -10,6 +10,7 @@ import signal
 import sys
 import aiohttp
 from discord.ext import commands
+import urllib
 
 import config
 from cogs.utils.tools import *
@@ -182,11 +183,15 @@ class Godavaru(commands.Bot):
             errid = id_generator()
             await ctx.send(
                 f":x: Unhandled exception. Report this on my support guild (https://discord.gg/ewvvKHM) with the ID **{errid}**")
-            self.webhook.send(f"Unhandled exception on command `{ctx.command}`\n"
-                              + f"**Content:** {ctx.message.clean_content}\n"
-                              + f"**Author:** {ctx.author} ({ctx.author.id})\n"
-                              + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
-                              + f"**Traceback:** ```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}\n```")
+            err_msg = f"Unhandled exception on command `{ctx.command}`\n**Content:** {ctx.message.clean_content}\n**Author:** {ctx.author} ({ctx.author.id})\n**Guild:** {ctx.guild} ({ctx.guild.id})\n"
+            trace = ''.join(traceback.format_exception(type(error), error, error.__traceback__))
+            try:
+                self.webhook.send(err_msg + f"**Traceback:** ```py\n{trace}\n```")
+            except discord.HTTPException:
+                text = urllib.parse.quote(trace, safe="")
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(f'https://hastepaste.com/api/create?text={text}&raw=false') as resp:
+                        self.webhook(err_msg + "**Traceback:** " + await resp.text())
 
     def gracefully_disconnect(self, signal, frame):
         print("Gracefully disconnecting...")
