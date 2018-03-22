@@ -79,15 +79,14 @@ class Owner:
                 await ctx.send(f"*Executed in {((datetime.datetime.utcnow() - before) * 1000).total_seconds()}ms" + (
                     f".* ```py\n{content}```" if content else " with no returns.*"))
             except discord.HTTPException:
-                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastebin...")
+                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
                 async with aiohttp.ClientSession() as session:
-                    async with session.post("https://hastebin.com/documents", data=content.encode('utf-8')) as resp:
+                    async with session.post("https://hastepaste.com/api/create", data='text=' + content, headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
                         if resp.status == 200:
-                            await msg.edit(content="*Executed in {}ms and returned:* https://hastebin.com/".format(
-                                ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + (await resp.json())[
-                                                       "key"])
+                            await msg.edit(content="*Executed in {}ms and returned:* ".format(
+                                ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + await resp.text())
                         else:
-                            await msg.edit(content="Error uploading to hastebin :(")
+                            await msg.edit(content="Error uploading to hastepaste :(")
 
     @commands.command(name="exec")
     @commands.check(is_owner)
