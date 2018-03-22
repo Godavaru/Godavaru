@@ -125,7 +125,6 @@ class Owner:
                 l = list(it)
                 x.append(l[0])
             table = PrettyTable(x)
-            table.set_field_align("guildid", "1")
             for row in cur.fetchall():
                 table.add_row(list(row))
             db.commit()
