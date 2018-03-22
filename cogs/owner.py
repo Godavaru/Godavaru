@@ -5,6 +5,7 @@ import textwrap
 import traceback
 import subprocess
 import pymysql
+from prettytable import PrettyTable
 from contextlib import redirect_stdout
 
 import aiohttp
@@ -118,17 +119,19 @@ class Owner:
             db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
             cur = db.cursor()
             cur.execute(query)
-            res = "| "
             desc = list(cur.description)
+            x = []
             for it in desc:
                 l = list(it)
-                res += l[0] + ' | '
+                x.append(l[0])
+            table = PrettyTable(x)
+            table.set_field_align("guildid", "1")
             for row in cur.fetchall():
-                res += f"\n| {' | '.join(list(row))} |"
+                table.add_row(list(row))
             db.commit()
             cur.close()
             db.close()
-            await ctx.send(f"```\n{res}```" if res != "" else ":x: Nothing was returned in this query.")
+            await ctx.send(f"```\n{table}```" if table != "" else ":x: Nothing was returned in this query.")
         except pymysql.err.ProgrammingError as e:
             err_msg = str(e).split(',')[1].replace(')', '').replace('"', '')
             await ctx.send(f":x: {err_msg}")
