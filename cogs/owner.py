@@ -118,9 +118,13 @@ class Owner:
             db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
             cur = db.cursor()
             cur.execute(query)
-            res = ""
+            res = "| "
+            desc = list(cur.description)
+            for it in desc:
+                l = list(it)
+                res += l[0] + ' | '
             for row in cur.fetchall():
-                res += f"| {' | '.join(list(row))} |\n"
+                res += f"\n| {' | '.join(list(row))} |"
             db.commit()
             cur.close()
             db.close()
