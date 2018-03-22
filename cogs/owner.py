@@ -81,7 +81,7 @@ class Owner:
             except discord.HTTPException:
                 msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
                 async with aiohttp.ClientSession() as session:
-                    async with session.post("https://hastepaste.com/api/create", data='text=' + content, headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
+                    async with session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false', headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
                         if resp.status == 200:
                             await msg.edit(content="*Executed in {}ms and returned:* ".format(
                                 ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + await resp.text())
