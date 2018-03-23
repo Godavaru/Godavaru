@@ -221,6 +221,7 @@ signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
 
 def start_bot():
     bot.run(config.token)
+
 """ Gonna finish this later
 web_resources = {
     "statuses": {
@@ -243,4 +244,5 @@ def get_webhook():
             return Response(json.dumps({"msg": "Unauthorized"}), status=web_resources["statuses"]["UN_AUTH"],
                             mimetype=web_resources["content_type"])
 """
-Thread(target=start_bot).start()
+if __name__ == "__main__":
+    Thread(target=start_bot).start()
