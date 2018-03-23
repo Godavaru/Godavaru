@@ -1,20 +1,24 @@
-import datetime
-import random
-import string
-import traceback
 import asyncio
-import weeb
+import datetime
+import json
+import random
+import signal
+import string
+import sys
+import traceback
+import urllib
+import config
+
+import aiohttp
 import discord
 import pymysql
-import signal
-import sys
-import aiohttp
+import weeb
 from discord.ext import commands
-import urllib
+from threading import Thread
+from flask import Flask, Response, request
 
-import config
-from cogs.utils.tools import *
 from cogs.utils.db import *
+from cogs.utils.tools import *
 
 initial_extensions = (
     "cogs.info",
@@ -198,8 +202,45 @@ class Godavaru(commands.Bot):
         self.logout()
         sys.exit(0)
 
+    def query_db(self, query):
+        db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
+        cur = db.cursor()
+        cur.execute(query)
+        res = cur.fetchall()
+        db.commit()
+        cur.close()
+        db.close()
+        return res
+
 
 bot = Godavaru()
-bot.run(config.token)
 signal.signal(signal.SIGINT, bot.gracefully_disconnect)
 signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
+# app = Flask(__name__)
+
+
+def start_bot():
+    bot.run(config.token)
+""" Gonna finish this later
+web_resources = {
+    "statuses": {
+        "OK": 200,
+        "UN_AUTH": 401,
+        "NO_AUTH": 403
+    },
+    "content_type": "application/json"
+}
+
+
+@app.route("/dbl", methods=["POST"])
+def get_webhook():
+    if request.method == 'POST':
+        auth = request.headers.get("authorization")
+        if not auth:
+            return Response(json.dumps({"msg": "Authorization required"}), status=web_resources["statuses"]["NO_AUTH"],
+                            mimetype=web_resources["content_type"])
+        if auth != config.dbl_auth:
+            return Response(json.dumps({"msg": "Unauthorized"}), status=web_resources["statuses"]["UN_AUTH"],
+                            mimetype=web_resources["content_type"])
+"""
+Thread(target=start_bot).start()
