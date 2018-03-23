@@ -217,10 +217,7 @@ bot = Godavaru()
 signal.signal(signal.SIGINT, bot.gracefully_disconnect)
 signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
 # app = Flask(__name__)
-
-
-def start_bot():
-    bot.run(config.token)
+bot.run(config.token)
 
 """ Gonna finish this later
 web_resources = {
@@ -244,5 +241,3 @@ def get_webhook():
             return Response(json.dumps({"msg": "Unauthorized"}), status=web_resources["statuses"]["UN_AUTH"],
                             mimetype=web_resources["content_type"])
 """
-if __name__ == "__main__":
-    Thread(target=start_bot).start()
