@@ -34,7 +34,7 @@ class Currency:
             em.set_author(
                 name=member.display_name + ("'s" if not member.display_name.endswith('s') else "'") + " Profile")
             em.add_field(name='Balance', value=f'${profile[2]}')
-            em.add_field(name='Married with', value=self.bot.get_user_info(int(profile[3])))
+            em.add_field(name='Married with', value=await self.bot.get_user_info(int(profile[3])))
             em.add_field(name='Reputation', value=profile[4])
             await ctx.send(embed=em)
         else:
