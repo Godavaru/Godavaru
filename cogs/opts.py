@@ -20,7 +20,7 @@ class Settings:
         Note: to use this command, you must have the `MANAGE_GUILD` permission. If you wish to have a prefix with spaces, surround it in "quotes" """
         if not prefix:
             try:
-                return await ctx.send(f'My prefix here is `{self.bot.prefixes_dict[str(ctx.guild.id)]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
+                return await ctx.send(f'My prefix here is `{self.bot.prefixes[str(ctx.guild.id)]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
             except KeyError:
                 return await ctx.send(f'My prefix here is `{config.prefix[0]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
         db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
