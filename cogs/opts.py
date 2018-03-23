@@ -29,7 +29,7 @@ class Settings:
             f"""INSERT INTO settings (guildid, prefix) VALUES ({ctx.guild.id}, "{prefix}") ON DUPLICATE KEY UPDATE prefix = "{prefix}";""")
         db.commit()
         db.close()
-        self.bot.prefixes_dict = get_all_prefixes()
+        self.bot.prefixes = get_all_prefixes()
         await ctx.send(f':ok_hand: Successfully set my prefix here to `{prefix}`')
 
 
