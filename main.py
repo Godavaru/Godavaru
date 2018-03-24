@@ -220,10 +220,6 @@ signal.signal(signal.SIGINT, bot.gracefully_disconnect)
 signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
 app = Flask(__name__)
 
-
-def start_bot():
-    bot.run(config.token)
-
 web_resources = {
     "statuses": {
         "OK": 200,
@@ -248,6 +244,5 @@ def get_webhook():
 def start_app():
     app.run(port=1034, host="localhost")
 
-
-Thread(target=start_bot).start()
 Thread(target=start_app).start()
+bot.run(config.token)
