@@ -132,10 +132,10 @@ class Currency:
                     try:
                         amnt = itms[item]
                         itms[item] = amnt + amount
-                        self.bot.query_db(f'''UPDATE users SET items='{str(itms)}' WHERE userid={ctx.author.id}''')
+                        self.bot.query_db(f'''UPDATE users SET items="{str(itms)}" WHERE userid={ctx.author.id}''')
                     except:
                         itms[item] = amount
-                        self.bot.query_db(f'''UPDATE users SET items='{str(itms)}' WHERE userid={ctx.author.id}''')
+                        self.bot.query_db(f'''UPDATE users SET items="{str(itms)}" WHERE userid={ctx.author.id}''')
                     self.bot.query_db(
                         f'''UPDATE users SET balance=balance-{items.all_items[item]["buy"] * amount} WHERE userid={ctx.author.id}''')
                     await ctx.send(f':white_check_mark: You purchased {amount}x{items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
