@@ -1,6 +1,8 @@
 import random
 import discord
 import asyncio
+import json
+from .assets import items
 from discord.ext import commands
 
 
@@ -20,8 +22,8 @@ class Currency:
         max_num = 100 if not self.is_premium(ctx.author) else 500
         amnt = random.randint(0, max_num)
         if amnt > 50:
-            self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps) 
-                                VALUES ({ctx.author.id}, DEFAULT, {amnt}, DEFAULT, DEFAULT) 
+            self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items) 
+                                VALUES ({ctx.author.id}, DEFAULT, {amnt}, DEFAULT, DEFAULT, DEFAULT) 
                                 ON DUPLICATE KEY UPDATE balance = balance + {amnt}''')
             await ctx.send(f":tada: You looted **{amnt}** from this channel!")
         else:
@@ -70,8 +72,8 @@ class Currency:
             return await ctx.send("The proposal timed out :<")
         if msg.content.lower() == 'yes':
             await ctx.send(":tada: Congratulations! The two of you are now married.")
-            self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps) 
-                                VALUES ({ctx.author.id}, DEFAULT, DEFAULT, {member.id}, DEFAULT) 
+            self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items) 
+                                VALUES ({ctx.author.id}, DEFAULT, DEFAULT, {member.id}, DEFAULT, DEFAULT) 
                                 ON DUPLICATE KEY UPDATE marriage={member.id}''')
         elif msg.content.lower() == 'no':
             await ctx.send(f":sob: {ctx.author.display_name} just got denied :broken_heart:")
@@ -82,8 +84,8 @@ class Currency:
         if not self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}'''):
             return await ctx.send(":x: You are not married.")
         await ctx.send(":ok_hand: You're single now. Cool.")
-        self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps)
-                            VALUES ({ctx.author.id}, DEFAULT, DEFAULT, DEFAULT, DEFAULT) 
+        self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items)
+                            VALUES ({ctx.author.id}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT) 
                             ON DUPLICATE KEY UPDATE marriage=DEFAULT''')
 
     @commands.command(aliases=["bal"])
@@ -100,14 +102,48 @@ class Currency:
     @commands.command()
     async def daily(self, ctx, *, member: discord.Member = None):
         """Collect your daily reward.
-        Alternatively, you may give your daily to someone else and they get more money."""
+        Alternatively, you may give your daily to someone else and they get more credits."""
         user_id = member.id if member else ctx.author.id
         max_value = 200 if not self.is_premium(ctx.author) else 600
         daily_coins = random.randint(200, max_value) + (0 if not member else random.randint(1, 20))
-        self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps)
-                            VALUES ({user_id}, DEFAULT, {daily_coins}, DEFAULT, DEFAULT)
+        self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items)
+                            VALUES ({user_id}, DEFAULT, {daily_coins}, DEFAULT, DEFAULT, DEFAULT)
                             ON DUPLICATE KEY UPDATE balance = balance + {daily_coins}''')
-        await ctx.send(f':white_check_mark: You {"gave your daily money of $" + str(daily_coins) + " to" + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
+        await ctx.send(f':white_check_mark: You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
+
+    @commands.command()
+    async def buy(self, ctx, item: str, amount: int = 1):
+        """Buy an item.
+        Use `list` as the param for a list of all items that can be bought."""
+        if item.lower() == 'list':
+            msg = ""
+            for it in items.all_items:
+                if items.all_items[it]['buy']:
+                    msg += f"{items.all_items[it]['emoji']} - ${items.all_items[it]['buy']} - {it.capitalize()}\n"
+            return await ctx.send(msg)
+        if item.upper() not in items.all_items:
+            return await ctx.send(":x: That is not an item.")
+        if items.all_items[item]['buy']:
+            results = self.bot.query_db(f'''SELECT balance,items FROM users WHERE userid={ctx.author.id}''')
+            if results:
+                if results[0][0] > (items.all_items[item]["buy"] * amount):
+                    itms = json.loads(results[0][1] if results[0][1] else '{}')
+                    try:
+                        amnt = itms[item]
+                        itms[item] = amnt + amount
+                        self.bot.query_db(f'''UPDATE users SET items='{str(itms)}' WHERE userid={ctx.author.id}''')
+                    except:
+                        itms[item] = amount
+                        self.bot.query_db(f'''UPDATE users SET items='{str(itms)}' WHERE userid={ctx.author.id}''')
+                    self.bot.query_db(
+                        f'''UPDATE users SET balance=balance-{items.all_items[item]["buy"] * amount} WHERE userid={ctx.author.id}''')
+                    await ctx.send(f':white_check_mark: You purchased {amount}x{items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
+                else:
+                    await ctx.send(":x: You do not have the money for that.")
+            else:
+                await ctx.send(":x: You do not have the money for that.")
+        else:
+            await ctx.send(":x: That item can not be bought.")
 
 
 def setup(bot):
