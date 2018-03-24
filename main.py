@@ -191,6 +191,7 @@ class Godavaru(commands.Bot):
                 f":x: Unhandled exception. Report this on my support guild (https://discord.gg/ewvvKHM) with the ID **{errid}**")
             err_msg = f"Unhandled exception on command `{ctx.command}`\n**Content:** {ctx.message.clean_content}\n**Author:** {ctx.author} ({ctx.author.id})\n**Guild:** {ctx.guild} ({ctx.guild.id})\n"
             trace = ''.join(traceback.format_exception(type(error), error, error.__traceback__))
+            print(err_msg)
             try:
                 self.webhook.send(err_msg + f"**Traceback:** ```py\n{trace}\n```")
             except discord.HTTPException:

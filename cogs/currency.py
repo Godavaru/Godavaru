@@ -115,13 +115,14 @@ class Currency:
     async def buy(self, ctx, item: str, amount: int = 1):
         """Buy an item.
         Use `list` as the param for a list of all items that can be bought."""
-        if item.lower() == 'list':
+        item = item.upper()
+        if item == 'LIST':
             msg = ""
             for it in items.all_items:
                 if items.all_items[it]['buy']:
                     msg += f"{items.all_items[it]['emoji']} - ${items.all_items[it]['buy']} - {it.capitalize()}\n"
             return await ctx.send(msg)
-        if item.upper() not in items.all_items:
+        if item not in items.all_items:
             return await ctx.send(":x: That is not an item.")
         if items.all_items[item]['buy']:
             results = self.bot.query_db(f'''SELECT balance,items FROM users WHERE userid={ctx.author.id}''')
