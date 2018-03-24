@@ -108,7 +108,7 @@ class Owner:
         """Shutdown the bot. Thanks to PM2, this also reboots it. (Bot Owner Only)"""
         await ctx.send(":wave: Shutting down...")
         self.bot.logout()
-        sys.exit()
+        sys.exit(0)
 
     @commands.command(aliases=['db', 'dbquery'])
     @commands.check(is_owner)
