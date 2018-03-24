@@ -195,10 +195,13 @@ class Godavaru(commands.Bot):
             try:
                 self.webhook.send(err_msg + f"**Traceback:** ```py\n{trace}\n```")
             except discord.HTTPException:
-                text = urllib.parse.quote(trace, safe="")
                 async with aiohttp.ClientSession() as session:
-                    async with session.post(f'https://hastepaste.com/api/create?text={text}&raw=false') as resp:
-                        self.webhook(err_msg + "**Traceback:** " + await resp.text())
+                    async with session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false', headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
+                        if resp.status == 200:
+                            self.webhook.send(err_msg + "**Traceback:** " + await resp.text())
+                        else:
+                            self.webhook.send(err_msg + "**Traceback:** Unable to upload to hastepaste.")
+
 
     def gracefully_disconnect(self, signal, frame):
         print("Gracefully disconnecting...")
