@@ -47,7 +47,7 @@ class Currency:
                 name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
             em.add_field(name='Balance', value=f'${profile[2]}')
             em.add_field(name='Reputation', value=profile[4])
-            em.add_field(name='Married with', value=await self.bot.get_user_info(int(profile[3])), inline=False)
+            em.add_field(name='Married with', value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
             em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
             em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
             await ctx.send(embed=em)
