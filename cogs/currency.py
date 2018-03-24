@@ -38,12 +38,17 @@ class Currency:
         if results:
             profile = list(results)[0]
             name = ("💰 | " if self.is_premium(member) else "") + member.display_name
+            itms = json.loads(profile[5]) if profile[5] else json.dumps({})
+            msg = []
+            for i in itms:
+                msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
             em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
             em.set_author(
                 name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
             em.add_field(name='Balance', value=f'${profile[2]}')
             em.add_field(name='Reputation', value=profile[4])
             em.add_field(name='Married with', value=await self.bot.get_user_info(int(profile[3])), inline=False)
+            em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
             em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
             await ctx.send(embed=em)
         else:
@@ -138,7 +143,7 @@ class Currency:
                         self.bot.query_db(f'''UPDATE users SET items="{str(itms)}" WHERE userid={ctx.author.id}''')
                     self.bot.query_db(
                         f'''UPDATE users SET balance=balance-{items.all_items[item]["buy"] * amount} WHERE userid={ctx.author.id}''')
-                    await ctx.send(f':white_check_mark: You purchased {amount}x{items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
+                    await ctx.send(f':white_check_mark: You purchased {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
                 else:
                     await ctx.send(":x: You do not have the money for that.")
             else:
