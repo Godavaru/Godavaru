@@ -80,18 +80,21 @@ class Currency:
             self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items) 
                                 VALUES ({ctx.author.id}, DEFAULT, DEFAULT, {member.id}, DEFAULT, DEFAULT) 
                                 ON DUPLICATE KEY UPDATE marriage={member.id}''')
+            self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items) 
+                                            VALUES ({member}, DEFAULT, DEFAULT, {ctx.author.id}, DEFAULT, DEFAULT) 
+                                            ON DUPLICATE KEY UPDATE marriage={ctx.author.id}''')
         elif msg.content.lower() == 'no':
             await ctx.send(f":sob: {ctx.author.display_name} just got denied :broken_heart:")
 
     @commands.command()
     async def divorce(self, ctx):
         """Divorce the person you are married to :sob:"""
-        if not self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}'''):
+        married = self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')
+        if not married:
             return await ctx.send(":x: You are not married.")
         await ctx.send(":ok_hand: You're single now. Cool.")
-        self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items)
-                            VALUES ({ctx.author.id}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT) 
-                            ON DUPLICATE KEY UPDATE marriage=DEFAULT''')
+        self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={ctx.author.id}''')
+        self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={married[0][0]}''')
 
     @commands.command(aliases=["bal"])
     async def balance(self, ctx, *, member: discord.Member = None):
