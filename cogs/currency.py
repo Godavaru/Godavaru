@@ -17,7 +17,7 @@ class Currency:
     @commands.cooldown(rate=300, per=1, type=commands.BucketType.user)
     async def loot(self, ctx):
         """Loot the current channel for goodies!"""
-        max_num = 100 if not self.is_premium(ctx.author) else 300
+        max_num = 100 if not self.is_premium(ctx.author) else 500
         amnt = random.randint(0, max_num)
         if amnt > 50:
             self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps) 
@@ -96,6 +96,18 @@ class Currency:
         if results:
             balance = list(results)[0][0]
         await ctx.send(f":gem: {member.display_name} has a balance of ${balance}")
+
+    @commands.command()
+    async def daily(self, ctx, *, member: discord.Member):
+        """Collect your daily reward.
+        Alternatively, you may give your daily to someone else and they get more money."""
+        user_id = member.id if member else ctx.author.id
+        max_value = 200 if not self.is_premium(ctx.author) else 600
+        daily_coins = random.randint(200, max_value) + (0 if not member else random.randint(1, 20))
+        self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps)
+                            VALUES ({user_id}, DEFAULT, {daily_coins}, DEFAULT, DEFAULT)
+                            ON DUPLICATE KEY UPDATE balance = balance + {daily_coins}''')
+        await ctx.send(f':white_check_mark: You {"gave your daily money of $" + str(daily_coins) + " to" + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
 
 
 def setup(bot):
