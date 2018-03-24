@@ -38,7 +38,7 @@ class Currency:
         if results:
             profile = list(results)[0]
             name = ("💰 | " if self.is_premium(member) else "") + member.display_name
-            itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.dumps({})
+            itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
             msg = []
             for i in itms:
                 msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
