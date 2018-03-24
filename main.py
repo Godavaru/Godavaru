@@ -43,6 +43,7 @@ class Godavaru(commands.Bot):
         self.remove_command('help')
         self.weeb = weeb.Client(token=config.weeb_token, user_agent='Godavaru/'+self.version)
         self.weeb_types = []
+        self.seen_messages = 0
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
         for extension in initial_extensions:
@@ -119,6 +120,7 @@ class Godavaru(commands.Bot):
             await self.process_commands(after)
 
     async def on_message(self, message):
+        self.seen_messages += 1
         channel = message.channel
         if not message.author.bot and message.guild is not None:
             if message.content.lower() == "f":

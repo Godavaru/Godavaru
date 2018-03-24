@@ -195,43 +195,32 @@ class Info:
     async def info(self, ctx):
         """Show some of the more statistical information about me.
         This information includes the current version(s), number of commands, amount of servers, channels, users, uptime, and average websocket ping."""
-        cmds = len(self.bot.commands)
-        cogs = len(self.bot.cogs)
-        version = discord.__version__
         before = time.monotonic()
         await (await self.bot.ws.ping())
         after = time.monotonic()
         ping = (after - before) * 1000
-        pversion = platform.python_version()
-        server_count = 0
         member_count = 0
         channel_count = 0
         for server in self.bot.guilds:
-            server_count += 1
             for _ in server.channels:
                 channel_count += 1
             for _ in server.members:
                 member_count += 1
-        await ctx.send("""```prolog
-=========[ Bot Information ]=========
-
-Commands           :  {0}
-Cogs               :  {1}
-Version            :  {2}
-DiscordPY Version  :  {3}
-Python Version     :  {4}
-Websocket Ping     :  {5:.0f}ms
-Uptime             :  {6}
-
-=========[ Guild Information ]=========
-
-Guilds             :  {7}
-Users              :  {8}
-Channels           :  {9}
-Hostname           :  {10}
-OS                 :  {11}```""".format(cmds, cogs, self.bot.version, version, pversion, ping,
-                                        self.get_bot_uptime(), server_count, member_count, channel_count,
-                                        platform.node(), platform.system()))
+        await ctx.send("```prolog\n"
+                       + '=========[ Bot Information ]=========\n\n'
+                       + f'Commands           :  {len(self.bot.commands)}\n'
+                       + f'Cogs               :  {len(self.bot.cogs)}\n'
+                       +  'Websocket Ping     :  {:.0f}ms\n'.format(ping)
+                       + f'Uptime             :  {self.get_bot_uptime()}\n'
+                       + f'Guilds             :  {len(self.bot.guilds)}\n'
+                       + f'Users              :  {member_count}\n'
+                       + f'Channels           :  {channel_count}\n\n'
+                       + '=========[ Technical Information ]=========\n\n'
+                       + f'Version            :  {self.bot.version}\n'
+                       + f'DiscordPY Version  :  {discord.__version__}\n'
+                       + f'Python Version     :  {platform.python_version()}\n'
+                       + f'Hostname           :  {platform.node()}\n'
+                       + f'OS                 :  {platform.system()}\n```')
 
     @commands.command()
     async def avatar(self, ctx, *, user: discord.Member = None):

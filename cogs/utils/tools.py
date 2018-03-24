@@ -26,6 +26,7 @@ def get_status_emoji(status, number):
 
 def get_prefix(bot, msg):
     prefixes = []
+    prefixes.append(msg.guild.me.mention)
     for p in config.prefix:
         prefixes.append(p)
     try:

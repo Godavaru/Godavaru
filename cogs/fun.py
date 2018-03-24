@@ -383,7 +383,7 @@ class Fun:
     async def trivia(self, ctx, *, difficulty: str = None):
         """Play a game of trivia."""
         url = "https://opentdb.com/api.php?amount=1"
-        if difficulty:
+        if difficulty and difficulty.lower() in ['easy', 'medium', 'hard']:
             url += "&difficulty=" + difficulty
         r = requests.get(url)
         j = r.json()

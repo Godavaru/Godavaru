@@ -118,18 +118,29 @@ class Owner:
             db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
             cur = db.cursor()
             cur.execute(query)
-            desc = list(cur.description)
-            x = []
-            for it in desc:
-                l = list(it)
-                x.append(l[0])
-            table = PrettyTable(x)
-            for row in cur.fetchall():
-                table.add_row(list(row))
+            if hasattr(cur, 'description'):
+                desc = list(cur.description)
+                x = []
+                for it in desc:
+                    l = list(it)
+                    x.append(l[0])
+                table = PrettyTable(x)
+                for row in cur.fetchall():
+                    table.add_row(list(row))
             db.commit()
             cur.close()
             db.close()
-            await ctx.send(f"```\n{table}```" if table != "" else ":x: Nothing was returned in this query.")
+            try:
+                await ctx.send(f"```\n{table}```" if hasattr(cur, 'description') else " Nothing was returned in this query.")
+            except discord.HTTPException:
+                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
+                async with aiohttp.ClientSession() as session:
+                    async with session.post("https://hastepaste.com/api/create", data=f'text={table}&raw=false',
+                                            headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
+                        if resp.status == 200:
+                            await msg.edit(content=await resp.text())
+                        else:
+                            await msg.edit(content="Error uploading to hastepaste :(")
         except pymysql.err.ProgrammingError as e:
             err_msg = str(e).split(',')[1].replace(')', '').replace('"', '')
             await ctx.send(f":x: {err_msg}")
