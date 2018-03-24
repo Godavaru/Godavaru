@@ -7,14 +7,17 @@ from discord.ext import commands
 class Currency:
     def __init__(self, bot):
         self.bot = bot
-        self.support_guild = self.bot.get_guild(315251940999299072)
-        self.patron = discord.utils.get(self.support_guild.roles, name="Patron")
+
+    def is_premium(self, member):
+        support = self.bot.get_guild(315251940999299072)
+        role = discord.utils.get(support.roles, name="Patron")
+        return role in support.get_member(member.id).roles
 
     @commands.command()
     @commands.cooldown(rate=300, per=1, type=commands.BucketType.user)
     async def loot(self, ctx):
         """Loot the current channel for goodies!"""
-        max_num = 100 if not ctx.author in self.support_guild and self.patron not in ctx.author.roles else 300
+        max_num = 100 if not self.is_premium(ctx.author) else 300
         amnt = random.randint(0, max_num)
         if amnt > 50:
             self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps) 
@@ -32,7 +35,7 @@ class Currency:
         results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
         if results:
             profile = list(results)[0]
-            name = ("💰 " if member in self.support_guild and self.patron in member.roles else "") + member.display_name
+            name = ("💰 " if self.is_premium(member) else "") + member.display_name
             em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
             em.set_author(
                 name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
