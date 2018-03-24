@@ -35,7 +35,7 @@ class Currency:
         results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
         if results:
             profile = list(results)[0]
-            name = ("💰 " if self.is_premium(member) else "") + member.display_name
+            name = ("💰 | " if self.is_premium(member) else "") + member.display_name
             em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
             em.set_author(
                 name=name + ("'s" if not name.endswith('s') else "'") + " Profile")

@@ -218,10 +218,12 @@ class Godavaru(commands.Bot):
 bot = Godavaru()
 signal.signal(signal.SIGINT, bot.gracefully_disconnect)
 signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
-# app = Flask(__name__)
-bot.run(config.token)
+app = Flask(__name__)
 
-""" Gonna finish this later
+
+def start_bot():
+    bot.run(config.token)
+
 web_resources = {
     "statuses": {
         "OK": 200,
@@ -242,4 +244,10 @@ def get_webhook():
         if auth != config.dbl_auth:
             return Response(json.dumps({"msg": "Unauthorized"}), status=web_resources["statuses"]["UN_AUTH"],
                             mimetype=web_resources["content_type"])
-"""
+
+def start_app():
+    app.run(port=1034, host="localhost")
+
+
+Thread(target=start_bot).start()
+Thread(target=start_app).start()
