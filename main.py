@@ -196,7 +196,7 @@ class Godavaru(commands.Bot):
                 self.webhook.send(err_msg + f"**Traceback:** ```py\n{trace}\n```")
             except discord.HTTPException:
                 async with aiohttp.ClientSession() as session:
-                    async with session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false', headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
+                    async with session.post("https://hastepaste.com/api/create", data=f'text={trace}&raw=false', headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
                         if resp.status == 200:
                             self.webhook.send(err_msg + "**Traceback:** " + await resp.text())
                         else:
