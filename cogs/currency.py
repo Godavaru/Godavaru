@@ -98,7 +98,7 @@ class Currency:
         await ctx.send(f":gem: {member.display_name} has a balance of ${balance}")
 
     @commands.command()
-    async def daily(self, ctx, *, member: discord.Member):
+    async def daily(self, ctx, *, member: discord.Member = None):
         """Collect your daily reward.
         Alternatively, you may give your daily to someone else and they get more money."""
         user_id = member.id if member else ctx.author.id
