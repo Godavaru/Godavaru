@@ -61,9 +61,9 @@ class Currency:
             return await ctx.send(":x: You can't marry yourself.")
         if member.bot:
             return await ctx.send(":x: You can't marry a bot.")
-        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}'''):
+        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''')[0][0]:
             return await ctx.send(":x: That person is already married!")
-        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}'''):
+        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')[0][0]:
             return await ctx.send(":x: You are already married!")
         await ctx.send(
             f'{member.display_name}, say `yes` or `no` to the marriage proposal from {ctx.author.display_name}')
@@ -90,7 +90,7 @@ class Currency:
     async def divorce(self, ctx):
         """Divorce the person you are married to :sob:"""
         married = self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')
-        if not married:
+        if not married[0][0]:
             return await ctx.send(":x: You are not married.")
         await ctx.send(":ok_hand: You're single now. Cool.")
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={ctx.author.id}''')
