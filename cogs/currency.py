@@ -46,7 +46,8 @@ class Currency:
         itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
         msg = []
         for i in itms:
-            msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
+            if itms[i] != 0:
+                msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
         em = discord.Embed(
             description=profile[1] if profile[1] else ('No description set.'
                                                       + (f' Set one with `{ctx.prefix}description <description>`!' if member is ctx.author else "")),
@@ -68,7 +69,7 @@ class Currency:
         max_value = 300 if not self.is_premium(ctx.author) else 500
         if len(description) > max_value:
             return await ctx.send(
-                f":x: The maximum the description can be is `{max_value}` characters for you!"
+                f":x: The maximum the description can be is `{max_value}` characters for you! "
                 + (f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
                     ctx.author) else ""))
         self.bot.query_db(f'''INSERT INTO users (userid, description) VALUES ({ctx.author.id}, "{description}") 
@@ -129,6 +130,7 @@ class Currency:
         await ctx.send(f":gem: {member.display_name} has a balance of ${balance}")
 
     @commands.command()
+    @commands.cooldown(rate=86400, per=1, type=commands.BucketType.user)
     async def daily(self, ctx, *, member: discord.Member = None):
         """Collect your daily reward.
         Alternatively, you may give your daily to someone else and they get more credits."""
@@ -200,12 +202,49 @@ class Currency:
                         return await ctx.send(":x: You do not have enough of that item.")
                     itms[item] = amnt - amount
                     self.bot.query_db(f'''UPDATE users SET items="{str(itms)}",balance=balance+{items.all_items[item]["sell"] * amount} WHERE userid={ctx.author.id}''')
+                    await ctx.send(f':white_check_mark: You successfully sold {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["sell"] * amount}')
                 except KeyError:
                     return await ctx.send(":x: You do not have enough of that item.")
             else:
                 return await ctx.send(":x: You do not have enough of that item.")
         else:
             await ctx.send(":x: That item can not be sold.")
+
+    @commands.command()
+    @commands.cooldown(rate=300, per=1, type=commands.BucketType.user)
+    async def mine(self, ctx):
+        """Go mining for those diamonds!
+        Requires a pickaxe. Has a chance of breaking the pickaxe."""
+        results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
+        itms = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
+        if 'PICKAXE' not in itms or itms['PICKAXE'] == 0:
+            return await ctx.send(":x: You don't seem to have a pickaxe.")
+        gets_diamond = random.randint(1, 10) >= 7
+        pick_breaks = random.randint(1, 10) >= 8
+        max_value = 150 if not self.is_premium(ctx.author) else 300
+        num = random.randint(0, max_value)
+        if num > 50:
+            msg = f":pick: You mined {num} credits" + (" and you found a diamond" if gets_diamond else "") + (" but your pickaxe broke :<" if pick_breaks else "") + '.'
+            await ctx.send(msg)
+            if gets_diamond:
+                try:
+                    amnt = itms['DIAMOND']
+                    itms['DIAMOND'] = amnt + 1
+                except KeyError:
+                    itms['DIAMOND'] = 1
+            if pick_breaks:
+                pick_amnt = itms['PICKAXE']
+                itms['PICKAXE'] = pick_amnt - 1
+            sets = f'balance=balance+{num}' + (f',items="{str(itms)}"' if gets_diamond else '')
+            self.bot.query_db(f'''UPDATE users SET {sets} WHERE userid={ctx.author.id}''')
+            await ctx.send(msg)
+        else:
+            msg = f':sob: You didn\'t find anything' + (' and your pick broke :<' if pick_breaks else '') + '.'
+            await ctx.send(msg)
+            if pick_breaks:
+                pick_amnt = itms['PICKAXE']
+                itms['PICKAXE'] = pick_amnt - 1
+                self.bot.query_db(f'''UPDATE users SET items={str(itms)} WHERE userid={ctx.author.id}''')
 
 
 def setup(bot):
