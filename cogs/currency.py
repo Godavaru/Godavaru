@@ -30,38 +30,41 @@ class Currency:
         else:
             await ctx.send(":slight_frown: You didn't loot anything")
 
-    @commands.group(invoke_without_subcommand=True)
+    @commands.command()
     async def profile(self, ctx, *, member: discord.Member = None):
         """Show yours or someone else's profile."""
-        if ctx.invoked_subcommand is None:
-            if member is None:
-                member = ctx.author
-            if member.bot:
-                return await ctx.send(":x: Bots don't have profiles.")
-            results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
-            if results:
-                profile = list(results)[0]
-            else:
-                profile = db.default_profile_values
-            name = ("💰 | " if self.is_premium(member) else "") + member.display_name
-            itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
-            msg = []
-            for i in itms:
-                msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
-            em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
-            em.set_author(
-                name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
-            em.add_field(name='Balance', value=f'${profile[2]}')
-            em.add_field(name='Reputation', value=profile[4])
-            em.add_field(name='Married with',
-                         value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
-            em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
-            em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
-            await ctx.send(embed=em)
+        if member is None:
+            member = ctx.author
+        if member.bot:
+            return await ctx.send(":x: Bots don't have profiles.")
+        results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
+        if results:
+            profile = list(results)[0]
+        else:
+            profile = db.default_profile_values
+        name = ("💰 | " if self.is_premium(member) else "") + member.display_name
+        itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
+        msg = []
+        for i in itms:
+            msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
+        em = discord.Embed(
+            description=profile[1] if profile[1] else ('No description set.'
+                                                      + (f' Set one with `{ctx.prefix}description <description>`!' if member is ctx.author else "")),
+            color=ctx.author.color)
+        em.set_author(
+            name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
+        em.add_field(name='Balance', value=f'${profile[2]}')
+        em.add_field(name='Reputation', value=profile[4])
+        em.add_field(name='Married with',
+                     value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
+        em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
+        em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
+        await ctx.send(embed=em)
 
-    @profile.command()
+    @commands.command()
     async def description(self, ctx, *, description: str):
-        """Set your profile description. Max of 300 for non-donors and 500 for donors."""
+        """Set your profile description.
+        Max of 300 for non-donors and 500 for donors."""
         max_value = 300 if not self.is_premium(ctx.author) else 500
         if len(description) > max_value:
             return await ctx.send(
