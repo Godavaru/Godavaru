@@ -98,40 +98,29 @@ class Fun:
         hair = 'cc817c'
         if re.compile(r'^[0-9a-fA-F]{6}$').match(hair_colour):
             hair = hair_colour
-        with open("./images/awoo.png", "wb") as img:
-            img.write(await self.bot.weeb.generate_image(imgtype="awooo", face=face, hair=hair))
-            img.close()
-        await ctx.send(file=discord.File('./images/awoo.png'))
+        img = await self.bot.weeb.generate_image(imgtype="awooo", face=face, hair=hair)
+        await ctx.send(file=discord.File(img, filename='awoo.png'))
         os.remove('./images/awoo.png')
 
     @commands.command()
     async def eyes(self, ctx):
         """Generate some random facing eyes!"""
-        with open("./images/eyes.png", "wb") as img:
-            img.write(await self.bot.weeb.generate_image(imgtype="eyes"))
-            img.close()
-        await ctx.send(file=discord.File('./images/eyes.png'))
-        os.remove('./images/eyes.png')
+        img = await self.bot.weeb.generate_image(imgtype="eyes")
+        await ctx.send(file=discord.File(img, filename='eyes.png'))
 
     @commands.command()
     async def won(self, ctx):
         """Generate a won image with randomly facing eyes."""
-        with open("./images/won.png", "wb") as img:
-            img.write(await self.bot.weeb.generate_image(imgtype='won'))
-            img.close()
-        await ctx.send(file=discord.File('./images/won.png'))
-        os.remove('./images/won.png')
+        img = await self.bot.weeb.generate_image(imgtype='won')
+        await ctx.send(file=discord.File(img, filename='won.png'))
 
     @commands.command(aliases=['insult', 'waifu', 'shitwaifu', 'garbage'])
     async def waifuinsult(self, ctx, *, member: discord.Member = None):
         """Generate a waifu insult of someone."""
         if member is None:
             member = ctx.author
-        with open("./images/waifuinsult.png", "wb") as img:
-            img.write(await self.bot.weeb.generate_waifu_insult(avatar=member.avatar_url))
-            img.close()
-        await ctx.send(file=discord.File('./images/waifuinsult.png'))
-        os.remove('./images/waifuinsult.png')
+        img = await self.bot.weeb.generate_waifu_insult(avatar=member.avatar_url)
+        await ctx.send(file=discord.File(img, filename='waifuinsult.png'))
 
     @commands.command(aliases=["weeb"])
     @commands.bot_has_permissions(embed_links=True)
@@ -182,6 +171,11 @@ class Fun:
     # no im not crazy dont look at me like that
     # awau
     # hi
+    # no u https://lars-is-the-love.of-my.life/HS6qp1.png
+    # aaa
+    # bbb
+    # ccc
+    # ddd
 
     @commands.command()
     async def slots(self, ctx):
@@ -286,13 +280,11 @@ class Fun:
             title="Love Meter",
             description=f"\N{TWO HEARTS} **{l[0].display_name}**\n\N{TWO HEARTS} **{l[1].display_name}**",
             color=ctx.author.color)
-        with open('love.png', 'wb') as f:
-            f.write(await self.bot.weeb.generate_love_ship(l[0].avatar_url, l[1].avatar_url))
-            f.close()
+        img = await self.bot.weeb.generate_love_ship(l[0].avatar_url, l[1].avatar_url)
         em.add_field(name="Result", value=f"**{sum}%**\n`{msg}`", inline=False)
         em.add_field(name="Shipname", value=shipname)
         em.set_thumbnail(url="https://www.emojibase.com/resources/img/emojis/hangouts/1f49c.png")
-        await ctx.send(file=discord.File('love.png'), embed=em.set_image(url="attachment://love.png"))
+        await ctx.send(file=discord.File(img, filename='love.png'), embed=em.set_image(url="attachment://love.png"))
 
     @commands.command()
     async def flip(self, ctx, *, user: discord.Member):
@@ -479,6 +471,11 @@ class Fun:
         msg13 = msg12.replace("?", ":grey_question:")
         msg14 = msg13.replace("!", ":grey_exclamation:")
         await ctx.send(msg14)
+
+    @commands.command()
+    async def clap(self, ctx, *, msg: str):
+        """👏 We 👏 all 👏 need 👏 clapping 👏 in 👏 our 👏 lives. 👏"""
+        await ctx.send(f"👏{'👏'.join(msg.split(' '))}👏")
 
 
 def setup(bot):

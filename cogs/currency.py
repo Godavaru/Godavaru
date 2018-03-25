@@ -118,7 +118,7 @@ class Currency:
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={ctx.author.id}''')
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={married[0][0]}''')
 
-    @commands.command(aliases=["bal"])
+    @commands.command(aliases=["bal", "credits"])
     async def balance(self, ctx, *, member: discord.Member = None):
         """Check the balance of yourself or another user."""
         if member is None:

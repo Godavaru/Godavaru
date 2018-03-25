@@ -28,7 +28,8 @@ initial_extensions = (
     "cogs.mod",
     "cogs.utility",
     "cogs.nsfw",
-    "cogs.opts"
+    "cogs.opts",
+    "cogs.currency",
 )
 
 
