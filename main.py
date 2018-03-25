@@ -41,7 +41,7 @@ class Godavaru(commands.Bot):
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
-        self.weeb = weeb.Client(token=config.weeb_token, user_agent='Godavaru/'+self.version)
+        self.weeb = weeb.Client(token=config.weeb_token, user_agent='Godavaru/'+self.version+'/'+config.environment)
         self.weeb_types = []
         self.seen_messages = 0
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
@@ -72,9 +72,10 @@ class Godavaru(commands.Bot):
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
-        while True:
-            self.weeb_types = await self.weeb.get_types()
-            await asyncio.sleep(86400)
+        if config.environment != "Development":
+            while True:
+                self.weeb_types = await self.weeb.get_types()
+                await asyncio.sleep(86400)
 
     async def on_guild_join(self, server):
         server_count = len(self.guilds)
@@ -222,7 +223,7 @@ class Godavaru(commands.Bot):
 bot = Godavaru()
 signal.signal(signal.SIGINT, bot.gracefully_disconnect)
 signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
-app = Flask(__name__)
+"""app = Flask(__name__)
 
 web_resources = {
     "statuses": {
@@ -248,5 +249,5 @@ def get_webhook():
 def start_app():
     app.run(port=1034, host="localhost")
 
-Thread(target=start_app).start()
+Thread(target=start_app).start()"""
 bot.run(config.token)
