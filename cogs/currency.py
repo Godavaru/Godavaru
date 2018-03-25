@@ -136,12 +136,12 @@ class Currency:
             results = self.bot.query_db(f'''SELECT balance,items FROM users WHERE userid={ctx.author.id}''')
             if results:
                 if results[0][0] > (items.all_items[item]["buy"] * amount):
-                    itms = json.loads(results[0][1] if results[0][1] else '{}')
+                    itms = json.loads(results[0][1]) if results[0][1] else json.dumps({})
                     try:
                         amnt = itms[item]
                         itms[item] = amnt + amount
                         self.bot.query_db(f'''UPDATE users SET items="{str(itms)}" WHERE userid={ctx.author.id}''')
-                    except:
+                    except KeyError:
                         itms[item] = amount
                         self.bot.query_db(f'''UPDATE users SET items="{str(itms)}" WHERE userid={ctx.author.id}''')
                     self.bot.query_db(

@@ -3,7 +3,7 @@
 # Godavaru
 This is the official repository for the Godavaru Discord bot. The main developer is
 [@Desiiii](https://github.com/Desiiii) (Desiree 🌺#0611). Below you will find a list of features that come with
-this bot. As this was last updated (03/03/2018), Godavaru is in version **2.0.2**. Note that if the version
+this bot. As this was last updated (03/03/2018), Godavaru is in version **2.1.0 ALPHA**. Note that if the version
 number is followed by **ALPHA** or **BETA**, it is only available via the Development instance, not on the public
 instance.
 ```
