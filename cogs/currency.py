@@ -30,32 +30,47 @@ class Currency:
         else:
             await ctx.send(":slight_frown: You didn't loot anything")
 
-    @commands.command()
+    @commands.group()
     async def profile(self, ctx, *, member: discord.Member = None):
         """Show yours or someone else's profile."""
-        if member is None:
-            member = ctx.author
-        if member.bot:
-            return await ctx.send(":x: Bots don't have profiles.")
-        results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
-        if results:
-            profile = list(results)[0]
-        else:
-            profile = db.default_profile_values
-        name = ("💰 | " if self.is_premium(member) else "") + member.display_name
-        itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
-        msg = []
-        for i in itms:
-            msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
-        em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
-        em.set_author(
-            name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
-        em.add_field(name='Balance', value=f'${profile[2]}')
-        em.add_field(name='Reputation', value=profile[4])
-        em.add_field(name='Married with', value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
-        em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
-        em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
-        await ctx.send(embed=em)
+        if ctx.invoked_subcommand is None:
+            if member is None:
+                member = ctx.author
+            if member.bot:
+                return await ctx.send(":x: Bots don't have profiles.")
+            results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
+            if results:
+                profile = list(results)[0]
+            else:
+                profile = db.default_profile_values
+            name = ("💰 | " if self.is_premium(member) else "") + member.display_name
+            itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
+            msg = []
+            for i in itms:
+                msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
+            em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
+            em.set_author(
+                name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
+            em.add_field(name='Balance', value=f'${profile[2]}')
+            em.add_field(name='Reputation', value=profile[4])
+            em.add_field(name='Married with',
+                         value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
+            em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
+            em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
+            await ctx.send(embed=em)
+
+    @profile.command()
+    async def description(self, ctx, *, description: str):
+        """Set your profile description. Max of 300 for non-donors and 500 for donors."""
+        max_value = 300 if not self.is_premium(ctx.author) else 500
+        if len(description) > max_value:
+            return await ctx.send(
+                f":x: The maximum the description can be is `{max_value}` characters for you!"
+                + (f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
+                    ctx.author) else ""))
+        self.bot.query_db(f'''INSERT INTO users (userid, description) VALUES ({ctx.author.id}, "{description}") 
+                            ON DUPLICATE KEY UPDATE description="{description}"''')
+        await ctx.send(f":ok_hand: Set your description! Check it out on `{ctx.prefix}profile`!")
 
     @commands.command()
     async def marry(self, ctx, *, member: discord.Member):
@@ -120,7 +135,8 @@ class Currency:
         self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items)
                             VALUES ({user_id}, DEFAULT, {daily_coins}, DEFAULT, DEFAULT, DEFAULT)
                             ON DUPLICATE KEY UPDATE balance = balance + {daily_coins}''')
-        await ctx.send(f':white_check_mark: You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
+        await ctx.send(
+            f':white_check_mark: You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
 
     @commands.command()
     async def buy(self, ctx, item: str, amount: int = 1):
@@ -149,7 +165,8 @@ class Currency:
                         self.bot.query_db(f'''UPDATE users SET items="{str(itms)}" WHERE userid={ctx.author.id}''')
                     self.bot.query_db(
                         f'''UPDATE users SET balance=balance-{items.all_items[item]["buy"] * amount} WHERE userid={ctx.author.id}''')
-                    await ctx.send(f':white_check_mark: You purchased {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
+                    await ctx.send(
+                        f':white_check_mark: You purchased {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
                 else:
                     await ctx.send(":x: You do not have the money for that.")
             else:

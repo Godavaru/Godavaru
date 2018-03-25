@@ -115,10 +115,10 @@ class Owner:
     async def query(self, ctx, *, query: str):
         """Query the MySQL database. (Bot Owner Only)"""
         try:
-            db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
+            db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
             cur = db.cursor()
             cur.execute(query)
-            if hasattr(cur, 'description'):
+            if cur.description:
                 desc = list(cur.description)
                 x = []
                 for it in desc:
@@ -131,7 +131,7 @@ class Owner:
             cur.close()
             db.close()
             try:
-                await ctx.send(f"```\n{table}```" if hasattr(cur, 'description') else " Nothing was returned in this query.")
+                await ctx.send(f"```\n{table}```" if cur.description else " Nothing was returned in this query.")
             except discord.HTTPException:
                 msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
                 async with aiohttp.ClientSession() as session:

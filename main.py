@@ -210,7 +210,7 @@ class Godavaru(commands.Bot):
         sys.exit(0)
 
     def query_db(self, query):
-        db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name)
+        db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
         cur = db.cursor()
         cur.execute(query)
         res = cur.fetchall()
