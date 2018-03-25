@@ -81,8 +81,8 @@ class Currency:
                                 VALUES ({ctx.author.id}, DEFAULT, DEFAULT, {member.id}, DEFAULT, DEFAULT) 
                                 ON DUPLICATE KEY UPDATE marriage={member.id}''')
             self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items) 
-                                            VALUES ({member.id}, DEFAULT, DEFAULT, {ctx.author.id}, DEFAULT, DEFAULT) 
-                                            ON DUPLICATE KEY UPDATE marriage={ctx.author.id}''')
+                                VALUES ({member.id}, DEFAULT, DEFAULT, {ctx.author.id}, DEFAULT, DEFAULT) 
+                                ON DUPLICATE KEY UPDATE marriage={ctx.author.id}''')
         elif msg.content.lower() == 'no':
             await ctx.send(f":sob: {ctx.author.display_name} just got denied :broken_heart:")
 
