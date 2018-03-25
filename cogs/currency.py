@@ -30,7 +30,7 @@ class Currency:
         else:
             await ctx.send(":slight_frown: You didn't loot anything")
 
-    @commands.group()
+    @commands.group(invoke_without_subcommand=True)
     async def profile(self, ctx, *, member: discord.Member = None):
         """Show yours or someone else's profile."""
         if ctx.invoked_subcommand is None:
