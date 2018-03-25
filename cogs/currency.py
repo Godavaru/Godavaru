@@ -177,6 +177,36 @@ class Currency:
         else:
             await ctx.send(":x: That item can not be bought.")
 
+    @commands.command()
+    async def sell(self, ctx, item: str, amount: int = 1):
+        """Sell an item.
+        Use `list` as the param for a list of all items that can be sold."""
+        item = item.upper()
+        if item == 'LIST':
+            msg = ""
+            for it in items.all_items:
+                if items.all_items[it]['sell']:
+                    msg += f"{items.all_items[it]['emoji']} - ${items.all_items[it]['sell']} - {it.capitalize()}\n"
+            return await ctx.send(msg)
+        if item not in items.all_items:
+            return await ctx.send(":x: That is not an item.")
+        if items.all_items[item]['sell']:
+            results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
+            if results:
+                itms = json.loads(results[0][0].replace("'", '"'))  if results[0][0] else json.dumps({})
+                try:
+                    amnt = itms[item]
+                    if amount > amnt:
+                        return await ctx.send(":x: You do not have enough of that item.")
+                    itms[item] = amnt - amount
+                    self.bot.query_db(f'''UPDATE users SET items="{str(itms)}",balance=balance+{items.all_items[item]["sell"] * amount} WHERE userid={ctx.author.id}''')
+                except KeyError:
+                    return await ctx.send(":x: You do not have enough of that item.")
+            else:
+                return await ctx.send(":x: You do not have enough of that item.")
+        else:
+            await ctx.send(":x: That item can not be sold.")
+
 
 def setup(bot):
     bot.add_cog(Currency(bot))
