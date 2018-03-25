@@ -12,3 +12,5 @@ def get_all_prefixes():
         d[str(row[0])] = row[1]
     db.close()
     return d
+
+default_profile_values = [None, None, 0, None, 0, None]

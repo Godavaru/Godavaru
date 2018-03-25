@@ -3,6 +3,7 @@ import discord
 import asyncio
 import json
 from .assets import items
+from .utils import db
 from discord.ext import commands
 
 
@@ -34,25 +35,27 @@ class Currency:
         """Show yours or someone else's profile."""
         if member is None:
             member = ctx.author
+        if member.bot:
+            return await ctx.send(":x: Bots don't have profiles.")
         results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
         if results:
             profile = list(results)[0]
-            name = ("💰 | " if self.is_premium(member) else "") + member.display_name
-            itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
-            msg = []
-            for i in itms:
-                msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
-            em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
-            em.set_author(
-                name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
-            em.add_field(name='Balance', value=f'${profile[2]}')
-            em.add_field(name='Reputation', value=profile[4])
-            em.add_field(name='Married with', value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
-            em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
-            em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
-            await ctx.send(embed=em)
         else:
-            await ctx.send(":x: That user has no profile in my database.")
+            profile = db.default_profile_values
+        name = ("💰 | " if self.is_premium(member) else "") + member.display_name
+        itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
+        msg = []
+        for i in itms:
+            msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
+        em = discord.Embed(description=profile[1] if profile[1] else 'No description set.', color=ctx.author.color)
+        em.set_author(
+            name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
+        em.add_field(name='Balance', value=f'${profile[2]}')
+        em.add_field(name='Reputation', value=profile[4])
+        em.add_field(name='Married with', value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
+        em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
+        em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
+        await ctx.send(embed=em)
 
     @commands.command()
     async def marry(self, ctx, *, member: discord.Member):
