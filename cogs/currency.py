@@ -17,7 +17,7 @@ class Currency:
         return role in support.get_member(member.id).roles
 
     @commands.command()
-    @commands.cooldown(rate=300, per=1, type=commands.BucketType.user)
+    @commands.cooldown(rate=1, per=300, type=commands.BucketType.user)
     async def loot(self, ctx):
         """Loot the current channel for goodies!"""
         max_num = 100 if not self.is_premium(ctx.author) else 500
@@ -130,7 +130,7 @@ class Currency:
         await ctx.send(f":gem: {member.display_name} has a balance of ${balance}")
 
     @commands.command()
-    @commands.cooldown(rate=86400, per=1, type=commands.BucketType.user)
+    @commands.cooldown(rate=1, per=86400, type=commands.BucketType.user)
     async def daily(self, ctx, *, member: discord.Member = None):
         """Collect your daily reward.
         Alternatively, you may give your daily to someone else and they get more credits."""
@@ -211,7 +211,7 @@ class Currency:
             await ctx.send(":x: That item can not be sold.")
 
     @commands.command()
-    @commands.cooldown(rate=300, per=1, type=commands.BucketType.user)
+    @commands.cooldown(rate=1, per=300, type=commands.BucketType.user)
     async def mine(self, ctx):
         """Go mining for those diamonds!
         Requires a pickaxe. Has a chance of breaking the pickaxe."""

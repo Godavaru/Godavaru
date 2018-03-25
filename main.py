@@ -172,17 +172,17 @@ class Godavaru(commands.Bot):
             await ctx.send(f":x: I need the permission(s) `{', '.join(error.missing_perms)}` to run this command.")
         elif isinstance(error, commands.CheckFailure):
             await ctx.send(":x: You are not authorized to use this command.")
-        elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error,
-                                                                               commands.BadArgument) or isinstance(
-                error, commands.UserInputError):
-            await ctx.send(f":x: Improper arguments, check `{ctx.prefix}help {ctx.command}`")
-            ctx.command.reset_cooldown(ctx)
         elif isinstance(error, commands.CommandOnCooldown):
             m, s = divmod(error.retry_after, 60)
             h, m = divmod(m, 60)
             await ctx.send(
                 f':x: You can use this command again in {"%d hours, %02d minutes and %02d seconds" % (h, m, s)}'
                 + (" (about now)." if error.retry_after == 0 else "."))
+        elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error,
+                                                                               commands.BadArgument) or isinstance(
+                error, commands.UserInputError):
+            await ctx.send(f":x: Improper arguments, check `{ctx.prefix}help {ctx.command}`")
+            ctx.command.reset_cooldown(ctx)
         else:
             def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
                 return ''.join(random.choice(chars) for _ in range(size))
