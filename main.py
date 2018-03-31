@@ -72,23 +72,29 @@ class Godavaru(commands.Bot):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
         is_prod = config.environment == "Production"
-        while is_prod:
-            self.weeb_types = await self.weeb.get_types()
-            await asyncio.sleep(86400)
-        while is_prod:
-            data = {'server_count': len(self.guilds)}
-            dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
-            terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
-            async with aiohttp.ClientSession() as session:
-                await session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
-                await session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
-            await asyncio.sleep(3600)
-        while True:
-            with open('splashes.txt') as f:
-                splashes = f.readlines()
-            await self.change_presence(
-                activity=discord.Game(name=config.prefix[0] + "help | " + random.choice(splashes).format(self.version, len(self.guilds))))
-            await asyncio.sleep(900)
+        async def weeb_types():
+            while is_prod:
+                self.weeb_types = await self.weeb.get_types()
+                await asyncio.sleep(86400)
+        async def post_counts():
+            while is_prod:
+                data = {'server_count': len(self.guilds)}
+                dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
+                terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
+                async with aiohttp.ClientSession() as session:
+                    await session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
+                    await session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
+                await asyncio.sleep(3600)
+        async def do_splashes():
+            while True:
+                with open('splashes.txt') as f:
+                    splashes = f.readlines()
+                await self.change_presence(
+                    activity=discord.Game(name=config.prefix[0] + "help | " + random.choice(splashes).format(self.version, len(self.guilds))))
+                await asyncio.sleep(900)
+        await weeb_types()
+        await post_counts()
+        await do_splashes()
 
     async def on_guild_join(self, server):
         self.webhook.send(':tada: [`' + str(
