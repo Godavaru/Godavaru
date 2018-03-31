@@ -92,9 +92,9 @@ class Godavaru(commands.Bot):
                 await self.change_presence(
                     activity=discord.Game(name=config.prefix[0] + "help | " + random.choice(splashes).format(self.version, len(self.guilds))))
                 await asyncio.sleep(900)
+        await do_splashes()
         await weeb_types()
         await post_counts()
-        await do_splashes()
 
     async def on_guild_join(self, server):
         self.webhook.send(':tada: [`' + str(
