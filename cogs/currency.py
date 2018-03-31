@@ -162,9 +162,9 @@ class Currency:
             return await ctx.send(":x: You can't marry yourself.")
         if member.bot:
             return await ctx.send(":x: You can't marry a bot.")
-        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''')[0][0]:
+        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''') and self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''')[0][0]:
             return await ctx.send(":x: That person is already married!")
-        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')[0][0]:
+        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''') and self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')[0][0]:
             return await ctx.send(":x: You are already married!")
         await ctx.send(
             f'{member.display_name}, say `yes` or `no` to the marriage proposal from {ctx.author.display_name}')
