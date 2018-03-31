@@ -100,7 +100,6 @@ class Fun:
             hair = hair_colour
         img = await self.bot.weeb.generate_image(imgtype="awooo", face=face, hair=hair)
         await ctx.send(file=discord.File(img, filename='awoo.png'))
-        os.remove('./images/awoo.png')
 
     @commands.command()
     async def eyes(self, ctx):
