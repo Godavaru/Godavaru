@@ -14,7 +14,7 @@ class Currency:
     def is_premium(self, member):
         support = self.bot.get_guild(315251940999299072)
         role = discord.utils.get(support.roles, name="Patron")
-        return role in support.get_member(member.id).roles
+        return role in support.get_member(member.id).roles if support.get_member(member.id) else False
 
     @commands.command()
     @commands.cooldown(rate=1, per=300, type=commands.BucketType.user)
