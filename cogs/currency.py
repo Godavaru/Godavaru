@@ -329,7 +329,7 @@ class Currency:
             if pick_breaks:
                 pick_amnt = itms['PICKAXE']
                 itms['PICKAXE'] = pick_amnt - 1
-                self.bot.query_db(f'''UPDATE users SET items={str(itms)} WHERE userid={ctx.author.id}''')
+                self.bot.query_db(f'''UPDATE users SET items="{str(itms)}" WHERE userid={ctx.author.id}''')
 
 
 def setup(bot):
