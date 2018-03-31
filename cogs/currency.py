@@ -147,7 +147,7 @@ class Currency:
             win = random.randint(1, 10) >= 7
             if win:
                 bal = f'balance-{round(amount * 0.7)}'
-                await ctx.send(f':tada: You won round(amount * 0.7) credits!')
+                await ctx.send(f':tada: You won {round(amount * 0.7)} credits!')
             else:
                 bal = f'balance+{round(amount * 0.7)}'
                 await ctx.send(f':sob: Sadly, you lost {round(amount * 0.7)} credits.')
