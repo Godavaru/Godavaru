@@ -1,8 +1,9 @@
 [![Discord Bots](https://discordbots.org/api/widget/status/311810096336470017.png)](https://discordbots.org/bot/311810096336470017)[![Discord Bots](https://discordbots.org/api/widget/servers/311810096336470017.png?noavatar=true)](https://discordbots.org/bot/311810096336470017)[![Discord Bots](https://discordbots.org/api/widget/owner/311810096336470017.png?noavatar=true)](https://discordbots.org/bot/311810096336470017)
+![](https://i.pinimg.com/originals/b8/ed/c9/b8edc912a7f63d819899bbfcdcaea79c.png)
 # Godavaru
 This is the official repository for the Godavaru Discord bot. The main developer is
 [@Desiiii](https://github.com/Desiiii) (Desiree 🌺#0611). Below you will find a list of features that come with
-this bot. As this was last updated (03/03/2018), Godavaru is in version **2.0.2**. Note that if the version
+this bot. As this was last updated (03/03/2018), Godavaru is in version **2.1.0 ALPHA**. Note that if the version
 number is followed by **ALPHA** or **BETA**, it is only available via the Development instance, not on the public
 instance.
 ```
@@ -18,6 +19,11 @@ Informational Commands
   -> User ID lookup, discriminator lookup, role information, and more!
 ```
 For a full list of all commands, use `g_help` in any guild that the bot is in.
+
+# Avatar
+For anyone who may be curious, Godavaru is not an actual character in any anime. The avatar is actually Yayoi from KanColle, in case you were curious as of who the character is.
+
+Why use a different name? Why not make my own avatar? Quite simply, I like the images of Yayoi and I am a terrible artist. :\<
 
 # Developers
 The following is a list of developers of the Godavaru bot.

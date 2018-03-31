@@ -1,13 +1,17 @@
 import datetime
 import io
+import sys
 import textwrap
 import traceback
 import subprocess
+import pymysql
+from prettytable import PrettyTable
 from contextlib import redirect_stdout
 
 import aiohttp
 import discord
 from discord.ext import commands
+from .utils.tools import *
 
 import config
 
@@ -21,7 +25,7 @@ class Owner:
         self.bot = bot
         self.last_result = None
 
-    @commands.command(name="eval")
+    @commands.command(name="eval", aliases=["ev", "debug"])
     @commands.check(is_owner)
     async def _eval(self, ctx, *, code):
         """Evaluate code. (Bot Owner Only)"""
@@ -75,15 +79,14 @@ class Owner:
                 await ctx.send(f"*Executed in {((datetime.datetime.utcnow() - before) * 1000).total_seconds()}ms" + (
                     f".* ```py\n{content}```" if content else " with no returns.*"))
             except discord.HTTPException:
-                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastebin...")
+                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
                 async with aiohttp.ClientSession() as session:
-                    async with session.post("https://hastebin.com/documents", data=content.encode('utf-8')) as resp:
+                    async with session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false', headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
                         if resp.status == 200:
-                            await msg.edit(content="*Executed in {}ms and returned:* https://hastebin.com/".format(
-                                ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + (await resp.json())[
-                                                       "key"])
+                            await msg.edit(content="*Executed in {}ms and returned:* ".format(
+                                ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + await resp.text())
                         else:
-                            await msg.edit(content="Error uploading to hastebin :(")
+                            await msg.edit(content="Error uploading to hastepaste :(")
 
     @commands.command(name="exec")
     @commands.check(is_owner)
@@ -98,7 +101,49 @@ class Owner:
             msg += 'Error/Info/Warn! ```\n{}```\n'.format(err.decode())
         msg += "Returncode: {}".format(sp.returncode)
         await ctx.send(msg)
-        # my commit names are meme btw
+
+    @commands.command(aliases=["die", "reboot"])
+    @commands.check(is_owner)
+    async def shutdown(self, ctx):
+        """Shutdown the bot. Thanks to PM2, this also reboots it. (Bot Owner Only)"""
+        await ctx.send(":wave: Shutting down...")
+        self.bot.logout()
+        sys.exit(0)
+
+    @commands.command(aliases=['db', 'dbquery'])
+    @commands.check(is_owner)
+    async def query(self, ctx, *, query: str):
+        """Query the MySQL database. (Bot Owner Only)"""
+        try:
+            db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
+            cur = db.cursor()
+            cur.execute(query)
+            if cur.description:
+                desc = list(cur.description)
+                x = []
+                for it in desc:
+                    l = list(it)
+                    x.append(l[0])
+                table = PrettyTable(x)
+                for row in cur.fetchall():
+                    table.add_row(list(row))
+            db.commit()
+            cur.close()
+            db.close()
+            try:
+                await ctx.send(f"```\n{table}```" if cur.description else " Nothing was returned in this query.")
+            except discord.HTTPException:
+                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
+                async with aiohttp.ClientSession() as session:
+                    async with session.post("https://hastepaste.com/api/create", data=f'text={table}&raw=false',
+                                            headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
+                        if resp.status == 200:
+                            await msg.edit(content=await resp.text())
+                        else:
+                            await msg.edit(content="Error uploading to hastepaste :(")
+        except pymysql.err.ProgrammingError as e:
+            err_msg = str(e).split(',')[1].replace(')', '').replace('"', '')
+            await ctx.send(f":x: {err_msg}")
 
     @commands.command()
     @commands.check(is_owner)

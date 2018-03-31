@@ -13,6 +13,7 @@ import re
 import aiohttp
 import pytz
 from discord.ext import commands
+from PIL import ImageColor
 
 from cogs.utils import image
 from cogs.utils.tools import *
@@ -110,10 +111,9 @@ class Utils:
         url = 'https://8ball.delegator.com/magic/JSON/' + urllib.parse.quote_plus(question)
         r = requests.get(url)
         j = r.json()
-        q = j['magic']['question']
         a = j['magic']['answer']
         t = j['magic']['type']
-        em = discord.Embed(description=f"**Question:** {q}\n**Answer:** {a}\n**Response Type:** {t}", color=0x00ff00)
+        em = discord.Embed(description=f"**Question:** {question}\n**Answer:** {a}\n**Response Type:** {t}", color=0x00ff00)
         em.set_thumbnail(url="https://8ball.delegator.com/images/8ball.png")
         em.set_author(name="You consult the magic 8 ball...", icon_url=ctx.author.avatar_url.replace("?size=1024", ""))
         em.set_footer(text="Powered by 8ball.delegator.com")
@@ -186,17 +186,20 @@ class Utils:
     @commands.command(aliases=["color"])
     async def colour(self, ctx, hexcode: str):
         """Show a preview of a hex colour."""
-        colour = hexcode.replace('#', '')
-        for char in colour:
-            if char not in "abcdef0123456789":
-                await ctx.send(":x: T-that's not a valid hex code!")
-                return
-        if len(colour) != 6:
-            await ctx.send(":x: Hex codes are six characters long!")
-            return
-        c = discord.Color(int(colour, 16))
+        if hexcode.startswith("0x") or hexcode.startswith("#"):
+            hexcode = hexcode.strip("0x#")
+        match = re.compile(r'^[^g-zG-Z]{6}$').match(hexcode)
+        if not match:
+            return await ctx.send(":x: That is not a valid hex colour.")
+        hexcode = f'{match.group()}'
+        try:
+            rgb = ImageColor.getrgb(hexcode)
+        except ValueError:
+            return await ctx.send(":x: Something happened parsing this hex code :<")
+        c = discord.Color(int(match.group(), 16))
         em = discord.Embed(color=c)
-        em.set_image(url='https://www.colorcombos.com/images/colors/' + colour + '.png')
+        em.set_image(
+            url="https://crimsonxv.pro/rendercolour?rgb={r},{g},{b}".format(r=rgb[0], g=rgb[1], b=rgb[2]))
         em.set_author(name="Here is a preview of your colour.", icon_url=ctx.author.avatar_url_as(format='png'))
         await ctx.send(embed=em)
 
@@ -207,7 +210,7 @@ class Utils:
         discrim = discrim.replace('#', '')
         num = 0
         msg = ""
-        for user in self.bot.users.filter(lambda u: u.discriminator == discrim):
+        for user in filter(lambda u: u.discriminator == discrim, self.bot.users):
             num += 1
             if num == 6:
                 break
