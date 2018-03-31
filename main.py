@@ -56,8 +56,6 @@ class Godavaru(commands.Bot):
 
     # noinspection PyAttributeOutsideInit
     async def on_ready(self):
-        await self.change_presence(
-            activity=discord.Game(name=config.prefix[0] + "help | {} guilds".format(len(self.guilds))))
         startup_message = f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
                           + "===============\n" \
                           + 'Logged in as:\n' \
@@ -73,38 +71,32 @@ class Godavaru(commands.Bot):
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
-        if config.environment != "Development":
-            while True:
-                self.weeb_types = await self.weeb.get_types()
-                await asyncio.sleep(86400)
+        is_prod = config.environment == "Production"
+        while is_prod:
+            self.weeb_types = await self.weeb.get_types()
+            await asyncio.sleep(86400)
+        while is_prod:
+            data = {'server_count': len(self.guilds)}
+            dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
+            terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
+            async with aiohttp.ClientSession() as session:
+                await session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
+                await session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
+            await asyncio.sleep(3600)
+        while True:
+            with open('splashes.txt') as f:
+                splashes = f.readlines()
+            await self.change_presence(
+                activity=discord.Game(name=config.prefix[0] + "help | " + random.choice(splashes).format(self.version, len(self.guilds))))
+            await asyncio.sleep(900)
 
     async def on_guild_join(self, server):
-        server_count = len(self.guilds)
-        member_count = 0
-        for server in self.guilds:
-            for _ in server.members:
-                member_count += 1
-        await self.change_presence(activity=discord.Game(
-            name=config.prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':tada: [`' + str(
             datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I joined the server `' + server.name + '` (' + str(
             server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(
             server.owner.id) + ').')
-        guild_count = len(self.guilds)
-        headers = {'Authorization': config.dbotstoken}
-        data = {'server_count': guild_count}
-        api_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
-        async with aiohttp.ClientSession() as session:
-            await session.post(api_url, data=data, headers=headers)
 
     async def on_guild_remove(self, server):
-        server_count = len(self.guilds)
-        member_count = 0
-        for server in self.guilds:
-            for _ in server.members:
-                member_count += 1
-        await self.change_presence(activity=discord.Game(
-            name=config.prefix[0] + "help | {} guilds with {} members.".format(server_count, member_count)))
         self.webhook.send(':frowning: [`' + str(
             datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")) + '`] I left the server `' + server.name + '` (' + str(
             server.id) + '), owned by `' + server.owner.name + '#' + server.owner.discriminator + '` (' + str(

@@ -50,7 +50,8 @@ class Currency:
                 msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
         em = discord.Embed(
             description=profile[1] if profile[1] else ('No description set.'
-                                                      + (f' Set one with `{ctx.prefix}description <description>`!' if member is ctx.author else "")),
+                                                       + (
+                                                       f' Set one with `{ctx.prefix}description <description>`!' if member is ctx.author else "")),
             color=ctx.author.color)
         em.set_author(
             name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
@@ -70,11 +71,89 @@ class Currency:
         if len(description) > max_value:
             return await ctx.send(
                 f":x: The maximum the description can be is `{max_value}` characters for you! "
-                + (f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
+                + (
+                f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
                     ctx.author) else ""))
         self.bot.query_db(f'''INSERT INTO users (userid, description) VALUES ({ctx.author.id}, "{description}") 
                             ON DUPLICATE KEY UPDATE description="{description}"''')
         await ctx.send(f":ok_hand: Set your description! Check it out on `{ctx.prefix}profile`!")
+
+    @commands.command()
+    @commands.cooldown(rate=1, per=43200, type=commands.BucketType.user)
+    async def rep(self, ctx, *, member: discord.Member):
+        """Give reputation to a user."""
+        if member == ctx.author:
+            ctx.command.reset_cooldown(ctx)
+            return await ctx.send(":x: You can not rep yourself.")
+        if member.bot:
+            ctx.command.reset_cooldown(ctx)
+            return await ctx.send(":x: Yes, bots are cool, but you can not rep them.")
+        self.bot.query_db(f'''INSERT INTO users (userid, reps) VALUES ({ctx.author.id}, 1) 
+                            ON DUPLICATE KEY UPDATE reps=reps+1''')
+        await ctx.send(f":white_check_mark: Added reputation point to **{member}**")
+
+    @commands.group(aliases=["richest", "top", "lb"])
+    async def leaderboard(self, ctx):
+        """Check the leaderboard of money."""
+        if ctx.invoked_subcommand is None:
+            results = self.bot.query_db(f'SELECT userid,balance FROM users ORDER BY balance DESC LIMIT 15')
+            msg = ""
+            for i in range(len(results)):
+                row = results[i]
+                user = self.bot.get_user(int(row[0]))
+                if not user:
+                    user = row[0]
+                n = i + 1
+                if n < 10:
+                    n = f'0{i+1}'
+                msg += f':star: **{n} | {user}** - ${row[1]}\n'
+            em = discord.Embed(
+                title="Richest Users",
+                description=msg,
+                color=ctx.author.color
+            )
+            await ctx.send(embed=em)
+
+    @leaderboard.command(name="rep")
+    async def _rep(self, ctx):
+        """Check the leaderboard of reputation."""
+        results = self.bot.query_db(f'SELECT userid,reps FROM users ORDER BY reps DESC LIMIT 15')
+        msg = ""
+        for i in range(len(results)):
+            row = results[i]
+            user = self.bot.get_user(int(row[0]))
+            if not user:
+                user = row[0]
+            n = i + 1
+            if n < 10:
+                n = f'0{i+1}'
+            msg += f':star: **{n} | {user}** - ${row[1]}\n'
+        em = discord.Embed(
+            title="Richest Users",
+            description=msg,
+            color=ctx.author.color
+        )
+        await ctx.send(embed=em)
+
+    # TODO add percentage support
+    @commands.command()
+    @commands.cooldown(rate=1, per=8, type=commands.BucketType.user)
+    async def gamble(self, ctx, amount: int):
+        """Gamble your life away!"""
+        if amount <= 0:
+            return await ctx.send(':x: Don\'t even try it...')
+        profile = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id}''')
+        if profile and profile[0][0] >= amount:
+            win = random.randint(1, 10) >= 7
+            if win:
+                bal = f'balance-{round(amount * 0.7)}'
+                await ctx.send(f':tada: You won round(amount * 0.7) credits!')
+            else:
+                bal = f'balance+{round(amount * 0.7)}'
+                await ctx.send(f':sob: Sadly, you lost {round(amount * 0.7)} credits.')
+            self.bot.query_db(f'''UPDATE users SET balance={bal} WHERE userid={ctx.author.id}''')
+        else:
+            await ctx.send(':x: You don\'t have the money to do that.')
 
     @commands.command()
     async def marry(self, ctx, *, member: discord.Member):
@@ -147,6 +226,8 @@ class Currency:
     async def buy(self, ctx, item: str, amount: int = 1):
         """Buy an item.
         Use `list` as the param for a list of all items that can be bought."""
+        if amount <= 0:
+            return await ctx.send("You can not buy less than one of an item.")
         item = item.upper()
         if item == 'LIST':
             msg = ""
@@ -183,6 +264,8 @@ class Currency:
     async def sell(self, ctx, item: str, amount: int = 1):
         """Sell an item.
         Use `list` as the param for a list of all items that can be sold."""
+        if amount <= 0:
+            return await ctx.send("You can not sell less than one of an item.")
         item = item.upper()
         if item == 'LIST':
             msg = ""
@@ -195,14 +278,16 @@ class Currency:
         if items.all_items[item]['sell']:
             results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
             if results:
-                itms = json.loads(results[0][0].replace("'", '"'))  if results[0][0] else json.dumps({})
+                itms = json.loads(results[0][0].replace("'", '"')) if results[0][0] else json.dumps({})
                 try:
                     amnt = itms[item]
                     if amount > amnt:
                         return await ctx.send(":x: You do not have enough of that item.")
                     itms[item] = amnt - amount
-                    self.bot.query_db(f'''UPDATE users SET items="{str(itms)}",balance=balance+{items.all_items[item]["sell"] * amount} WHERE userid={ctx.author.id}''')
-                    await ctx.send(f':white_check_mark: You successfully sold {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["sell"] * amount}')
+                    self.bot.query_db(
+                        f'''UPDATE users SET items="{str(itms)}",balance=balance+{items.all_items[item]["sell"] * amount} WHERE userid={ctx.author.id}''')
+                    await ctx.send(
+                        f':white_check_mark: You successfully sold {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["sell"] * amount}')
                 except KeyError:
                     return await ctx.send(":x: You do not have enough of that item.")
             else:
@@ -224,7 +309,8 @@ class Currency:
         max_value = 150 if not self.is_premium(ctx.author) else 300
         num = random.randint(0, max_value)
         if num > 50:
-            msg = f":pick: You mined {num} credits" + (" and you found a diamond" if gets_diamond else "") + (" but your pickaxe broke :<" if pick_breaks else "") + '.'
+            msg = f":pick: You mined {num} credits" + (" and you found a diamond" if gets_diamond else "") + (
+            " but your pickaxe broke :<" if pick_breaks else "") + '.'
             await ctx.send(msg)
             if gets_diamond:
                 try:
