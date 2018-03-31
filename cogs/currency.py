@@ -241,7 +241,7 @@ class Currency:
             results = self.bot.query_db(f'''SELECT balance,items FROM users WHERE userid={ctx.author.id}''')
             if results:
                 if results[0][0] > (items.all_items[item]["buy"] * amount):
-                    itms = json.loads(results[0][1].replace("'", '"')) if results[0][1] else json.dumps({})
+                    itms = json.loads(results[0][1].replace("'", '"')) if results[0][1] else json.loads('{}')
                     try:
                         amnt = itms[item]
                         itms[item] = amnt + amount
@@ -278,7 +278,7 @@ class Currency:
         if items.all_items[item]['sell']:
             results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
             if results:
-                itms = json.loads(results[0][0].replace("'", '"')) if results[0][0] else json.dumps({})
+                itms = json.loads(results[0][0].replace("'", '"')) if results[0][0] else json.loads('{}')
                 try:
                     amnt = itms[item]
                     if amount > amnt:
