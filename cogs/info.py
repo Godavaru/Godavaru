@@ -257,7 +257,9 @@ class Info:
         idle = len([m for m in g.members if m.status == discord.Status("idle")])
         dnd = len([m for m in g.members if m.status == discord.Status("dnd")])
         roles = ", ".join([r.name for r in sorted(g.roles, key=lambda x: -x.position) if not r.is_default()])
+        roles_haste = await self.bot.post_to_haste(roles)
         emotes = " ".join([str(e) for e in g.emojis]) if len(g.emojis) > 0 else "No emotes are in this guild."
+        emotes_haste = await self.bot.post_to_haste(emotes)
         guild_embed = discord.Embed(
             title=g.name,
             description=f"Guild ID: {g.id}",
@@ -306,10 +308,10 @@ class Info:
             value=str(g.explicit_content_filter).capitalize()
         ).add_field(
             name=f"Roles - {len(g.roles)-1}",
-            value=roles if len(roles) < 1000 else f'[Click Me]({self.bot.post_to_haste(roles)})'
+            value=roles if len(roles) < 1000 else f'[Click Me]({roles_haste})'
         ).add_field(
             name=f"Emotes - {len(g.emojis)}",
-            value=emotes if len(emotes) < 1000 else f'[Click Me (yes they will look odd)]({self.bot.post_to_haste(emotes)})'
+            value=emotes if len(emotes) < 1000 else f'[Click Me (yes they will look odd)]({emotes_haste})'
         )
         await ctx.send(embed=guild_embed)
 
