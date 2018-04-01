@@ -60,7 +60,7 @@ class Info:
             em = discord.Embed(title='About Godavaru!', description=about_description, color=0x9B59B6)
             em.add_field(name='Version', value=self.bot.version + '\n' + self.bot.version_info, inline=False)
             em.add_field(name='Servers', value=str(server_count))
-            em.add_field(name='Users', value=f'{member_count} total/{len(self.bot.users)} unique')
+            em.add_field(name='Users', value=f'{len(self.bot.users)} total/{member_count} unique')
             em.add_field(
                 name='Invite Me!',
                 value='[Click Here](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/desii)',
@@ -212,11 +212,12 @@ class Info:
                        + '=========[ Bot Information ]=========\n\n'
                        + f'Commands           :  {len(self.bot.commands)}\n'
                        + f'Cogs               :  {len(self.bot.cogs)}\n'
-                       +  'Websocket Ping     :  {:.0f}ms\n'.format(ping)
+                       + 'Websocket Ping     :  {:.0f}ms\n'.format(ping)
                        + f'Uptime             :  {self.get_bot_uptime()}\n'
                        + f'Guilds             :  {len(self.bot.guilds)}\n'
                        + f'Users              :  {member_count}\n'
-                       + f'Channels           :  {channel_count}\n\n'
+                       + f'Channels           :  {channel_count}\n'
+                       + f'Messages Seen      :  {self.bot.seen_messages}\n\n'
                        + '=========[ Technical Information ]=========\n\n'
                        + f'Version            :  {self.bot.version}\n'
                        + f'DiscordPY Version  :  {discord.__version__}\n'
@@ -255,6 +256,8 @@ class Info:
         online = len([m for m in g.members if m.status == discord.Status("online")])
         idle = len([m for m in g.members if m.status == discord.Status("idle")])
         dnd = len([m for m in g.members if m.status == discord.Status("dnd")])
+        roles = ", ".join([r.name for r in sorted(g.roles, key=lambda x: -x.position) if not r.is_default()])
+        emotes = " ".join([str(e) for e in g.emojis]) if len(g.emojis) > 0 else "No emotes are in this guild."
         guild_embed = discord.Embed(
             title=g.name,
             description=f"Guild ID: {g.id}",
@@ -303,10 +306,10 @@ class Info:
             value=str(g.explicit_content_filter).capitalize()
         ).add_field(
             name=f"Roles - {len(g.roles)-1}",
-            value=", ".join([r.name for r in sorted(g.roles, key=lambda x: -x.position) if not r.is_default()])
+            value=roles if len(roles) < 1000 else f'[Click Me]({self.bot.post_to_haste(roles)})'
         ).add_field(
             name=f"Emotes - {len(g.emojis)}",
-            value=" ".join([str(e) for e in g.emojis]) if len(g.emojis) > 0 else "No emotes are in this guild."
+            value=emotes if len(emotes) < 1000 else f'[Click Me (yes they will look odd)]({self.bot.post_to_haste(emotes)})'
         )
         await ctx.send(embed=guild_embed)
 
@@ -383,18 +386,29 @@ class Info:
     @commands.command()
     async def changelog(self, ctx):
         """Check the most recent changelog for all of the newer features!"""
-        global last_update, desii, changelog
-        changelog_channel = discord.utils.get(discord.utils.get(self.bot.guilds, id=315251940999299072).channels,
-                                              id=315602734235516928)
-        async for m in changelog_channel.history(limit=1):
-            changelog = m.clean_content
-            desii = m.author
-            last_update = m.created_at
-        em = discord.Embed(description=changelog, color=ctx.message.author.color)
+        changelog_channel = self.bot.get_channel(315602734235516928)
+        m = (await changelog_channel.history(limit=1).flatten())[0]
+        changelog = m.clean_content
+        desii = m.author
+        last_update = m.created_at
+        em = discord.Embed(description=changelog, color=ctx.author.color)
         em.set_author(icon_url=desii.avatar_url.replace("?size=1024", ""),
                       name="Found the latest changelog from my support guild!")
         em.timestamp = last_update
         await ctx.send(embed=em)
+
+    @commands.command()
+    async def news(self, ctx):
+        """Get the latest five messages from my announcements channel!"""
+        announcements = self.bot.get_channel(315252885682389012)
+        msgs = sorted(await announcements.history(limit=5).flatten(), key=lambda m: m.created_at)
+        em = discord.Embed(description='\n\n'.join(
+            map(lambda m: f'**{m.author.display_name} ({m.author})**\n{m.clean_content}', msgs)),
+                           color=ctx.author.color)
+        em.set_author(icon_url=msgs[0].author.avatar_url.replace('?size=1024', ''),
+                      name="The latest five announcements from my support guild!")
+        em.timestamp = msgs[0].created_at
+        await ctx.send()
 
 
 def setup(bot):

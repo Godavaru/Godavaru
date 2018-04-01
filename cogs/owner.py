@@ -80,14 +80,8 @@ class Owner:
                 await ctx.send(f"*Executed in {((datetime.datetime.utcnow() - before) * 1000).total_seconds()}ms" + (
                     f".* ```py\n{content}```" if content else " with no returns.*"))
             except discord.HTTPException:
-                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
-                async with aiohttp.ClientSession() as session:
-                    async with session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false', headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
-                        if resp.status == 200:
-                            await msg.edit(content="*Executed in {}ms and returned:* ".format(
-                                ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + await resp.text())
-                        else:
-                            await msg.edit(content="Error uploading to hastepaste :(")
+                await ctx.send("*Executed in {}ms and returned:*\nContent too long. Haste: ".format(
+                    ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + self.bot.post_to_haste(content))
 
     @commands.command(name="exec")
     @commands.check(is_owner)
@@ -119,6 +113,7 @@ class Owner:
             db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
             cur = db.cursor()
             cur.execute(query)
+            table = ":x: Nothing was returned in this query."
             if cur.description:
                 desc = list(cur.description)
                 x = []
@@ -132,16 +127,9 @@ class Owner:
             cur.close()
             db.close()
             try:
-                await ctx.send(f"```\n{table}```" if cur.description else " Nothing was returned in this query.")
+                await ctx.send(f"```\n{table}```")
             except discord.HTTPException:
-                msg = await ctx.send("Unable to send returns due to the length. Uploading to hastepaste...")
-                async with aiohttp.ClientSession() as session:
-                    async with session.post("https://hastepaste.com/api/create", data=f'text={table}&raw=false',
-                                            headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
-                        if resp.status == 200:
-                            await msg.edit(content=await resp.text())
-                        else:
-                            await msg.edit(content="Error uploading to hastepaste :(")
+                await ctx.send(f'Content too long. Hastepaste: ' + await self.bot.post_to_haste(table))
         except pymysql.err.ProgrammingError as e:
             err_msg = str(e).split(',')[1].replace(')', '').replace('"', '')
             await ctx.send(f":x: {err_msg}")
@@ -165,7 +153,8 @@ class Owner:
                     self.bot.unload_extension('cogs.' + ext[:-3])
                     self.bot.load_extension('cogs.' + ext[:-3])
                 except:
-                    await ctx.send(f'I ran into an error reloading the {ext[:-3]} extension. ```py\n{traceback.format_exc()}```')
+                    await ctx.send(
+                        f'I ran into an error reloading the {ext[:-3]} extension. ```py\n{traceback.format_exc()}```')
                     continue
             await ctx.send(':white_check_mark: Reloaded all extensions.')
 

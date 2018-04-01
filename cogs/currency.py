@@ -321,7 +321,7 @@ class Currency:
             if pick_breaks:
                 pick_amnt = itms['PICKAXE']
                 itms['PICKAXE'] = pick_amnt - 1
-            sets = f'balance=balance+{num}' + (f',items="{str(itms)}"' if gets_diamond else '')
+            sets = f'balance=balance+{num},items="{str(itms)}"'
             self.bot.query_db(f'''UPDATE users SET {sets} WHERE userid={ctx.author.id}''')
         else:
             msg = f':sob: You didn\'t find anything' + (' and your pick broke :<' if pick_breaks else '') + '.'

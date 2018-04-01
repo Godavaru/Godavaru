@@ -53,6 +53,15 @@ class Godavaru(commands.Bot):
                 print(f'Failed to load extension {extension}.')
                 print(traceback.format_exc())
 
+    async def post_to_haste(self, content):
+        async with aiohttp.ClientSession() as session:
+            async with session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false',
+                                    headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
+                if resp.status == 200:
+                    return await resp.text()
+                else:
+                    return "Error uploading to hastepaste :("
+
     # noinspection PyAttributeOutsideInit
     async def on_ready(self):
         startup_message = f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
@@ -185,12 +194,7 @@ class Godavaru(commands.Bot):
             try:
                 self.webhook.send(err_msg + f"**Traceback:** ```py\n{trace}\n```")
             except discord.HTTPException:
-                async with aiohttp.ClientSession() as session:
-                    async with session.post("https://hastepaste.com/api/create", data=f'text={trace}&raw=false', headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
-                        if resp.status == 200:
-                            self.webhook.send(err_msg + "**Traceback:** " + await resp.text())
-                        else:
-                            self.webhook.send(err_msg + "**Traceback:** Unable to upload to hastepaste.")
+                self.webhook.send(err_msg + '**Traceback:** ' + await self.post_to_haste(trace))
 
 
     def gracefully_disconnect(self, signal, frame):
