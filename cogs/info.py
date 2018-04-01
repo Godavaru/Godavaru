@@ -408,7 +408,7 @@ class Info:
         em.set_author(icon_url=msgs[0].author.avatar_url.replace('?size=1024', ''),
                       name="The latest five announcements from my support guild!")
         em.timestamp = msgs[0].created_at
-        await ctx.send()
+        await ctx.send(embed=em)
 
 
 def setup(bot):
