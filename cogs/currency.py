@@ -191,7 +191,7 @@ class Currency:
     async def divorce(self, ctx):
         """Divorce the person you are married to :sob:"""
         married = self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')
-        if not married[0][0]:
+        if not married and not married[0][0]:
             return await ctx.send(":x: You are not married.")
         await ctx.send(":ok_hand: You're single now. Cool.")
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={ctx.author.id}''')

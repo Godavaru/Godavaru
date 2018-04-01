@@ -369,6 +369,18 @@ class Fun:
         song = r.text
         await ctx.send(song)
 
+    @commands.command(aliases=['owofy'])
+    async def owoify(self, ctx, *, msg: str):
+        """Do you want youw wowds to be owoified? UwU  I know I do~ ^w^"""
+        faces = ["(・`ω´・)", ";;w;;", "owo", "UwU", ">w<", "^w^"]
+        r = re.sub('(?:r|l)', "w", msg)
+        r = re.sub('(?:R|L)', "W", r)
+        r = re.sub('ove', 'uv', r)
+        r = re.sub('OVE', 'UV', r)
+        r = re.sub('(n|N)([aeiouAEIOU])', "\g<1>y\g<2>", r)
+        r = re.sub('!+', " " + random.choice(faces) + " ", r)
+        await ctx.send(r)
+
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def trivia(self, ctx, *, difficulty: str = None):
