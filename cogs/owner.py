@@ -1,5 +1,6 @@
 import datetime
 import io
+import os
 import sys
 import textwrap
 import traceback
@@ -149,13 +150,24 @@ class Owner:
     @commands.check(is_owner)
     async def reload(self, ctx, *, extension: str):
         """Reload an extension (Bot Owner Only)"""
-        try:
-            self.bot.unload_extension('cogs.' + extension)
-            self.bot.load_extension('cogs.' + extension)
-            await ctx.send(f":ok_hand: Reloaded /cogs/{extension}.py")
-        except Exception:
-            await ctx.send(f":sob: I-I'm sorry, I couldn't reload the `{extension}` module >w< "
-                           + f"```py\n{traceback.format_exc()}```")
+        if extension != "all":
+            try:
+                self.bot.unload_extension('cogs.' + extension)
+                self.bot.load_extension('cogs.' + extension)
+                await ctx.send(f":ok_hand: Reloaded /cogs/{extension}.py")
+            except Exception:
+                await ctx.send(f":sob: I-I'm sorry, I couldn't reload the `{extension}` extensions >w< "
+                               + f"```py\n{traceback.format_exc()}```")
+        else:
+            extensions = os.listdir('./cogs')
+            for ext in extensions:
+                try:
+                    self.bot.unload_extension('cogs.' + ext[:-3])
+                    self.bot.load_extension('cogs.' + ext[:-3])
+                except:
+                    await ctx.send(f'I ran into an error reloading the {ext[:-3]} extension. ```py\n{traceback.format_exc()}```')
+                    continue
+            await ctx.send(':white_check_mark: Reloaded all extensions.')
 
     @commands.command()
     @commands.check(is_owner)
