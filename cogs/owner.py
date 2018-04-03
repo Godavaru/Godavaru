@@ -9,10 +9,8 @@ import pymysql
 from prettytable import PrettyTable
 from contextlib import redirect_stdout
 
-import aiohttp
 import discord
 from discord.ext import commands
-from .utils.tools import *
 
 import config
 
