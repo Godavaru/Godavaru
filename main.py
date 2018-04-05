@@ -169,7 +169,7 @@ class Godavaru(commands.Bot):
         elif isinstance(error, commands.BotMissingPermissions):
             await ctx.send(f":x: I need the permission(s) `{', '.join(error.missing_perms)}` to run this command.")
         elif isinstance(error, commands.CheckFailure):
-            await ctx.send(":x: " + str(error))
+            await ctx.send(":x: You are not authorized to use this command.")
         elif isinstance(error, commands.CommandOnCooldown):
             m, s = divmod(error.retry_after, 60)
             h, m = divmod(m, 60)
