@@ -112,15 +112,15 @@ class Info:
     @commands.command()
     async def ping(self, ctx):
         """Check my response time and my websocket ping"""
-        before = datetime.datetime.utcnow()
-        ping_msg = await ctx.send(":mega: If you see this message you are cool... jk. It's just a ping message.")
-        ping = (datetime.datetime.utcnow() - before) * 1000
-        before2 = time.monotonic()
+        received = ctx.message.created_at
+        send = await ctx.send(":mega: If you see this message you are cool... jk. It's just a ping message.")
+        ping = (send.created_at - received).total_seconds() * 1000
+        before = time.monotonic()
         await (await self.bot.ws.ping())
         after = time.monotonic()
-        ping2 = (after - before2) * 1000
-        await ping_msg.edit(
-            content=":mega: Pong! My ping is {:.2f}ms! `Websocket: {:.0f}ms`".format(ping.total_seconds(), ping2))
+        ws = (after - before) * 1000
+        await send.edit(
+            content=f':mega: Pong! My ping is {round(ping)}ms! `Websocket: {round(ws)}ms`')
 
     def get_bot_uptime(self, *, brief=False):
         now = datetime.datetime.utcnow()
