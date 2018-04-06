@@ -14,6 +14,7 @@ import discord
 import pymysql
 import weeb
 from discord.ext import commands
+import logging
 from threading import Thread
 from flask import Flask, Response, request
 
@@ -31,6 +32,7 @@ initial_extensions = (
     "cogs.opts",
     "cogs.currency",
 )
+logging.basicConfig(level=logging.DEBUG)
 
 
 class Godavaru(commands.Bot):
@@ -44,8 +46,12 @@ class Godavaru(commands.Bot):
         self.remove_command('help')
         self.weeb = weeb.Client(token=config.weeb_token, user_agent='Godavaru/'+self.version+'/'+config.environment)
         self.seen_messages = 0
+        self.reconnects = 0
+        self.executed_commands = 0
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
+        self.logger = logging.getLogger(__name__)
+        self.logger.info('Starting initial bot startup...')
         for extension in initial_extensions:
             try:
                 self.load_extension(extension)
@@ -64,6 +70,7 @@ class Godavaru(commands.Bot):
 
     # noinspection PyAttributeOutsideInit
     async def on_ready(self):
+        self.logger.info('Starting the on_ready process.')
         startup_message = f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
                           + "===============\n" \
                           + 'Logged in as:\n' \
@@ -80,19 +87,23 @@ class Godavaru(commands.Bot):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
         is_prod = config.environment == "Production"
+        self.logger.debug(f'Finished the base on_ready event with production value of {is_prod}.')
         if is_prod:
             self.weeb_types = await self.weeb.get_types()
             while True:
                 with open('splashes.txt') as f:
                     splashes = f.readlines()
+                pr = random.choice(splashes).format(self.version, len(self.guilds))
                 await self.change_presence(
-                    activity=discord.Game(name=config.prefix[0] + "help | " + random.choice(splashes).format(self.version, len(self.guilds))))
+                    activity=discord.Game(name=config.prefix[0] + "help | " + pr))
+                self.logger.debug(f'Set presence to {pr}')
                 data = {'server_count': len(self.guilds)}
                 dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
                 terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
                 async with aiohttp.ClientSession() as session:
                     await session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
                     await session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
+                    self.logger.debug(f'Updated guild counts with data: {data}')
                 await asyncio.sleep(900)
 
     async def on_guild_join(self, server):
@@ -160,6 +171,16 @@ class Godavaru(commands.Bot):
                       + "[MessageInformation]: {} ({})\n".format(message.clean_content, str(message.id))
                       + "Intercepted direct message and sent alternate message.\n")
                 return
+
+    async def on_resumed(self):
+        self.webhook.send(f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n"
+                          + "I disconnected from the Discord API and successfully resumed.")
+        self.reconnects += 1
+        self.logger.info('Successfully resumed.')
+
+    async def on_command(self, ctx):
+        self.executed_commands += 1
+        self.logger.info(f'Running command {ctx.commands.cog_name}:{ctx.command.name}')
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
