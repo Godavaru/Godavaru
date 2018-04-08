@@ -9,8 +9,7 @@ import aiohttp
 from discord.ext import commands
 
 import config
-from cogs.utils import image
-from cogs.utils.tools import *
+from cogs.utils import tools
 
 
 class Fun:
@@ -175,6 +174,8 @@ class Fun:
     # bbb
     # ccc
     # ddd
+    # owo
+    # sometimes im worried for myself
 
     @commands.command()
     async def slots(self, ctx):
@@ -311,6 +312,13 @@ class Fun:
         await ctx.send(":game_die: You rolled a **{}**!".format(random.randint(1, 6)))
 
     @commands.command()
+    async def achievement(self, ctx, *, text: str):
+        """Generate a minecraft achievement."""
+        num = random.randint(1, 26)
+        img = await tools.get(f'https://www.minecraftskinstealer.com/achievement/a.php?i={num}&h=Achievement+Get%21&t={text[:26].replace(" ", "+")}')
+        await ctx.send(file=discord.File(img, filename='achievement.png'))
+
+    @commands.command()
     async def person(self, ctx):
         """Generate a random person's information.
         Note: This information is 100% fake and provided by randomuser.me."""
@@ -390,15 +398,15 @@ class Fun:
             url += "&difficulty=" + difficulty
         r = requests.get(url)
         j = r.json()
-        correct = remove_html(j['results'][0]['correct_answer'])
+        correct = tools.remove_html(j['results'][0]['correct_answer'])
         x = j['results'][0]['incorrect_answers']
         x.append(correct)
         y = []
         for val in x:
-            val = remove_html(val)
+            val = tools.remove_html(val)
             y.append(val)
         z = sorted(y, key=lambda l: l.lower())
-        em = discord.Embed(description=remove_html(j['results'][0]['question']), color=ctx.author.color)
+        em = discord.Embed(description=tools.remove_html(j['results'][0]['question']), color=ctx.author.color)
         em.add_field(name="Category", value=j['results'][0]['category'])
         em.add_field(name="Difficulty", value=j['results'][0]['difficulty'])
         em.add_field(name="Answers", value=("\n".join(z)), inline=False)
@@ -459,14 +467,12 @@ class Fun:
     @commands.command()
     async def ttb(self, ctx, *, text: str):
         """Use the text to brick feature."""
-        bricks = "🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿"
         text = text.lower()
-        for b in bricks:
-            index = bricks.index(b)
-            text = text.replace(string.ascii_lowercase[index], b)
-        # Yes, replace spam here because I can't figure out another way.
-        # If you have one pls tell me.
-        # I'm too tired for this shit.
+        chars = string.ascii_lowercase
+        bricks = "🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿"
+        table = str.maketrans(chars, bricks)
+        text = text.translate(table)
+        # Still replace spam bc fuck me
         msg1 = text.replace("#", ":hash:")
         msg2 = msg1.replace("1", ":one:")
         msg3 = msg2.replace("2", ":two:")
@@ -478,10 +484,10 @@ class Fun:
         msg9 = msg8.replace("8", ":eight:")
         msg10 = msg9.replace("9", ":nine:")
         msg11 = msg10.replace("0", ":zero:")
-        msg12 = msg11.replace(" ", "   ")
+        msg12 = msg11.replace(" ", "  ")
         msg13 = msg12.replace("?", ":grey_question:")
         msg14 = msg13.replace("!", ":grey_exclamation:")
-        await ctx.send(msg14)
+        await ctx.send(" ".join(msg14))
 
     @commands.command()
     async def clap(self, ctx, *, msg: str):

@@ -1,4 +1,5 @@
 import config
+import aiohttp
 
 
 def remove_html(string):
@@ -36,3 +37,15 @@ def get_prefix(bot, msg):
     except KeyError:
         pass
     return prefixes
+
+
+async def get(url, headers=None):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url=url, headers=headers) as resp:
+            return resp
+
+
+async def post(url, headers=None, data=None):
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url=url, headers=headers, data=data) as resp:
+            return resp

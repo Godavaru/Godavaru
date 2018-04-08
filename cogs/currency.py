@@ -135,22 +135,26 @@ class Currency:
         )
         await ctx.send(embed=em)
 
-    # TODO add percentage support
     @commands.command()
     @commands.cooldown(rate=1, per=8, type=commands.BucketType.user)
-    async def gamble(self, ctx, amount: int):
+    async def gamble(self, ctx, amount: str):
         """Gamble your life away!"""
+        profile = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id}''')
+        if amount == 'all':
+            amount = profile[0][0]
+        if amount.endswith('%'):
+            amount = round((int(amount[:-1]) * 0.01) * profile[0][0])
+        amount = int(amount)
         if amount <= 0:
             return await ctx.send(':x: Don\'t even try it...')
-        profile = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id}''')
         if profile and profile[0][0] >= amount:
             win = random.randint(1, 10) >= 7
             if win:
-                bal = f'balance-{round(amount * 0.7)}'
+                bal = f'balance+{round(amount * 0.7)}'
                 await ctx.send(f':tada: You won {round(amount * 0.7)} credits!')
             else:
-                bal = f'balance+{round(amount * 0.7)}'
-                await ctx.send(f':sob: Sadly, you lost {round(amount * 0.7)} credits.')
+                bal = f'balance-{amount}'
+                await ctx.send(f':sob: Sadly, you lost {amount} credits.')
             self.bot.query_db(f'''UPDATE users SET balance={bal} WHERE userid={ctx.author.id}''')
         else:
             await ctx.send(':x: You don\'t have the money to do that.')
