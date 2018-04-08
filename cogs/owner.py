@@ -145,7 +145,7 @@ class Owner:
                 await ctx.send(f":sob: I-I'm sorry, I couldn't reload the `{extension}` extensions >w< "
                                + f"```py\n{traceback.format_exc()}```")
         else:
-            extensions = os.listdir('./cogs')
+            extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')]
             for ext in extensions:
                 try:
                     self.bot.unload_extension('cogs.' + ext[:-3])
