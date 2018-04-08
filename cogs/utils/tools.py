@@ -42,10 +42,10 @@ def get_prefix(bot, msg):
 async def get(url, headers=None):
     async with aiohttp.ClientSession() as session:
         async with session.get(url=url, headers=headers) as resp:
-            return resp
+            return await resp.read()
 
 
 async def post(url, headers=None, data=None):
     async with aiohttp.ClientSession() as session:
         async with session.post(url=url, headers=headers, data=data) as resp:
-            return resp
+            return await resp.read()

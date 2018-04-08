@@ -127,9 +127,9 @@ class Currency:
             n = i + 1
             if n < 10:
                 n = f'0{i+1}'
-            msg += f':star: **{n} | {user}** - ${row[1]}\n'
+            msg += f':star: **{n} | {user}** - {row[1]} points\n'
         em = discord.Embed(
-            title="Richest Users",
+            title="Richest Users in Reputation",
             description=msg,
             color=ctx.author.color
         )

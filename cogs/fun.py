@@ -498,4 +498,3 @@ class Fun:
 def setup(bot):
     bot.add_cog(Fun(bot))
 
-# Yes, oddly enough, there are no leftovers in this cog. It was one of the more less effort to convert.
