@@ -16,7 +16,7 @@ class CommandHandler:
 
     async def on_command(self, ctx):
         self.bot.executed_commands += 1
-        self.bot.logger.info(f'Running command {ctx.commands.cog_name}:{ctx.command.name}')
+        self.bot.logger.info(f'Running command {ctx.command.cog_name}:{ctx.command.name}')
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
@@ -34,7 +34,7 @@ class CommandHandler:
                 f':x: You can use this command again in {"%d hours, %02d minutes and %02d seconds" % (h, m, s)}'
                 + (" (about now)." if error.retry_after == 0 else "."))
         elif isinstance(error, self.__sendable_exceptions):
-            await ctx.send(':x:' + error)
+            await ctx.send(':x:' + str(error))
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f":x: Missing required argument {error.param}, check `{ctx.prefix}help {ctx.command}`")
             ctx.command.reset_cooldown(ctx)
