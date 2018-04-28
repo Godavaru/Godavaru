@@ -74,6 +74,7 @@ class Currency:
                 + (
                 f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
                     ctx.author) else ""))
+        description = description.replace('"', '\"').replace('\\', '\\\\')  # in theory prevents borking.
         self.bot.query_db(f'''INSERT INTO users (userid, description) VALUES ({ctx.author.id}, "{description}") 
                             ON DUPLICATE KEY UPDATE description="{description}"''')
         await ctx.send(f":ok_hand: Set your description! Check it out on `{ctx.prefix}profile`!")
@@ -88,7 +89,7 @@ class Currency:
         if member.bot:
             ctx.command.reset_cooldown(ctx)
             return await ctx.send(":x: Yes, bots are cool, but you can not rep them.")
-        self.bot.query_db(f'''INSERT INTO users (userid, reps) VALUES ({ctx.author.id}, 1) 
+        self.bot.query_db(f'''INSERT INTO users (userid, reps) VALUES ({member.id}, 1) 
                             ON DUPLICATE KEY UPDATE reps=reps+1''')
         await ctx.send(f":white_check_mark: Added reputation point to **{member}**")
 
@@ -115,7 +116,7 @@ class Currency:
             await ctx.send(embed=em)
 
     @leaderboard.command(name="rep")
-    async def _rep(self, ctx):
+    async def leaderboard_rep(self, ctx):
         """Check the leaderboard of reputation."""
         results = self.bot.query_db(f'SELECT userid,reps FROM users ORDER BY reps DESC LIMIT 15')
         msg = ""
@@ -143,8 +144,14 @@ class Currency:
         if amount == 'all':
             amount = profile[0][0]
         if amount.endswith('%'):
-            amount = round((int(amount[:-1]) * 0.01) * profile[0][0])
-        amount = int(amount)
+            try:
+                amount = round((int(amount[:-1]) * 0.01) * profile[0][0])
+            except ValueError:
+                return await ctx.send(':x: That is not a valid percentage.')
+        try:
+            amount = int(amount)
+        except ValueError:
+            return await ctx.send(':x: That is not a valid number.')
         if amount <= 0:
             return await ctx.send(':x: Don\'t even try it...')
         if profile and profile[0][0] >= amount:
@@ -307,6 +314,7 @@ class Currency:
         results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
         itms = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
         if 'PICKAXE' not in itms or itms['PICKAXE'] == 0:
+            ctx.command.reset_cooldown(ctx)
             return await ctx.send(":x: You don't seem to have a pickaxe.")
         gets_diamond = random.randint(1, 10) >= 7
         pick_breaks = random.randint(1, 10) >= 8

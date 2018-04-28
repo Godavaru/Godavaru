@@ -86,7 +86,12 @@ class Owner:
     async def _exec(self, ctx, *, code: str):
         """Execute code in a command shell. (Bot Owner Only)"""
         sp = subprocess.Popen(code, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = sp.communicate()
+        try:
+            out, err = sp.communicate(timeout=8)
+            sp.terminate()
+        except subprocess.TimeoutExpired:
+            sp.kill()
+            return await ctx.send('S-sorry! The command timed out... I-I\'ll try harder next time!')
         msg = "Executing...\n"
         if out:
             msg += 'Success! ```\n{}```\n'.format(out.decode())

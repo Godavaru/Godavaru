@@ -190,17 +190,17 @@ class Utils:
             hexcode = hexcode.strip("0x#")
         match = re.compile(r'^[^g-zG-Z]{6}$').match(hexcode)
         if not match:
-            return await ctx.send(":x: That is not a valid hex colour.")
+            return await ctx.send(":x: I-I'm sorry, that doesn't look like a hex colour to me.")
         hexcode = f'{match.group()}'
         try:
-            rgb = ImageColor.getrgb(hexcode)
+            rgb = ImageColor.getrgb('#' + hexcode)
         except ValueError:
-            return await ctx.send(":x: Something happened parsing this hex code :<")
+            return await ctx.send(":x: S-sorry! Something happened parsing this hexcode. I'll be better next time!")
         c = discord.Color(int(match.group(), 16))
         em = discord.Embed(color=c)
         em.set_image(
             url="https://crimsonxv.pro/rendercolour?rgb={r},{g},{b}".format(r=rgb[0], g=rgb[1], b=rgb[2]))
-        em.set_author(name="Here is a preview of your colour.", icon_url=ctx.author.avatar_url_as(format='png'))
+        em.set_author(name="Here's the colour you wanted!", icon_url=ctx.author.avatar_url_as(format='png'))
         await ctx.send(embed=em)
 
     @commands.command()
@@ -238,9 +238,9 @@ class Utils:
                 if oper[1].lower() in available_endpoints:
                     op = oper[1].lower()
                 else:
-                    return await ctx.send(":x: The operation you gave me was invalid.")
+                    return await ctx.send(":x: S-Sorry! That operation seems invalid")
             except:
-                return await ctx.send(":x: You never gave me an operation. Check the command help.")
+                return await ctx.send(":x: Y-you need to give me a valid operation! I made a list for you in the command help.")
         expr = oper[0].replace('/', '%2F')
         r = requests.get("https://newton.now.sh/" + op + "/" + expr)
         try:
@@ -256,7 +256,7 @@ class Utils:
         await ctx.send(embed=em)
 
     @commands.command(aliases=["request"])
-    @commands.cooldown(rate=4, per=43200, type=commands.BucketType.user)
+    @commands.cooldown(rate=2, per=86400, type=commands.BucketType.user)
     async def suggest(self, ctx, *, suggestion: str):
         """Suggest a feature to be added!
         Has a cooldown of 2 requests per day to prevent spamming."""
