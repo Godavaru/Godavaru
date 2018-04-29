@@ -14,6 +14,7 @@ class MessageEvents:
 
     async def on_message(self, message):
         self.bot.seen_messages += 1
+        """
         channel = message.channel
         if not message.author.bot and message.guild is not None:
             if message.content == message.guild.me.mention:
@@ -45,7 +46,9 @@ class MessageEvents:
                       + "[AuthorInformation]: {} ({})\n".format(str(message.author), str(message.author.id))
                       + "[MessageInformation]: {} ({})\n".format(message.clean_content, str(message.id))
                       + "Intercepted direct message and sent alternate message.\n")
-                return
+                return"""
+        if not message.author.bot:
+            await self.bot.process_commands(message)
 
 def setup(bot):
     bot.add_cog(MessageEvents(bot))
