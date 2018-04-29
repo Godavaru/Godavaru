@@ -56,7 +56,7 @@ class Godavaru(commands.Bot):
         for ext in events:
             try:
                 self.unload_extension('cogs.events.' + ext[:-3])
-                self.load_extension('cogs.evrnts.' + ext[:-3])
+                self.load_extension('cogs.events.' + ext[:-3])
             except:
                 print(f'Failed to load event {ext}.')
                 print(traceback.format_exc())
