@@ -33,10 +33,10 @@ class CommandHandler:
             await ctx.send(
                 f':x: You can use this command again in {"%d hours, %02d minutes and %02d seconds" % (h, m, s)}'
                 + (" (about now)." if error.retry_after == 0 else "."))
-        elif isinstance(error, checks.ChannelNotNSFW):
+        elif isinstance(error, self.__sendable_exceptions):
             await ctx.send(':x:' + str(error))
         elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(f":x: Missing required argument {error.param}, check `{ctx.prefix}help {ctx.command}`")
+            await ctx.send(f":x: Missing required argument `{error.param}`, check `{ctx.prefix}help {ctx.command}`")
             ctx.command.reset_cooldown(ctx)
         else:
             def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
