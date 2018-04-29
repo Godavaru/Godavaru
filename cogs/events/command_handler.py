@@ -18,6 +18,11 @@ class CommandHandler:
         self.bot.executed_commands += 1
         self.bot.logger.info(f'Running command {ctx.command.cog_name}:{ctx.command.name}')
 
+    async def on_message_edit(self, before, after):
+        if after.guild.name is not None and str(after.content) != str(
+                before.content) and before.author.bot is False:
+            await self.bot.process_commands(after)
+
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             pass
