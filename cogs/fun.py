@@ -125,7 +125,8 @@ class Fun:
     async def image(self, ctx, type: str = None):
         """Get an image with the specified type, powered by weeb.sh"""
         if type not in self.bot.weeb_types or type.lower() is None:
-            return await ctx.send(f"Valid types: ```\n{', '.join(self.bot.weeb_types)}\n``` Use these like `{ctx.prefix}{ctx.command} <type>`")
+            return await ctx.send(
+                f"Valid types: ```\n{', '.join(self.bot.weeb_types)}\n``` Use these like `{ctx.prefix}{ctx.command} <type>`")
         em = discord.Embed(color=ctx.author.color)
         em.set_image(url=(await self.bot.weeb.get_image(type.lower()))[0])
         em.set_footer(text="Powered by weeb.sh")
@@ -315,7 +316,8 @@ class Fun:
     async def achievement(self, ctx, *, text: str):
         """Generate a minecraft achievement."""
         num = random.randint(1, 26)
-        img = await tools.get(f'https://www.minecraftskinstealer.com/achievement/a.php?i={num}&h=Achievement+Get%21&t={text[:26].replace(" ", "+")}')
+        img = await tools.get(
+            f'https://www.minecraftskinstealer.com/achievement/a.php?i={num}&h=Achievement+Get%21&t={text[:26].replace(" ", "+")}')
         await ctx.send(file=discord.File(img, filename='achievement.png'))
 
     @commands.command()
@@ -337,7 +339,8 @@ class Fun:
             [string.capwords(person['location']['street']), string.capwords(person['location']['city']),
              string.capwords(person['location']['state']), str(person['location']['postcode']), person['nat']])) \
             .add_field(name="Email", value=person['email'].replace('example.com', 'gmail.com')) \
-            .add_field(name="Account", value="**Username:** {}\n**Password:** {}\n**Registered At:** {}".format(person['login']['username'], person['login']['password'], person['registered'])) \
+            .add_field(name="Account", value="**Username:** {}\n**Password:** {}\n**Registered At:** {}".format(
+            person['login']['username'], person['login']['password'], person['registered'])) \
             .add_field(name="Phone", value=f"**Home:** {person['phone']}\n**Cell:** {person['cell']}")
         await ctx.send(embed=em)
 
@@ -373,8 +376,8 @@ class Fun:
     @commands.command(aliases=["nc"])
     async def nightcore(self, ctx):
         """Get a random nightcore song."""
-        r = requests.get('https://api.apithis.net/nightcore.php')
-        song = r.text
+        r = await self.bot.session.get('https://api.apithis.net/nightcore.php')
+        song = await r.text()
         await ctx.send(song)
 
     @commands.command(aliases=['owofy'])
@@ -396,8 +399,8 @@ class Fun:
         url = "https://opentdb.com/api.php?amount=1"
         if difficulty and difficulty.lower() in ['easy', 'medium', 'hard']:
             url += "&difficulty=" + difficulty
-        r = requests.get(url)
-        j = r.json()
+        r = await self.bot.session.get(url)
+        j = await r.json()
         correct = tools.remove_html(j['results'][0]['correct_answer'])
         x = j['results'][0]['incorrect_answers']
         x.append(correct)
@@ -456,8 +459,8 @@ class Fun:
         """Make a somewhat Chuck Norris related joke."""
         if phrase is None:
             phrase = ctx.author.display_name
-        r = requests.get('http://api.icndb.com/jokes/random')
-        js = r.json()
+        r = await self.bot.session.get('http://api.icndb.com/jokes/random')
+        js = await r.json()
         j = str(js['value']['joke'])
         j = j.replace("Chuck Norris", phrase)
         j = j.replace("Chuck", phrase)
@@ -494,7 +497,18 @@ class Fun:
         """👏 We 👏 all 👏 need 👏 clapping 👏 in 👏 our 👏 lives. 👏"""
         await ctx.send(f"👏{'👏'.join(msg.split(' '))}👏")
 
+    @commands.command()
+    @commands.has_permissions(embed_links=True)
+    async def yesorno(self, ctx, *, question: str):
+        """Ask a question and I will answer with a yes or a no!"""
+        r = await self.bot.session.get('https://yesno.wtf/api')
+        j = await r.json()
+        em = discord.Embed(description=f'The answer is... **{j["answer"].capitalize()}**!',
+                           color=ctx.author.color)
+        em.set_author(name=question, icon_url=ctx.author.avatar_url)
+        em.set_image(url=j['image'])
+        await ctx.send(embed=em)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
-

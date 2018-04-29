@@ -34,6 +34,7 @@ class Godavaru(commands.Bot):
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
+        self.session = aiohttp.ClientSession()
         self.weeb = weeb.Client(token=config.weeb_token, user_agent='Godavaru/'+self.version+'/'+config.environment)
         self.seen_messages = 0
         self.reconnects = 0
@@ -62,8 +63,7 @@ class Godavaru(commands.Bot):
                 continue
 
     async def post_to_haste(self, content):
-        async with aiohttp.ClientSession() as session:
-            async with session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false',
+        async with self.session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false',
                                     headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
                 if resp.status == 200:
                     return await resp.text()
@@ -89,7 +89,7 @@ class Godavaru(commands.Bot):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
         is_prod = config.environment == "Production"
-        self.logger.debug(f'Finished the base on_ready event with production value of {is_prod}.')
+        self.logger.info(f'Finished the base on_ready event with production value of {is_prod}.')
         if is_prod:
             self.weeb_types = await self.weeb.get_types()
             while True:
@@ -98,14 +98,13 @@ class Godavaru(commands.Bot):
                 pr = random.choice(splashes).format(self.version, len(self.guilds))
                 await self.change_presence(
                     activity=discord.Game(name=config.prefix[0] + "help | " + pr))
-                self.logger.debug(f'Set presence to {pr}')
+                self.logger.info(f'Set presence to {pr}')
                 data = {'server_count': len(self.guilds)}
                 dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
                 terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
-                async with aiohttp.ClientSession() as session:
-                    await session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
-                    await session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
-                    self.logger.debug(f'Updated guild counts with data: {data}')
+                await self.session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
+                await self.session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
+                self.logger.info(f'Updated guild counts with data: {data}')
                 await asyncio.sleep(900)
 
     async def on_resumed(self):
