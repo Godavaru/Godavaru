@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 
-class ChannelNotNSFW(Exception):
+class ChannelNotNSFW(commands.CommandError):
     pass
 
 
