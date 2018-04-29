@@ -12,9 +12,10 @@ class MessageEvents:
                 before.content) and before.author.bot is False:
             await self.bot.process_commands(after)
 
-    async def on_message(self, message):
-        self.bot.seen_messages += 1
-        """
+def setup(bot):
+    @bot.listen("on_message")
+    async def message_event(message):
+        bot.seen_messages += 1
         channel = message.channel
         if not message.author.bot and message.guild is not None:
             if message.content == message.guild.me.mention:
@@ -29,12 +30,12 @@ class MessageEvents:
                 ]
                 await channel.send(random.choice(prefix_messages))
             if message.author.id not in config.blacklist:
-                await self.bot.process_commands(message)
+                await bot.process_commands(message)
         if not message.author.bot:
             if message.guild is None:
                 await message.channel.send(
                     "Hey! Weirdo! Stop sending me dms. If you're trying to use commands, use it in a server.")
-                self.bot.webhook.send(content="[`" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
+                bot.webhook.send(content="[`" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
                                           + "[`CommandHandler`][`InterceptDirectMessage`]\n"
                                           + "[`AuthorInformation`]: {} ({})\n".format(str(message.author),
                                                                                       str(message.author.id))
@@ -46,9 +47,5 @@ class MessageEvents:
                       + "[AuthorInformation]: {} ({})\n".format(str(message.author), str(message.author.id))
                       + "[MessageInformation]: {} ({})\n".format(message.clean_content, str(message.id))
                       + "Intercepted direct message and sent alternate message.\n")
-                return"""
-        if not message.author.bot:
-            await self.bot.process_commands(message)
-
-def setup(bot):
+                return
     bot.add_cog(MessageEvents(bot))
