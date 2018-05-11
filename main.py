@@ -32,7 +32,7 @@ initial_extensions = (
     "cogs.opts",
     "cogs.currency",
 )
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 class Godavaru(commands.Bot):
