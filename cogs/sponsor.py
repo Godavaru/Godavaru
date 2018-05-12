@@ -48,5 +48,9 @@ class Sponsor:
                               + 'Aside from that, thanks for your pledge if you have already or if you are considering it, '
                               + 'thanks as well :)')
 
+    @commands.command()
+    async def ayaya(self, ctx):
+        """Sponsor Command for Ayaya bot"""
+
 def setup(bot):
     bot.add_cog(Sponsor(bot))

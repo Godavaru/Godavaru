@@ -58,8 +58,8 @@ class Utils:
                 return
         else:
             num = 0
-        r = requests.get(f"http://api.urbandictionary.com/v0/define?term={word}")
-        j = r.json()
+        r = await self.bot.session.get(f"http://api.urbandictionary.com/v0/define?term={word}")
+        j = await r.json()
         try:
             request = j['list'][num]
         except IndexError:
@@ -107,18 +107,25 @@ class Utils:
 
     @commands.command(name="8ball", aliases=['mb', 'magicball'])
     async def _8ball(self, ctx, *, question):
-        """Consult the magic 8ball with a question!"""
-        url = 'https://8ball.delegator.com/magic/JSON/' + urllib.parse.quote_plus(question)
-        r = requests.get(url)
-        j = r.json()
-        a = j['magic']['answer']
-        t = j['magic']['type']
-        em = discord.Embed(description=f"**Question:** {question}\n**Answer:** {a}\n**Response Type:** {t}", color=0x00ff00)
-        em.set_thumbnail(url="https://8ball.delegator.com/images/8ball.png")
-        em.set_author(name="You consult the magic 8 ball...", icon_url=ctx.author.avatar_url.replace("?size=1024", ""))
-        em.set_footer(text="Powered by 8ball.delegator.com")
-        em.timestamp = datetime.datetime.now()
-        await ctx.send(embed=em)
+        """Consult the magic 8ball (tsundere edition) with a question!"""
+        answers = [
+            'Y-yes...', # y
+            'U-uh, sure!', # y
+            'I mean, n-not like I want to say y-yes or anything... b-baka!', # y
+            'S-Sure, you baka!', # y
+            'I-I don\'t know, b-baka!', # i
+            'I\'m not all-knowing, you baka tako!', # i
+            'Baka! How am I supposed to know that?', # i
+            'I-I\'m b-busy right now, you baka...', # i
+            'N-not like I want to g-give you an answer or anything!', # i
+            'B-Baka! Don\'t make me slap you!', # n
+            'N-no...', # n
+            'I t-told you no, b-baka!', # n
+            'Are you dumb?', # n
+            'N-no... I-it\'s not like I\'m s-sorry about that or anything!',  # n
+            'No, you b-baka tako!' # n
+        ]
+        await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' ' + random.choice(answers))
 
     @commands.command()
     async def cat(self, ctx):

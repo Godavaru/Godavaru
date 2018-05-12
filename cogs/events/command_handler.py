@@ -34,7 +34,7 @@ class CommandHandler:
                 f':x: You can use this command again in {"%d hours, %02d minutes and %02d seconds" % (h, m, s)}'
                 + (" (about now)." if error.retry_after == 0 else "."))
         elif isinstance(error, self.__sendable_exceptions):
-            await ctx.send(':x:' + str(error))
+            await ctx.send(':x: ' + str(error))
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f":x: Missing required argument `{error.param}`, check `{ctx.prefix}help {ctx.command}`")
             ctx.command.reset_cooldown(ctx)

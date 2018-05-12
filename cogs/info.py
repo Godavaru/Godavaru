@@ -159,6 +159,7 @@ class Info:
     @commands.bot_has_permissions(embed_links=True)
     async def _help(self, ctx, *, command_or_category: str = None):
         """Shows a list of commands or gives extended help on the command/category you supplied."""
+        prefix = ctx.prefix.replace(ctx.me.mention, f'@{ctx.me}')
         if command_or_category:
             cmd = self.bot.all_commands.get(command_or_category)
             if cmd is None:
@@ -173,7 +174,7 @@ class Info:
                 em = discord.Embed(title=f"Commands in Category {cmds[0].cog_name} - [{len(cmds)}]", description=msg,
                                    color=ctx.author.color)
                 em.set_footer(
-                    text=f"Requested by {ctx.author.display_name} | For extended help, do {ctx.prefix}help <command>",
+                    text=f"Requested by {ctx.author.display_name} | For extended help, do {prefix}help <command>",
                     icon_url=ctx.author.avatar_url.split('?')[0])
                 return await ctx.send(embed=em)
             em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help,
@@ -181,11 +182,11 @@ class Info:
             comm = cmd.signature.split(' ')[0].split('|')[0].replace('[', '')
             usage = cmd.signature.split(' ')
             del usage[0]
-            em.add_field(name="Usage", value=f"`{ctx.prefix}{comm} {' '.join(usage)}`", inline=False)
+            em.add_field(name="Usage", value=f"`{prefix}{comm} {' '.join(usage)}`", inline=False)
             if len(cmd.aliases) > 0:
                 em.add_field(name="Alias(es)", value="`" + "`, `".join(cmd.aliases) + "`", inline=False)
             if hasattr(cmd, 'commands'):
-                cmds = list(cmd.commands)
+                cmds = sorted(list(cmd.commands), key=lambda c: c.name)
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
@@ -194,7 +195,7 @@ class Info:
             return await ctx.send(embed=em)
         em = discord.Embed(
             title="Godavaru Help",
-            description=f"Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!",
+            description=f"Here is a list of all of my commands! You can do `{prefix}help <command>` without the brackets for extended help!",
             color=ctx.author.color)
         for cog in sorted(self.bot.cogs):
             if str(cog) == "Owner" and ctx.author.id not in config.owners:

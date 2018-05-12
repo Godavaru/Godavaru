@@ -22,8 +22,6 @@ from flask import Flask, Response, request
 from cogs.utils.db import *
 from cogs.utils.tools import *
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 class Godavaru(commands.Bot):
     def __init__(self):
@@ -41,8 +39,6 @@ class Godavaru(commands.Bot):
         self.executed_commands = 0
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
-        self.logger = logging.getLogger(__name__)
-        self.logger.info('Starting initial bot startup...')
         commands = [f for f in os.listdir('./cogs') if f.endswith('.py')]
         events = [f for f in os.listdir('./cogs/events') if f.endswith('.py')]
         for ext in commands:
@@ -75,7 +71,6 @@ class Godavaru(commands.Bot):
 
     # noinspection PyAttributeOutsideInit
     async def on_ready(self):
-        self.logger.info('Starting the on_ready process.')
         startup_message = f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n" \
                           + "===============\n" \
                           + 'Logged in as:\n' \
@@ -92,7 +87,6 @@ class Godavaru(commands.Bot):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
         is_prod = config.environment == "Production"
-        self.logger.info(f'Finished the base on_ready event with production value of {is_prod}.')
         if is_prod:
             self.weeb_types = await self.weeb.get_types()
             while True:
@@ -101,20 +95,17 @@ class Godavaru(commands.Bot):
                 pr = random.choice(splashes).format(self.version, len(self.guilds))
                 await self.change_presence(
                     activity=discord.Game(name=config.prefix[0] + "help | " + pr))
-                self.logger.info(f'Set presence to {pr}')
                 data = {'server_count': len(self.guilds)}
                 dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
                 terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
                 await self.session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
                 await self.session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
-                self.logger.info(f'Updated guild counts with data: {data}')
                 await asyncio.sleep(900)
 
     async def on_resumed(self):
         self.webhook.send(f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n"
                           + "I disconnected from the Discord API and successfully resumed.")
         self.reconnects += 1
-        self.logger.info('Successfully resumed.')
 
     def gracefully_disconnect(self, signal, frame):
         print("Gracefully disconnecting...")
@@ -135,7 +126,7 @@ class Godavaru(commands.Bot):
 bot = Godavaru()
 signal.signal(signal.SIGINT, bot.gracefully_disconnect)
 signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
-"""app = Flask(__name__)
+app = Flask(__name__)
 
 web_resources = {
     "statuses": {
@@ -161,5 +152,5 @@ def get_webhook():
 def start_app():
     app.run(port=1034, host="localhost")
 
-Thread(target=start_app).start()"""
+Thread(target=start_app).start()
 bot.run(config.token)
