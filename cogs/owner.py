@@ -183,7 +183,7 @@ class Owner:
             try:
                 if fmt is not None:
                     if len(fmt) > 2000:
-                        await ctx.send('Content too long. Haste: ' + self.bot.post_to_haste(fmt))
+                        await ctx.send('Content too long. Haste: ' + await self.bot.post_to_haste(fmt))
                     else:
                         await ctx.send(fmt)
             except discord.Forbidden:
