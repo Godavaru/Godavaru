@@ -125,14 +125,13 @@ class Owner:
 
         def check(m):
             return m.author.id == ctx.author.id and \
-                   m.channel.id == ctx.channel.id and \
-                   m.content.startswith('`')
+                   m.channel.id == ctx.channel.id
 
         while True:
             try:
                 response = await self.bot.wait_for('message', check=check, timeout=10.0 * 60.0)
             except asyncio.TimeoutError:
-                await ctx.send('Exiting REPL session.')
+                await ctx.send('Timed out, exiting REPL session.')
                 self.sessions.remove(ctx.channel.id)
                 break
 
