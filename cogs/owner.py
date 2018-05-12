@@ -136,7 +136,7 @@ class Owner:
                 self.sessions.remove(ctx.channel.id)
                 break
 
-            await response.add_reaction(resolve_emoji('SUCCESS', ctx))
+            await response.add_reaction(resolve_emoji('SUCCESS', ctx).replace('>', '').replace('<', ''))
 
             cleaned = self.cleanup_code(response.content)
 
