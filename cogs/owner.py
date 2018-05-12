@@ -21,6 +21,7 @@ from contextlib import redirect_stdout
 
 import discord
 from discord.ext import commands
+from .utils.tools import resolve_emoji
 
 import config
 
@@ -134,6 +135,8 @@ class Owner:
                 await ctx.send('Timed out, exiting REPL session.')
                 self.sessions.remove(ctx.channel.id)
                 break
+
+            await response.add_reaction(resolve_emoji('SUCCESS', ctx))
 
             cleaned = self.cleanup_code(response.content)
 
