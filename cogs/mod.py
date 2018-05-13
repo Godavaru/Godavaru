@@ -28,7 +28,7 @@ class Mod:
             query = self.bot.query_db(f'''SELECT mod_channel,last_mod_entry FROM settings 
                                 WHERE guildid={ctx.guild.id};''')
             if query and query[0][0]:
-                chan = ctx.guild.get_channel(query[0][0])
+                chan = ctx.guild.get_channel(int(query[0][0]))
                 if chan:
                     try:
                         try:
