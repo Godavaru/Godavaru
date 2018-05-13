@@ -2,6 +2,7 @@ import datetime
 
 import discord
 from discord.ext import commands
+from .utils.bases import ModLog
 
 
 class Mod:
@@ -24,6 +25,19 @@ class Mod:
                     f":x: I-I'm sorry, I couldn't ban `{member}` because my role seems to be lower than theirs.")
                 return
             await ctx.send(f":ok_hand: I banned **{member}** successfully.")
+            query = self.bot.query_db(f'''SELECT mod_channel,last_mod_entry FROM settings 
+                                WHERE guildid={ctx.guild.id};''')
+            if query and query[0][0]:
+                chan = ctx.guild.get_channel(query[0][0])
+                if chan:
+                    try:
+                        try:
+                            case = len(self.bot.modlogs[str(ctx.guild.id)]) + int(query[0][1])
+                        except KeyError:
+                            case = int(query[0][1]) if query[0][1] else 1
+                        await chan.send(embed=ModLog('ban', ctx.author, member, case, reason))
+                    except discord.Forbidden:
+                        pass
         else:
             await ctx.send(":x: I-I'm sorry, but you can't ban someone with a higher role than you!")
 

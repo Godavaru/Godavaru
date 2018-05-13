@@ -41,7 +41,7 @@ class Utils:
                 "`%H:%M:%S` on `%d-%b-%Y`")))
         except pytz.UnknownTimeZoneError:
             await ctx.send(resolve_emoji('ERROR',
-                                         ctx) + 'Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
+                                         ctx) + ' Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
 
     @commands.command()
     async def urban(self, ctx, *, params):
