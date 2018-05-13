@@ -27,7 +27,6 @@ class Utils:
     async def _time(self, ctx, *, timezone: str):
         """Determine the current time in a timezone specified.
         The timezone is case sensitive as seen in [this list](https://pastebin.com/B5tLQdEY)."""
-        timezone = timezone.upper()
         try:
             if timezone.startswith('GMT'):
                 t = timezone
@@ -41,8 +40,8 @@ class Utils:
             await ctx.send("The time in **{0}** is {1}".format(timezone, datetime.datetime.now(tz).strftime(
                 "`%H:%M:%S` on `%d-%b-%Y`")))
         except pytz.UnknownTimeZoneError:
-            await ctx.send(
-                'Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
+            await ctx.send(resolve_emoji('ERROR',
+                                         ctx) + 'Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
 
     @commands.command()
     async def urban(self, ctx, *, params):
@@ -54,7 +53,7 @@ class Utils:
             try:
                 num = int(params[1]) - 1
             except:
-                await ctx.send(":x: You gave me an improper number!")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " You gave me an improper number!")
                 return
         else:
             num = 0
@@ -63,7 +62,7 @@ class Utils:
         try:
             request = j['list'][num]
         except IndexError:
-            await ctx.send(":x: There are no more results.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " There are no more results.")
             return
         definition = request['definition']
         if len(definition) > 1000:
@@ -109,22 +108,28 @@ class Utils:
     async def _8ball(self, ctx, *, question):
         """Consult the magic 8ball (tsundere edition) with a question!"""
         answers = [
-            'Y-yes...', # y
-            'U-uh, sure!', # y
-            'I mean, n-not like I want to say y-yes or anything... b-baka!', # y
-            'S-Sure, you baka!', # y
-            'I-I don\'t know, b-baka!', # i
-            'I\'m not all-knowing, you baka tako!', # i
-            'Baka! How am I supposed to know that?', # i
-            'I-I\'m b-busy right now, you baka...', # i
-            'N-not like I want to g-give you an answer or anything!', # i
-            'B-Baka! Don\'t make me slap you!', # n
-            'N-no...', # n
-            'I t-told you no, b-baka!', # n
-            'Are you dumb?', # n
+            'Y-yes...',  # y
+            'U-uh, sure!',  # y
+            'I mean, n-not like I want to say y-yes or anything... b-baka!',  # y
+            'S-Sure, you baka!',  # y
+            'O-of course!', # y
+            'I-I don\'t know, b-baka!',  # i
+            'I\'m not all-knowing, you baka tako!',  # i
+            'Baka! How am I supposed to know that?',  # i
+            'I-I\'m b-busy right now, you baka...',  # i
+            'N-not like I want to g-give you an answer or anything!',  # i
+            'B-baka!', # i
+            'B-Baka! Don\'t make me slap you!',  # n
+            'N-no...',  # n
+            'I t-told you no, b-baka!',  # n
+            'Are you dumb?',  # n
             'N-no... I-it\'s not like I\'m s-sorry about that or anything!',  # n
-            'No, you b-baka tako!' # n
+            'No, you b-baka tako!',  # n
+            'N-no, you baka!', # n
+            'Geez, stop pushing yourself! You\'re going to get yourself hurt one day, you idiot!' # n
         ]
+        if re.compile('will you go out with me\??').match(question.lower()):
+            return await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' W-why are y-you asking! I-it\'s not like I l-like you or anything...')
         await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' ' + random.choice(answers))
 
     @commands.command()
@@ -135,20 +140,19 @@ class Utils:
                    "Meeeooowwww!",
                    "Awww, so cute! Look at the kitty!!1!",
                    "Woof... wait wrong animal."]
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://nekos.life/api/v2/img/meow') as resp:
-                try:
-                    js = await resp.json()
-                    em = discord.Embed(
-                        color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
-                    em.set_image(url=js['url'])
-                    await ctx.send(content=random.choice(content), embed=em)
-                except:
-                    await ctx.send(":x: Error retrieving cat image :<")
+        async with self.bot.session.get('https://nekos.life/api/v2/img/meow') as resp:
+            try:
+                js = await resp.json()
+                em = discord.Embed(
+                    color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
+                em.set_image(url=js['url'])
+                await ctx.send(content=random.choice(content), embed=em)
+            except:
+                await ctx.send(resolve_emoji('ERROR', ctx) + " Error retrieving cat image :<")
 
     @commands.command()
     async def dog(self, ctx):
-        """Get a random cat image!"""
+        """Get a random dog image!"""
         is_video = True
         url = None
         while is_video:
@@ -183,12 +187,13 @@ class Utils:
         else:
             try:
                 em = str(emote.encode('unicode_escape'))
-                uni = em[2:len(em)-1].replace('\\\\u', '-').replace('\\\\U000', '-')[1:]
-                cairosvg.svg2png(url="https://twemoji.maxcdn.com/2/svg/{}.svg".format(uni), write_to="./images/emote.png", parent_width=256, parent_height=256)
+                uni = em[2:len(em) - 1].replace('\\\\u', '-').replace('\\\\U000', '-')[1:]
+                cairosvg.svg2png(url="https://twemoji.maxcdn.com/2/svg/{}.svg".format(uni),
+                                 write_to="./images/emote.png", parent_width=256, parent_height=256)
                 await ctx.send(file=discord.File('./images/emote.png'))
                 os.remove('./images/emote.png')
             except urllib.error.HTTPError:
-                await ctx.send(":x: That is not a custom or unicode emoji!")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " That is not a custom or unicode emoji!")
 
     @commands.command(aliases=["color"])
     async def colour(self, ctx, hexcode: str):
@@ -197,12 +202,14 @@ class Utils:
             hexcode = hexcode.strip("0x#")
         match = re.compile(r'^[^g-zG-Z]{6}$').match(hexcode)
         if not match:
-            return await ctx.send(":x: I-I'm sorry, that doesn't look like a hex colour to me.")
+            return await ctx.send(
+                resolve_emoji('ERROR', ctx) + " I-I'm sorry, that doesn't look like a hex colour to me.")
         hexcode = f'{match.group()}'
         try:
             rgb = ImageColor.getrgb('#' + hexcode)
         except ValueError:
-            return await ctx.send(":x: S-sorry! Something happened parsing this hexcode. I'll be better next time!")
+            return await ctx.send(resolve_emoji('ERROR',
+                                                ctx) + " S-sorry! Something happened parsing this hexcode. I'll be better next time!")
         c = discord.Color(int(match.group(), 16))
         em = discord.Embed(color=c)
         em.set_image(
@@ -247,7 +254,8 @@ class Utils:
                 else:
                     return await ctx.send(":x: S-Sorry! That operation seems invalid")
             except:
-                return await ctx.send(":x: Y-you need to give me a valid operation! I made a list for you in the command help.")
+                return await ctx.send(
+                    ":x: Y-you need to give me a valid operation! I made a list for you in the command help.")
         expr = oper[0].replace('/', '%2F')
         r = requests.get("https://newton.now.sh/" + op + "/" + expr)
         try:
@@ -338,7 +346,7 @@ class Utils:
     async def unicode(self, ctx, *, character: str):
         """Get the unicodes for the input you give me!"""
         b_string = str(character.encode('unicode_escape'))
-        unicode_chars = b_string[2:len(b_string)-1]
+        unicode_chars = b_string[2:len(b_string) - 1]
         await ctx.send(f"The unicode for `{character}` is: `{unicode_chars}`")
 
 
