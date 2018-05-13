@@ -17,7 +17,7 @@ class ModLog(discord.Embed):
         if action not in self.types.keys():
             return
         self.set_author(name=f'{mod} ({mod.id})', icon_url=mod.avatar_url)
-        self.description(f'**User:** {user} ({user.id})\n**Action:** {action.capitalize()}\n**Reason:** '
-                         + reason if reason else f'Not set, responsible moderator please do `g_reason {case} <reason>`')
+        self.description = f'**User:** {user} ({user.id})\n**Action:** {action.capitalize()}\n**Reason:** ' \
+                         + reason if reason else f'Not set, responsible moderator please do `g_reason {case} <reason>`'
         self.set_footer(text=f'Case #{case}')
         self.timestamp = datetime.datetime.now()
