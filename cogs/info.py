@@ -266,9 +266,6 @@ class Info:
     async def guildinfo(self, ctx):
         """Get information on the guild you are currently in!"""
         g = ctx.guild
-        num = 0
-        if ctx.channel.permissions_for(ctx.me).external_emojis:
-            num = 1
         online = len([m for m in g.members if m.status == discord.Status("online")])
         idle = len([m for m in g.members if m.status == discord.Status("idle")])
         dnd = len([m for m in g.members if m.status == discord.Status("dnd")])
@@ -288,9 +285,9 @@ class Info:
             inline=False
         ).add_field(
             name="Users - " + str(len(g.members)),
-            value=f"{get_status_emoji('online', num)} Online: {online}\n"
-                  + f"{get_status_emoji('idle', num)} Idle: {idle}\n"
-                  + f"{get_status_emoji('dnd', num)} DnD: {dnd}",
+            value=f"{resolve_emoji('ONLINE', ctx)} Online: {online}\n"
+                  + f"{resolve_emoji('IDLE', ctx)} Idle: {idle}\n"
+                  + f"{resolve_emoji('DND', ctx)} DnD: {dnd}",
             inline=False
         ).add_field(
             name="Days Since Creation",

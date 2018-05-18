@@ -4,6 +4,7 @@ import discord
 import string
 import traceback
 from cogs.utils import checks
+from cogs.utils.tools import generate_id
 
 class CommandHandler:
     def __init__(self, bot):
@@ -16,7 +17,6 @@ class CommandHandler:
 
     async def on_command(self, ctx):
         self.bot.executed_commands += 1
-        self.bot.logger.info(f'Running command {ctx.command.cog_name}:{ctx.command.name}')
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
@@ -39,10 +39,7 @@ class CommandHandler:
             await ctx.send(f":x: Missing required argument `{error.param}`, check `{ctx.prefix}help {ctx.command}`")
             ctx.command.reset_cooldown(ctx)
         else:
-            def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
-                return ''.join(random.choice(chars) for _ in range(size))
-
-            errid = id_generator()
+            errid = generate_id()
             await ctx.send(
                 f":x: Unhandled exception. Report this on my support guild (https://discord.gg/ewvvKHM) with the ID **{errid}**")
             err_msg = f"Unhandled exception on command `{ctx.command}`\n**Error ID:** {errid}\n**Content:** {ctx.message.clean_content}\n**Author:** {ctx.author} ({ctx.author.id})\n**Guild:** {ctx.guild} ({ctx.guild.id})\n"

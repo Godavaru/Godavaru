@@ -1,7 +1,11 @@
 import config
 import aiohttp
-from discord import Message
+from discord import Message, Forbidden, Member, User
 from discord.ext.commands import Context
+from ...main import Godavaru
+from .bases import ModLog
+import string
+import random
 
 
 def remove_html(string):
@@ -9,25 +13,16 @@ def remove_html(string):
         '&#039;', "'")
 
 
-def get_status_emoji(status, number):
-    status_dict = {
-        "online": [
-            "💚",
-            "<:online:398856032392183819>"
-        ],
-        "idle": [
-            "💛",
-            "<:idle:398856031360253962>"
-        ],
-        "dnd": [
-            "❤",
-            "<:dnd:398856030068670477>"
-        ]
-    }
-    return status_dict[status][number]
+def get_prefix(bot: Godavaru, msg: Message) -> list:
+    """Get the prefix(es) that the bot will listen to.
 
+    Args:
+        bot (Godavaru): The custom ``Bot`` subclass that I've created.
+        msg (Message): The message to get the guild prefixes for.
 
-def get_prefix(bot, msg):
+    Returns:
+        A ``list`` of prefixes that will be used in this server.
+    """
     prefixes = []
     prefixes.append(msg.guild.me.mention)
     prefixes.append(msg.guild.me.mention + ' ')
@@ -38,6 +33,7 @@ def get_prefix(bot, msg):
         pref = bot.prefixes[str(msg.guild.id)]
         if not pref is None and not len(pref) == 0 and not pref == "":
             prefixes.append(pref)
+            prefixes.append(pref + ' ')
     except KeyError:
         pass
     return prefixes
@@ -54,15 +50,30 @@ async def post(url, headers=None, data=None):
         async with session.post(url=url, headers=headers, data=data) as resp:
             return await resp.read()
 
-def resolve_emoji(emoji, msg) -> str:
+
+def generate_id(size: int = 6, chars: str = string.ascii_uppercase + string.digits) -> str:
+    """Generate an ID with the given length and possible characters.
+    Mostly used for an error ID.
+
+    Args:
+        size (int): The length of the generated ID. (Default: 6)
+        chars (str): A ``str`` with all possible characters that the random generator can choose from. (Default: string.ascii_uppercase + string.digits)
+
+    Returns:
+        The ``str`` of the generated ID.
+    """
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def resolve_emoji(emoji: str, msg: Message or Context) -> str:
     """Resolve an emoji that will be sent based on the permissions of the SelfUser.
 
     Args:
         emoji (str): The emoji type to get.
-        msg (discord.Message or discord.ext.commands.Context): The message or context to get the user/channel from.
+        msg (Message or Context): The message or context to get the user/channel from.
 
     Returns:
-        The string of the emoji, an empty string if not found or ``msg`` is not a Message or Context.
+        The ``str`` of the emoji, an empty string if not found or ``msg`` is not a Message or Context.
     """
     channel = msg.channel
     if isinstance(msg, Message):
@@ -72,25 +83,41 @@ def resolve_emoji(emoji, msg) -> str:
     else:
         return ''
     emojis = {
-        'ERROR': [
-            '❌',
-            '<:cross:402968721515347968>'
-        ],
-        'SUCCESS': [
-            '✅',
-            '<:check:394001925860884480>'
-        ],
-        'WARN': [
-            '⚠',
-            '<:warning:394314103604117504>'
-        ],
-        'TSUNDERE': [
-            '😳',
-            '<:catBaka:389802304808943641>'
-        ]
+        'ERROR': ['❌', '<:crossed:402968721515347968>'],
+        'SUCCESS': ['✅', '<:check:394001925860884480>'],
+        'WARN': ['⚠', '<:warning:394314103604117504>'],
+        'TSUNDERE': ['😳', '<:catBaka:389802304808943641>'],
+        'ONLINE': ['💚', '<:online:398856032392183819>'],
+        'IDLE': ['💛', '<:idle:398856031360253962>'],
+        'DND': ['❤', '<:dnd:398856030068670477>']
     }
     num = ~~channel.permissions_for(me).external_emojis
     try:
         return emojis[emoji][num]
     except KeyError:
         return ''
+
+
+async def process_modlog(ctx: Context, bot: Godavaru, action: str, member: Member or User, reason: str):
+    """Process a modlog for the given context, bot, member, and reason.
+
+    Args:
+        ctx (Context): The context object to get the moderator and channel from.
+        bot (Godavaru): The custom subclass of ``Bot`` to get the bot object from.
+        action (str): The action that was taken against the user.
+        member (Member or User): The member or user that is punished.
+        reason (str): The reason for this punishment.
+    """
+    query = bot.query_db(f'''SELECT mod_channel,last_mod_entry FROM settings 
+                                    WHERE guildid={ctx.guild.id};''')
+    if query and query[0][0]:
+        chan = ctx.guild.get_channel(int(query[0][0]))
+        if chan:
+            try:
+                case = int(query[0][1]) + 1 if query[0][1] else 1
+                if not reason:
+                    reason = f"No reason specified, responsible moderator, please do `{ctx.prefix}reason {case} <reason>`."
+                await chan.send(embed=ModLog(action, ctx.author, member, case, reason))
+            except Forbidden:
+                await ctx.send(resolve_emoji('ERROR',
+                                             ctx) + ' I seem to be unable to send a message in the modlog channel set. Please check my permissions there or ask an Admin to do so.')

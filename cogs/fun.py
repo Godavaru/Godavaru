@@ -242,6 +242,7 @@ class Fun:
     async def love(self, ctx, *members: discord.Member):
         """Use some magic numbers to calculate the compatibility between two users.
         If only one user is given, you will be used as the second."""
+        message = await ctx.send('Generating... (this may take a bit)')
         l = members
         if len(members) > 2:
             l = [members[0], members[1]]
@@ -285,6 +286,7 @@ class Fun:
         em.add_field(name="Result", value=f"**{sum}%**\n`{msg}`", inline=False)
         em.add_field(name="Shipname", value=shipname)
         em.set_thumbnail(url="https://www.emojibase.com/resources/img/emojis/hangouts/1f49c.png")
+        await message.delete()
         await ctx.send(file=discord.File(img, filename='love.png'), embed=em.set_image(url="attachment://love.png"))
 
     @commands.command()
@@ -324,9 +326,8 @@ class Fun:
     async def person(self, ctx):
         """Generate a random person's information.
         Note: This information is 100% fake and provided by randomuser.me."""
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://randomuser.me/api') as resp:
-                js = await resp.json()
+        async with self.bot.session.get('https://randomuser.me/api') as resp:
+            js = await resp.json()
         person = js['results'][0]
         em = discord.Embed(colour=int("".join([random.choice('ABCDEF0123456789') for _ in range(6)]), 16)) \
             .set_author(

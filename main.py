@@ -33,29 +33,22 @@ class Godavaru(commands.Bot):
         self.version_info = config.version_description
         self.remove_command('help')
         self.session = aiohttp.ClientSession()
-        self.weeb = weeb.Client(token=config.weeb_token, user_agent='Godavaru/'+self.version+'/'+config.environment)
+        self.weeb = weeb.Client(token=config.weeb_token,
+                                user_agent='Godavaru/' + self.version + '/' + config.environment)
         self.seen_messages = 0
         self.reconnects = 0
         self.executed_commands = 0
         self.modlogs = dict()
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
-        commands = [f for f in os.listdir('./cogs') if f.endswith('.py')]
-        events = [f for f in os.listdir('./cogs/events') if f.endswith('.py')]
-        for ext in commands:
+        extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')] + ['events.' + f for f in
+                                                                               os.listdir('./cogs/events') if
+                                                                               f.endswith('.py')]
+        for ext in extensions:
             try:
-                self.unload_extension('cogs.' + ext[:-3])
                 self.load_extension('cogs.' + ext[:-3])
             except:
                 print(f'Failed to load command {ext}.')
-                print(traceback.format_exc())
-                continue
-        for ext in events:
-            try:
-                self.unload_extension('cogs.events.' + ext[:-3])
-                self.load_extension('cogs.events.' + ext[:-3])
-            except:
-                print(f'Failed to load event {ext}.')
                 print(traceback.format_exc())
                 continue
 
@@ -64,11 +57,11 @@ class Godavaru(commands.Bot):
 
     async def post_to_haste(self, content):
         async with self.session.post("https://hastepaste.com/api/create", data=f'text={content}&raw=false',
-                                    headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
-                if resp.status == 200:
-                    return await resp.text()
-                else:
-                    return "Error uploading to hastepaste :("
+                                     headers={'Content-Type': 'application/x-www-form-urlencoded'}) as resp:
+            if resp.status == 200:
+                return await resp.text()
+            else:
+                return "Error uploading to hastepaste :("
 
     # noinspection PyAttributeOutsideInit
     async def on_ready(self):
@@ -150,8 +143,10 @@ def get_webhook():
             return Response(json.dumps({"msg": "Unauthorized"}), status=web_resources["statuses"]["UN_AUTH"],
                             mimetype=web_resources["content_type"])
 
+
 def start_app():
     app.run(port=1034, host="localhost")
+
 
 Thread(target=start_app).start()
 bot.run(config.token)
