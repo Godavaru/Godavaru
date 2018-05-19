@@ -19,9 +19,21 @@ class Logs:
         if channel and channel.permissions_for(after.guild.me).send_messages and channel.id != after.channel.id:
             before_content = '\n-'.join(escape_markdown(before.clean_content, True).split('\n'))
             after_content = '\n+'.join(escape_markdown(after.clean_content, True).split('\n'))
-            await channel.send(resolve_emoji('WARN', after)
-                               + f' Message by **{after.author}** was edited in **{after.channel.mention}**\n'
-                               + f'```diff\n-{before_content}\n+{after_content}\n```')
+            if before_content != after_content:
+                await channel.send(resolve_emoji('WARN', after)
+                                   + f' Message by **{after.author}** was edited in **{after.channel.mention}**\n'
+                                   + f'```diff\n-{before_content}\n+{after_content}\n```')
+            else:
+                a_pins = await after.pins()
+                b_pins = await before.pins()
+                if a_pins[0].content == after.content:
+                    await channel.send(resolve_emoji('WARN', after)
+                                       + f' Message by **{after.author}** was pinned in **{after.channel.mention}**\n'
+                                       + f'```diff\n+{after_content}\n```')
+                if b_pins[0].content == after.content:
+                    await channel.send(resolve_emoji('WARN', after)
+                                       + f' Message by **{after.author}** was un-pinned in **{after.channel.mention}**\n'
+                                       + f'```diff\n-{before_content}\n```')
 
 
 def setup(bot):
