@@ -24,8 +24,8 @@ class Logs:
                                    + f' Message by **{after.author}** was edited in **{after.channel.mention}**\n'
                                    + f'```diff\n-{before_content}\n+{after_content}\n```')
             else:
-                a_pins = await after.pins()
-                b_pins = await before.pins()
+                a_pins = await after.channel.pins()
+                b_pins = await before.channel.pins()
                 if a_pins[0].content == after.content:
                     await channel.send(resolve_emoji('WARN', after)
                                        + f' Message by **{after.author}** was pinned in **{after.channel.mention}**\n'
