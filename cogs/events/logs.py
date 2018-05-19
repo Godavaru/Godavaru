@@ -45,7 +45,7 @@ class Logs:
             if before.nick != after.nick:
                 await channel.send(resolve_emoji('WARN', channel)
                                    + f' Nickname of member **{after}** updated.\n'
-                                   + f'```diff\n-{before.nickname}\n+{after.nickname}\n```')
+                                   + f'```diff\n-{before.nick}\n+{after.nick}\n```')
             r_roles = list(filter(lambda r: r not in after.roles, before.roles))
             a_roles = list(filter(lambda r: r not in before.roles, after.roles))
             msg = ''
