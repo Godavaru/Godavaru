@@ -138,7 +138,7 @@ class Mod:
                 await ctx.send(f":ok_hand: Removed the {role.name} role from {user.display_name}")
 
     @commands.command()
-    @commands.has_permissions(ban_members=True)
+    @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member, *, reason: str = None):
         """Mute a user.
@@ -162,7 +162,7 @@ class Mod:
             await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot punish members with a higher role than your own.')
 
     @commands.command()
-    @commands.has_permissions(ban_members=True)
+    @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(manage_roles=True)
     async def unmute(self, ctx, member: discord.Member, *, reason: str = None):
         """Unmute a user.

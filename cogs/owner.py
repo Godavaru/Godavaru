@@ -202,7 +202,8 @@ class Owner:
             sp.terminate()
         except subprocess.TimeoutExpired:
             sp.kill()
-            return await ctx.send('S-sorry! The command timed out... I-I\'ll try harder next time!')
+            return await ctx.send(
+                resolve_emoji('ERROR', ctx) + ' S-sorry! The command timed out... I-I\'ll try harder next time!')
         msg = "Executing...\n"
         if out:
             msg += 'Success! ```\n{}```\n'.format(out.decode())
@@ -227,7 +228,7 @@ class Owner:
             db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
             cur = db.cursor()
             cur.execute(query)
-            table = ":x: Nothing was returned in this query."
+            table = None
             if cur.description:
                 desc = list(cur.description)
                 x = []
@@ -241,7 +242,8 @@ class Owner:
             cur.close()
             db.close()
             try:
-                await ctx.send(f"```\n{table}```")
+                await ctx.send(f"```\n{table}```" if table else resolve_emoji('ERROR',
+                                                                              ctx) + " Nothing was returned in this query.")
             except discord.HTTPException:
                 await ctx.send(f'Content too long. Hastepaste: ' + await self.bot.post_to_haste(table))
         except pymysql.err.ProgrammingError as e:
@@ -254,40 +256,44 @@ class Owner:
         """Reload an extension (Bot Owner Only)"""
         if extension != "all":
             try:
-                self.bot.unload_extension('cogs.' + extension)
-                self.bot.load_extension('cogs.' + extension)
-                await ctx.send(f":ok_hand: Reloaded /cogs/{extension}.py")
+                self.bot.unload_extension('cogs.' + extension.replace('/', '.'))
+                self.bot.load_extension('cogs.' + extension.replace('/', '.'))
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Reloaded /cogs/{extension}.py")
             except Exception:
-                await ctx.send(f":sob: I-I'm sorry, I couldn't reload the `{extension}` extensions >w< "
+                await ctx.send(resolve_emoji('ERROR', ctx)
+                               + f" I-I'm sorry, I couldn't reload the `{extension}` extensions >w< "
                                + f"```py\n{traceback.format_exc()}```")
         else:
-            extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')]
+            extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')] + ['events.' + f for f in
+                                                                                   os.listdir('./cogs/events') if
+                                                                                   f.endswith('.py')]
             for ext in extensions:
                 try:
                     self.bot.unload_extension('cogs.' + ext[:-3])
                     self.bot.load_extension('cogs.' + ext[:-3])
                 except:
-                    await ctx.send(
-                        f'I ran into an error reloading the {ext[:-3]} extension. ```py\n{traceback.format_exc()}```')
+                    await ctx.send(resolve_emoji('ERROR', ctx)
+                                   + f'I ran into an error reloading the {ext[:-3]} extension. ```py\n{traceback.format_exc()}```')
                     continue
-            await ctx.send(':white_check_mark: Reloaded all extensions.')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Reloaded all extensions.')
 
     @commands.command()
     @commands.check(is_owner)
     async def unload(self, ctx, *, extension: str):
         """Unload an extension (Bot Owner Only)"""
-        self.bot.unload_extension("cogs." + extension)
-        await ctx.send(f":ok_hand: Unloaded /cogs/{extension}.py")
+        self.bot.unload_extension("cogs." + extension.replace('/', '.'))
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Unloaded /cogs/{extension}.py")
 
     @commands.command()
     @commands.check(is_owner)
     async def load(self, ctx, *, extension: str):
         """Load an extension (Bot Owner Only)"""
         try:
-            self.bot.load_extension("cogs." + extension)
-            await ctx.send(f":ok_hand: Loaded /cogs/{extension}.py")
+            self.bot.load_extension("cogs." + extension.replace('/', '.'))
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Loaded /cogs/{extension}.py")
         except Exception:
-            await ctx.send(f":sob: I-I'm sorry, I couldn't load the `{extension}` module >w< "
+            await ctx.send(resolve_emoji('ERROR', ctx)
+                           + f" I-I'm sorry, I couldn't load the `{extension}` module >w< "
                            + f"```py\n{traceback.format_exc()}```")
 
 
