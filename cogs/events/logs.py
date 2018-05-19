@@ -50,9 +50,9 @@ class Logs:
             a_roles = list(filter(lambda r: r not in before.roles, after.roles))
             msg = ''
             if len(r_roles) > 0:
-                msg += '\n-' + '\n-'.join(r_roles)
+                msg += '\n-' + '\n-'.join([r.name for r in r_roles])
             if len(a_roles) > 0:
-                msg += '\n+' + '\n+'.join(a_roles)
+                msg += '\n+' + '\n+'.join([r.name for r in a_roles])
             if msg != '':
                 await channel.send(resolve_emoji('WARN', channel)
                                    + f' Roles for **{after}** updated.\n'
