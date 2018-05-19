@@ -26,11 +26,11 @@ class Logs:
             else:
                 a_pins = await after.channel.pins()
                 b_pins = await before.channel.pins()
-                if a_pins[0].content == after.content:
+                if len(a_pins) > len(b_pins):
                     await channel.send(resolve_emoji('WARN', after)
                                        + f' Message by **{after.author}** was pinned in **{after.channel.mention}**\n'
                                        + f'```diff\n+{after_content}\n```')
-                if b_pins[0].content == after.content:
+                if len(b_pins) > len(a_pins):
                     await channel.send(resolve_emoji('WARN', after)
                                        + f' Message by **{after.author}** was un-pinned in **{after.channel.mention}**\n'
                                        + f'```diff\n-{before_content}\n```')
