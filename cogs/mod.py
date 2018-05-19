@@ -138,6 +138,30 @@ class Mod:
                 await ctx.send(f":ok_hand: Removed the {role.name} role from {user.display_name}")
 
     @commands.command()
+    @commands.has_permissions(ban_members=True)
+    @commands.bot_has_permissions(manage_roles=True)
+    async def mute(self, ctx, member: discord.Member, *, reason: str = None):
+        """Mute a user.
+        The muterole must be set in this server to use this."""
+        if ctx.author.top_role.position > member.top_role.position:
+            query = self.bot.query_db(f'''SELECT muterole FROM settings WHERE guildid={ctx.guild.id};''')
+            if query and query[0][0]:
+                role = discord.utils.get(ctx.guild.roles, id=int(query[0][0]))
+                if role:
+                    try:
+                        await member.add_roles(role, reason=f'Responsible Moderator: {ctx.author} | Reason: ' + (reason if reason else 'No reason specified.'))
+                        await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully muted **{member}**.')
+                        await process_modlog(ctx, self.bot, 'mute', member, reason)
+                    except discord.Forbidden:
+                        await ctx.send(resolve_emoji('ERROR', ctx) + ' I don\'t seem to be able to manage the mute role. Make sure my highest role is above the set muterole.')
+                else:
+                    await ctx.send(resolve_emoji('ERROR', ctx) + ' I can\' seem to find the mute role set. Maybe it was deleted.')
+            else:
+                await ctx.send(resolve_emoji('ERROR', ctx) + ' The muterole is not set in this server.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot punish members with a higher role than your own.')
+
+    @commands.command()
     async def reason(self, ctx, case: int, *, reason: str):
         """Change the modlog reason for a specific case.
         You must be the responsible moderator or the server owner to do this."""
