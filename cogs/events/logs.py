@@ -39,6 +39,25 @@ class Logs:
             await channel.send(resolve_emoji('INFO', channel)
                                + f' `{member}` (`{member.id}`) has left `{member.guild}` (`Was member #{len(member.guild.members) + 1}`)')
 
+    async def on_member_update(self, before, after):
+        channel = get_log_channel(self.bot, after.guild)
+        if channel and channel.permissions_for(after.guild.me).send_messages:
+            if before.nickname != after.nickname:
+                await channel.send(resolve_emoji('WARN', channel)
+                                   + f' Nickname of member **{after}** updated.\n'
+                                   + f'```diff\n-{before.nickname}\n+{after.nickname}\n```')
+            r_roles = list(filter(lambda r: r not in after.roles, before.roles))
+            a_roles = list(filter(lambda r: r not in before.roles, after.roles))
+            msg = ''
+            if len(r_roles) > 0:
+                msg += '\n-' + '\n-'.join(r_roles)
+            if len(a_roles) > 0:
+                msg += '\n+' + '\n+'.join(a_roles)
+            if msg != '':
+                await channel.send(resolve_emoji('WARN', channel)
+                                   + f' Roles for **{after}** updated.\n'
+                                   + f'```diff{escape_markdown(msg, True)}\n```')
+
 
 def setup(bot):
     bot.add_cog(Logs(bot))
