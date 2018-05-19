@@ -117,6 +117,22 @@ async def process_modlog(ctx: Context, bot: Bot, action: str, member: Member or 
                 if not reason:
                     reason = f"No reason specified, responsible moderator, please do `{ctx.prefix}reason {case} <reason>`."
                 await chan.send(embed=ModLog(action, ctx.author, member, case, reason))
+                bot.query_db(f'''INSERT INTO settings (guildid, last_mod_entry) VALUES ({ctx.guild.id}, {case}) 
+                                ON DUPLICATE KEY UPDATE last_mod_entry={case};''')
+                try:
+                    bot.modlogs[str(ctx.guild.id)][str(case)] = {
+                        'mod': ctx.author,
+                        'user': member,
+                        'reason': reason
+                    }
+                except KeyError:
+                    bot.modlogs[str(ctx.guild.id)] = {
+                        str(case): {
+                            'mod': ctx.author,
+                            'user': member,
+                            'reason': reason
+                        }
+                    }
             except Forbidden:
                 await ctx.send(resolve_emoji('ERROR',
                                              ctx) + ' I seem to be unable to send a message in the modlog channel set. Please check my permissions there or ask an Admin to do so.')
