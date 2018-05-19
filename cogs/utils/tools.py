@@ -116,21 +116,23 @@ async def process_modlog(ctx: Context, bot: Bot, action: str, member: Member or 
                 case = int(query[0][1]) + 1 if query[0][1] else 1
                 if not reason:
                     reason = f"No reason specified, responsible moderator, please do `{ctx.prefix}reason {case} <reason>`."
-                await chan.send(embed=ModLog(action, ctx.author, member, case, reason))
+                msg = await chan.send(embed=ModLog(action, ctx.author, member, case, reason))
                 bot.query_db(f'''INSERT INTO settings (guildid, last_mod_entry) VALUES ({ctx.guild.id}, {case}) 
                                 ON DUPLICATE KEY UPDATE last_mod_entry={case};''')
                 try:
                     bot.modlogs[str(ctx.guild.id)][str(case)] = {
                         'mod': ctx.author,
                         'user': member,
-                        'reason': reason
+                        'action': action,
+                        'message': msg.id
                     }
                 except KeyError:
                     bot.modlogs[str(ctx.guild.id)] = {
                         str(case): {
                             'mod': ctx.author,
                             'user': member,
-                            'reason': reason
+                            'action': action,
+                            'message': msg.id
                         }
                     }
             except Forbidden:

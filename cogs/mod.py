@@ -2,6 +2,7 @@ import datetime
 
 import discord
 from discord.ext import commands
+from .utils.bases import ModLog
 from .utils.tools import resolve_emoji, process_modlog
 
 
@@ -135,6 +136,28 @@ class Mod:
             else:
                 await user.remove_roles(role)
                 await ctx.send(f":ok_hand: Removed the {role.name} role from {user.display_name}")
+
+    @commands.command()
+    async def reason(self, ctx, case: int, *, reason: str):
+        """Change the modlog reason for a specific case.
+        You must be the responsible moderator or the server owner to do this."""
+        try:
+            modlog = self.bot.modlogs[str(ctx.guild.id)][str(case)]
+        except KeyError:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' I couldn\'t find that modlog message, Either it doesn\'t exist or it was so long ago I forgot.')
+        if ctx.author.id == modlog['mod'].id or ctx.author.id == ctx.guild.owner.id:
+            query = self.bot.query_db(f'''SELECT mod_channel FROM settings WHERE guildid={ctx.guild.id};''')
+            if query and query[0][0] and discord.utils.get(ctx.guild.channels, id=int(query[0][0])):
+                try:
+                    msg = await discord.utils.get(ctx.guild.channels, id=int(query[0][0])).get_message(modlog['message'])
+                except discord.NotFound:
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + ' The message linked to this modlog reason seems to have been deleted.')
+                await msg.edit(embed=ModLog(modlog['action'], modlog['mod'], modlog['user'], case, reason))
+                await ctx.send(resolve_emoji('SUCCESS', ctx))
+            else:
+                return await ctx.send(resolve_emoji('ERROR', ctx) + ' There doesn\'t seem to be a mod log channel here.')
+        else:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' Only the responsible moderator or the server owner can alter modlog reasons.')
 
 
 def setup(bot):
