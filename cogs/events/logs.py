@@ -7,6 +7,7 @@ class Logs:
         self.bot = bot
 
     async def on_message_delete(self, message):
+        await self.bot.get_channel(315252624645423105).send('fuck')
         channel = get_log_channel(self.bot, message.guild)
         if channel and channel.permissions_for(message.guild.me).send_messages:
             content = '\n-'.join(escape_markdown(message.clean_content, True).split('\n'))
