@@ -2,6 +2,7 @@ from ..utils.db import get_log_channel
 from ..utils.tools import resolve_emoji, escape_markdown
 
 
+# TODO add channel updates
 class Logs:
     def __init__(self, bot):
         self.bot = bot
@@ -57,6 +58,68 @@ class Logs:
                 await channel.send(resolve_emoji('WARN', channel)
                                    + f' Roles for **{after}** updated.\n'
                                    + f'```diff{escape_markdown(msg, True)}\n```')
+
+    async def on_guild_role_create(self, role):
+        channel = get_log_channel(self.bot, role.guild)
+        if channel and channel.permissions_for(role.guild.me).send_messages:
+            await channel.send(resolve_emoji('SUCCESS', channel)
+                               + f'Role **{role}** was created.\n'
+                               + f'```diff\n+ID: {role.id}\n+Name: {role}\n'
+                               + f'+Colour: {role.colour}\n+Permissions: {role.permissions}\n```')
+
+    async def on_guild_role_delete(self, role):
+        channel = get_log_channel(self.bot, role.guild)
+        if channel and channel.permissions_for(role.guild.me).send_messages:
+            await channel.send(resolve_emoji('ERROR', channel)
+                               + f'Role **{role}** was deleted.\n'
+                               + f'```diff\n-ID: {role.id}\n-Name: {role}\n'
+                               + f'-Colour: {role.colour}\n-Permissions: {role.permissions}\n```')
+
+    async def on_guild_role_update(self, before, after):
+        channel = get_log_channel(self.bot, after.guild)
+        if channel and channel.permissions_for(after.guild.me).send_messages:
+            msg = ''
+            if before.name != after.name:
+                msg += f'\n-Name: {before.name}\n+Name: {after.name}'
+            if before.colour != after.colour:
+                msg += f'\n-Colour: {before.colour}\n+Colour: {after.colour}'
+            if before.permissions != after.permissions:
+                msg += f'\n-Permissions: {before.permissions}\n+Permissions: {after.permissions}'
+            await channel.send(resolve_emoji('WARN', channel)
+                               + f' Role **{after}** was updated.\n'
+                               + f'```diff{msg}\n```')
+
+    async def on_guild_emojis_update(self, guild, before, after):
+        channel = get_log_channel(self.bot, guild)
+        if channel and channel.permissions_for(guild.me).send_messages:
+            after = sorted(after, key=lambda e: e.id)
+            before = sorted(before, key=lambda e: e.id)
+            added = list(filter(lambda e: e not in before, after))
+            removed = list(filter(lambda e: e not in after, before))
+            if len(before) == len(after):
+                await channel.send(resolve_emoji('ERROR' if len(removed) == 1 else 'SUCCESS', channel)
+                                   + f'Emoji `{removed[0].name if len(removed) == 1 else added[0].name}` '
+                                   + 'removed' if len(removed) == 1 else 'added: '
+                                   + str(removed[0] if len(removed) == 1 else added[0]))
+            for i in range(len(after)):
+                if after[i].name != before[i].name:
+                    await channel.send(resolve_emoji('WARN', channel)
+                                       + f'Name of emoji `{before[i].name}` updated to `{after[i].name}`'
+                                       + f': {after[i]}')
+
+    async def on_member_ban(self, guild, user):
+        channel = get_log_channel(self.bot, guild)
+        if channel and channel.permissions_for(guild.me).send_messages:
+            await channel.send(resolve_emoji('INFO', channel)
+                               + f' ***{user} ({user.id}) just got banned from {guild}.***'
+                               + resolve_emoji('INFO', channel))
+
+    async def on_member_unban(self, guild, user):
+        channel = get_log_channel(self.bot, guild)
+        if channel and channel.permissions_for(guild.me).send_messages:
+            await channel.send(resolve_emoji('SUCCESS', channel)
+                               + f' ***{user} ({user.id}) just got unbanned from {guild}.***'
+                               + resolve_emoji('SUCCESS', channel))
 
 
 def setup(bot):
