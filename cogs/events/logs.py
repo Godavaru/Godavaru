@@ -12,8 +12,8 @@ class Logs:
         if channel and channel.permissions_for(message.guild.me).send_messages:
             content = '\n-'.join(escape_markdown(message.clean_content, True).split('\n'))
             await channel.send(resolve_emoji('INFO', message)
-                               + f' Message by **{message.author}** was deleted in {message.channel}\n'
-                               + f'```diff{content}\n```')
+                               + f' Message by **{message.author}** was deleted in {message.channel.mention}\n'
+                               + f'```diff\n{content}\n```')
 
 def setup(bot):
     bot.add_cog(Logs(bot))
