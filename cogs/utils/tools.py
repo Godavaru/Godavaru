@@ -1,8 +1,7 @@
 import config
 import aiohttp
 from discord import Message, Forbidden, Member, User
-from discord.ext.commands import Context
-from ...main import Godavaru
+from discord.ext.commands import Context, Bot
 from .bases import ModLog
 import string
 import random
@@ -13,11 +12,11 @@ def remove_html(string):
         '&#039;', "'")
 
 
-def get_prefix(bot: Godavaru, msg: Message) -> list:
+def get_prefix(bot: Bot, msg: Message) -> list:
     """Get the prefix(es) that the bot will listen to.
 
     Args:
-        bot (Godavaru): The custom ``Bot`` subclass that I've created.
+        bot (Bot): A ``Bot`` object.
         msg (Message): The message to get the guild prefixes for.
 
     Returns:
@@ -98,12 +97,12 @@ def resolve_emoji(emoji: str, msg: Message or Context) -> str:
         return ''
 
 
-async def process_modlog(ctx: Context, bot: Godavaru, action: str, member: Member or User, reason: str):
+async def process_modlog(ctx: Context, bot: Bot, action: str, member: Member or User, reason: str):
     """Process a modlog for the given context, bot, member, and reason.
 
     Args:
         ctx (Context): The context object to get the moderator and channel from.
-        bot (Godavaru): The custom subclass of ``Bot`` to get the bot object from.
+        bot (Bot): A ``Bot`` object.
         action (str): The action that was taken against the user.
         member (Member or User): The member or user that is punished.
         reason (str): The reason for this punishment.
