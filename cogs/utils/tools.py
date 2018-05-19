@@ -85,7 +85,7 @@ def resolve_emoji(emoji: str, msg: Message or Context) -> str:
         'ERROR': ['❌', '<:crossed:402968721515347968>'],
         'SUCCESS': ['✅', '<:check:394001925860884480>'],
         'WARN': ['⚠', '<:warning:394314103604117504>'],
-        'INFO': [],
+        'INFO': ['❗', '<:exclamation:394001925198315530>'],
         'TSUNDERE': ['😳', '<:catBaka:389802304808943641>'],
         'ONLINE': ['💚', '<:online:398856032392183819>'],
         'IDLE': ['💛', '<:idle:398856031360253962>'],
