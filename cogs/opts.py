@@ -35,7 +35,7 @@ class Settings:
         Note: to use this command, you must have the `MANAGE_GUILD` permission."""
         self.bot.query_db(f'''INSERT INTO settings (guildid,mod_channel) VALUES ({ctx.guild.id}, {channel.id})
                             ON DUPLICATE KEY UPDATE mod_channel={channel.id}''')
-        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the modlog channel to **#{channel.name}** (`{channel.id}`)')
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the modlog channel to **#{channel}** (`{channel.id}`)')
 
     @commands.command()
     @commands.check(can_manage)
@@ -46,6 +46,15 @@ class Settings:
         self.bot.query_db(f'''INSERT INTO settings (guildid,muterole) VALUES ({ctx.guild.id},{role.id})
                             ON DUPLICATE KEY UPDATE muterole={role.id};''')
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the mute role to **{role}** (`{role.id}`)')
+
+    @commands.command()
+    @commands.check(can_manage)
+    async def logs(self, ctx, channel: discord.TextChannel):
+        """Change the guild logging channel.
+        Note: To use this command, you must have the `MANAGE_GUILD` permission."""
+        self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel) VALUES ({ctx.guild.id},{channel.id})
+                            ON DUPLICATE KEY UPDATE log_channel={channel.id};''')
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the logging channel to **#{channel}** (`{channel.id}`)')
 
 
 def setup(bot):
