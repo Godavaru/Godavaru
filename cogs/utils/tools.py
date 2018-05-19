@@ -59,7 +59,7 @@ def generate_id(size: int = 6, chars: str = string.ascii_uppercase + string.digi
         chars (str): A ``str`` with all possible characters that the random generator can choose from. (Default: string.ascii_uppercase + string.digits)
 
     Returns:
-        The ``str`` of the generated ID.
+        str: The ``str`` of the generated ID.
     """
     return ''.join(random.choice(chars) for _ in range(size))
 
@@ -72,7 +72,7 @@ def resolve_emoji(emoji: str, msg: Message or Context) -> str:
         msg (Message or Context): The message or context to get the user/channel from.
 
     Returns:
-        The ``str`` of the emoji, an empty string if not found or ``msg`` is not a Message or Context.
+        str: The ``str`` of the emoji, an empty string if not found or if ``msg`` is not a Message or Context.
     """
     channel = msg.channel
     if isinstance(msg, Message):
@@ -85,6 +85,7 @@ def resolve_emoji(emoji: str, msg: Message or Context) -> str:
         'ERROR': ['❌', '<:crossed:402968721515347968>'],
         'SUCCESS': ['✅', '<:check:394001925860884480>'],
         'WARN': ['⚠', '<:warning:394314103604117504>'],
+        'INFO': [],
         'TSUNDERE': ['😳', '<:catBaka:389802304808943641>'],
         'ONLINE': ['💚', '<:online:398856032392183819>'],
         'IDLE': ['💛', '<:idle:398856031360253962>'],
@@ -95,6 +96,22 @@ def resolve_emoji(emoji: str, msg: Message or Context) -> str:
         return emojis[emoji][num]
     except KeyError:
         return ''
+
+
+def escape_markdown(string: str, codeblock: bool = False) -> str:
+    """Escape the markdown of a given string.
+
+    Args:
+        string (str): The ``str`` that will have markdown escaped.
+        codeblock (bool): The ``bool`` that tells if the escaped content will be in a code block.
+
+    Returns:
+        str: The ``str`` that has markdown escaped.
+    """
+    string = string.replace('```', '`\u200D``')
+    if not codeblock:
+        string = string.replace('*', '\\*').replace('~', '\\~').replace('_', '\\_').replace('`', '\\`')
+    return string
 
 
 async def process_modlog(ctx: Context, bot: Bot, action: str, member: Member or User, reason: str):

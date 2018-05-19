@@ -32,7 +32,7 @@ class Mod:
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
     async def softban(self, ctx, member: discord.Member, *, reason: str = None):
-        """Ban a member from the guild.
+        """Kick a member from the guild and clean messages from the last 7 days.
         You can also supply an optional reason."""
         if ctx.author.top_role.position > member.top_role.position:
             try:

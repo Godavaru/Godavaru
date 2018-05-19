@@ -32,7 +32,7 @@ class CommandHandler:
                 + f' You can use this command again in {"%d hours, %02d minutes and %02d seconds" % (h, m, s)}'
                 + (" (about now)." if error.retry_after == 0 else "."))
         elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(resolve_emoji('ERROR', ctx) + f" Missing required argument `{error.param.split(':')[0]}`, check `{ctx.prefix}help {ctx.command}`")
+            await ctx.send(resolve_emoji('ERROR', ctx) + f" Missing required argument `{error.param}`, check `{ctx.prefix}help {ctx.command}`")
             ctx.command.reset_cooldown(ctx)
         elif isinstance(error, self.__sendable_exceptions):
             await ctx.send(resolve_emoji('ERROR', ctx) + ' ' + str(error))
