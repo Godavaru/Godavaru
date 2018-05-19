@@ -45,7 +45,7 @@ class Settings:
         Note 2: The muterole does not automatically deny `SEND_MESSAGES`. You must do this yourself."""
         self.bot.query_db(f'''INSERT INTO settings (guildid,muterole) VALUES ({ctx.guild.id},{role.id})
                             ON DUPLICATE KEY UPDATE muterole={role.id};''')
-        await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully changed the mute role to **{role}** (`{role.id}`)')
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the mute role to **{role}** (`{role.id}`)')
 
 
 def setup(bot):
