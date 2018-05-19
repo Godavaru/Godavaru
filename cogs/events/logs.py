@@ -8,32 +8,36 @@ class Logs:
 
     async def on_message_delete(self, message):
         channel = get_log_channel(self.bot, message.guild)
-        if channel and channel.permissions_for(message.guild.me).send_messages and channel.id != message.channel.id:
+        if channel and \
+                channel.permissions_for(message.guild.me).send_messages and \
+                channel.id != message.channel.id and message.content != '':
             content = '\n-'.join(escape_markdown(message.clean_content, True).split('\n'))
-            await channel.send(resolve_emoji('ERROR', message)
+            await channel.send(resolve_emoji('ERROR', channel)
                                + f' Message by **{message.author}** was deleted in **{message.channel.mention}**\n'
                                + f'```diff\n-{content}\n```')
 
     async def on_message_edit(self, before, after):
         channel = get_log_channel(self.bot, after.guild)
-        if channel and channel.permissions_for(after.guild.me).send_messages and channel.id != after.channel.id:
+        if channel and \
+                channel.permissions_for(after.guild.me).send_messages and \
+                channel.id != after.channel.id and before.content != after.content:
             before_content = '\n-'.join(escape_markdown(before.clean_content, True).split('\n'))
             after_content = '\n+'.join(escape_markdown(after.clean_content, True).split('\n'))
-            if before_content != after_content:
-                await channel.send(resolve_emoji('WARN', after)
-                                   + f' Message by **{after.author}** was edited in **{after.channel.mention}**\n'
-                                   + f'```diff\n-{before_content}\n+{after_content}\n```')
-            else:
-                a_pins = await after.channel.pins()
-                b_pins = await before.channel.pins()
-                if len(a_pins) > len(b_pins):
-                    await channel.send(resolve_emoji('WARN', after)
-                                       + f' Message by **{after.author}** was pinned in **{after.channel.mention}**\n'
-                                       + f'```diff\n+{after_content}\n```')
-                if len(b_pins) > len(a_pins):
-                    await channel.send(resolve_emoji('WARN', after)
-                                       + f' Message by **{after.author}** was un-pinned in **{after.channel.mention}**\n'
-                                       + f'```diff\n-{before_content}\n```')
+            await channel.send(resolve_emoji('WARN', channel)
+                               + f' Message by **{after.author}** was edited in **{after.channel.mention}**\n'
+                               + f'```diff\n-{before_content}\n+{after_content}\n```')
+
+    async def on_member_join(self, member):
+        channel = get_log_channel(self.bot, member.guild)
+        if channel and channel.permissions_for(member.guild.me).send_messages:
+            await channel.send(resolve_emoji('INFO', channel)
+                               + f' `{member}` (`{member.id}`) has joined `{member.guild}` (`Member #{len(member.guild.members)}`)')
+
+    async def on_member_remove(self, member):
+        channel = get_log_channel(self.bot, member.guild)
+        if channel and channel.permissions_for(member.guild.me).send_messages:
+            await channel.send(resolve_emoji('INFO', channel)
+                               + f' `{member}` (`{member.id}`) has left `{member.guild}` (`Was member #{len(member.guild.members) + 1}`)')
 
 
 def setup(bot):

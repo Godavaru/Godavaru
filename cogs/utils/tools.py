@@ -1,6 +1,6 @@
 import config
 import aiohttp
-from discord import Message, Forbidden, Member, User
+from discord import Message, Forbidden, Member, User, TextChannel
 from discord.ext.commands import Context, Bot
 from .bases import ModLog
 import string
@@ -64,21 +64,25 @@ def generate_id(size: int = 6, chars: str = string.ascii_uppercase + string.digi
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def resolve_emoji(emoji: str, msg: Message or Context) -> str:
+def resolve_emoji(emoji: str, msg: Message or Context or TextChannel) -> str:
     """Resolve an emoji that will be sent based on the permissions of the SelfUser.
 
     Args:
         emoji (str): The emoji type to get.
-        msg (Message or Context): The message or context to get the user/channel from.
+        msg (Message or Context or TextChannel): The message or context to get the user/channel from.
 
     Returns:
         str: The ``str`` of the emoji, an empty string if not found or if ``msg`` is not a Message or Context.
     """
-    channel = msg.channel
     if isinstance(msg, Message):
         me = msg.guild.me
+        channel = msg.channel
     elif isinstance(msg, Context):
         me = msg.me
+        channel = msg.channel
+    elif isinstance(msg, TextChannel):
+        me = msg.guild.me
+        channel = msg
     else:
         return ''
     emojis = {
