@@ -10,16 +10,18 @@ from cogs.utils.tools import *
 
 about_description = """
 **H-hello!~~**
-My name is Godavaru, but you can call me Godava, as many people do. I was named after a community guild, which I am not directly linked to anymore, but you may check out if you wish using the link [here](https://discord.gg/QdxDhrz)! I-I mean, It's not like I want you to join or anything... baka!
+My name is Godavaru, but you can call me Goda, as many people do. I was named after a community server that my mom made when she first started out in discord, but she no longer focuses on it, and rather develops me as an individual project.
 Below, you can find a link to the actual support guild for me, where you may tell my mom if I misbehave and throw errors around again. :< Below, you can also find a link to invite me, if you so wish! I promise that I will do you good!
 I have quite a few features; I can list them for you now!
 
 **__I come with:__**
--> Action Commands (hug, kiss, even some lewd ones :eyes:)
+-> Action Commands (hug, kiss, and many more)
 -> Moderation Commands (ban, kick, prune, and more!)
 -> Utility Commands (urbandictionary search, normal dictionary, complex maths, and much more!)
 -> Fun Commands (slots, trivia, and other miscellanious features to keep you occupied!)
 -> Information Commands (userid lookup, discriminator lookup, role information, and more!)
+-> Customisation (set your prefix, enable logging, enable modlogs and even change modlog reasons!)
+-> NSFW commands (rule34, yandere, and a fuck action :eyes:)
 
 Check all my commands with `g_help` or `godavaru help`!
 """

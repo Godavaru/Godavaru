@@ -37,6 +37,14 @@ class Settings:
                             ON DUPLICATE KEY UPDATE mod_channel={channel.id}''')
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the modlog channel to **#{channel}** (`{channel.id}`)')
 
+    @modlog.error()
+    async def modlog_error(self, ctx, error):
+        """Catch a certain error (bad argument) to check if the user is trying to reset their modlog channel."""
+        if isinstance(error, commands.BadArgument):
+            if ctx.kwargs['channel'] == 'reset':
+                self.bot.query_db(f'''UPDATE settings SET mod_channel=NULL WHERE guildid={ctx.guild.id};''')
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your mod log channel.')
+
     @commands.command()
     @commands.check(can_manage)
     async def muterole(self, ctx, *, role: discord.Role):

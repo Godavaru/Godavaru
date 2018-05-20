@@ -120,6 +120,7 @@ class Godavaru(commands.Bot):
 bot = Godavaru()
 signal.signal(signal.SIGINT, bot.gracefully_disconnect)
 signal.signal(signal.SIGTERM, bot.gracefully_disconnect)
+'''
 app = Flask(__name__)
 
 web_resources = {
@@ -148,5 +149,5 @@ def start_app():
     app.run(port=1034, host="localhost")
 
 
-Thread(target=start_app).start()
+Thread(target=start_app).start()'''
 bot.run(config.token)

@@ -3,7 +3,6 @@ from ..utils.tools import resolve_emoji, escape_markdown
 from discord import TextChannel, VoiceChannel
 
 
-# TODO add channel updates
 class Logs:
     def __init__(self, bot):
         self.bot = bot
