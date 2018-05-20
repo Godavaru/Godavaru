@@ -136,8 +136,10 @@ class Settings:
             await ctx.send('Found data! Are you ***sure*** that you want to do this? This can **NOT** be undone.'
                            + ' This will replace all of your current settings in Godavaru. Are you ***bolded sure*** '
                            + 'that you wish to go through with this? Please say `yes`.')
+
             def check(m):
-                return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+                return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id and m.content == 'yes'
+
             try:
                 await self.bot.wait_for('message', check=check, timeout=60.0)
             except asyncio.TimeoutError:
@@ -151,6 +153,9 @@ class Settings:
                                 {data[5]}, {data[5]}) ON DUPLICATE KEY UPDATE log_channel={data[0]},
                                 mod_channel={data[1]},muterole={data[2]},welcome_message={join},
                                 leave_message={leave},welcome_channel={data[5]},leave_channel={data[5]};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully imported all data from Kumiko into Godavaru.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' I couldn\'t find any data from Kumiko to import.')
 
 
 def setup(bot):
