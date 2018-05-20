@@ -43,8 +43,7 @@ class Settings:
         chan = self.bot.get_channel(315252624645423105)
         try:
             if isinstance(error, commands.BadArgument):
-                await chan.send(ctx.kwargs)
-                if ctx.kwargs['channel'] == 'reset':
+                if str(error) == 'Channel "reset" not found.':
                     self.bot.query_db(f'''UPDATE settings SET mod_channel=NULL WHERE guildid={ctx.guild.id};''')
                     await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your mod log channel.')
         except:
