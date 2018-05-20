@@ -77,6 +77,49 @@ class Settings:
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
 
+    @commands.command()
+    @commands.check(can_manage)
+    async def welcome(self, ctx, channel: str, *, msg: str = None):
+        """Set the welcome message & channel for this server.
+        Note: To use this command, you must have the `MANAGE_GUILD` permission."""
+        c = resolve_channel(channel, ctx)
+        if c:
+            if msg:
+                msg = msg.replace('"', '\\"')
+                self.bot.query_db(f'''INSERT INTO settings (guildid,welcome_channel,welcome_message)
+                                    VALUES ({ctx.guild.id},{c.id},"{msg}") ON DUPLICATE KEY UPDATE
+                                    welcome_channel={c.id},welcome_message="{msg}";''')
+            else:
+                await ctx.send(resolve_channel('ERROR', ctx) + ' You must supply the message you want after the channel.')
+        elif channel == 'reset':
+            self.bot.query_db(f'''UPDATE settings SET welcome_channel=NULL,welcome_message=NULL WHERE
+                                guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your welcome channel & message.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
+
+    @commands.command()
+    @commands.check(can_manage)
+    async def leave(self, ctx, channel: str, *, msg: str = None):
+        """Set the leave message & channel for this server.
+        Note: To use this command, you must have the `MANAGE_GUILD` permission."""
+        c = resolve_channel(channel, ctx)
+        if c:
+            if msg:
+                msg = msg.replace('"', '\\"')
+                self.bot.query_db(f'''INSERT INTO settings (guildid,leave_channel,leave_message)
+                                        VALUES ({ctx.guild.id},{c.id},"{msg}") ON DUPLICATE KEY UPDATE
+                                        leave_channel={c.id},leave_message="{msg}";''')
+            else:
+                await ctx.send(
+                    resolve_channel('ERROR', ctx) + ' You must supply the message you want after the channel.')
+        elif channel == 'reset':
+            self.bot.query_db(f'''UPDATE settings SET leave_channel=NULL,leave_message=NULL WHERE
+                                    guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your leave channel & message.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
+
 
 def setup(bot):
     bot.add_cog(Settings(bot))

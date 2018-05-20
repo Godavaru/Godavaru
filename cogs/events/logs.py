@@ -1,5 +1,5 @@
 from ..utils.db import get_log_channel
-from ..utils.tools import resolve_emoji, escape_markdown
+from ..utils.tools import resolve_emoji, escape_markdown, process_join_leave
 from discord import TextChannel, VoiceChannel
 
 
@@ -33,12 +33,14 @@ class Logs:
         if channel and channel.permissions_for(member.guild.me).send_messages:
             await channel.send(resolve_emoji('INFO', channel)
                                + f' `{member}` (`{member.id}`) has joined `{member.guild}` (`Member #{len(member.guild.members)}`)')
+        await process_join_leave(self.bot, member.guild, member, 'join')
 
     async def on_member_remove(self, member):
         channel = get_log_channel(self.bot, member.guild)
         if channel and channel.permissions_for(member.guild.me).send_messages:
             await channel.send(resolve_emoji('INFO', channel)
                                + f' `{member}` (`{member.id}`) has left `{member.guild}` (`Was member #{len(member.guild.members) + 1}`)')
+        await process_join_leave(self.bot, member.guild, member, 'leave')
 
     async def on_member_update(self, before, after):
         channel = get_log_channel(self.bot, after.guild)

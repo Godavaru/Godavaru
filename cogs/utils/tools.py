@@ -208,3 +208,18 @@ async def process_modlog(ctx: Context, bot: Bot, action: str, member: Member or 
             except Forbidden:
                 await ctx.send(resolve_emoji('ERROR',
                                              ctx) + ' I seem to be unable to send a message in the modlog channel set. Please check my permissions there or ask an Admin to do so.')
+
+
+async def process_join_leave(bot, guild, user, action):
+    if action == 'join':
+        query = bot.query_db(f'''SELECT welcome_channel,welcome_message FROM settings 
+                                WHERE guildid={guild.id};''')
+    elif action == 'leave':
+        query = bot.query_db(f'''SELECT leave_channel,leave_message FROM settings 
+                                WHERE guildid={guild.id};''')
+    else:
+        return
+    if query and query[0][0] and query[0][1]:
+        channel = guild.get_channel(int(query[0][0]))
+        if channel and channel.permissions_for(guild.me).send_messages:
+            await channel.send(query[0][1].format(guild=guild, user=user))

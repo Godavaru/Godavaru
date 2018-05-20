@@ -143,7 +143,7 @@ class Currency:
         profile = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id}''')
         if amount == 'all':
             amount = profile[0][0]
-        if amount.endswith('%'):
+        elif amount.endswith('%'):
             try:
                 amount = round((int(amount[:-1]) * 0.01) * profile[0][0])
             except ValueError:
