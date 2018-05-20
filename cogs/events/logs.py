@@ -1,5 +1,6 @@
 from ..utils.db import get_log_channel
 from ..utils.tools import resolve_emoji, escape_markdown
+from discord import TextChannel, VoiceChannel
 
 
 # TODO add channel updates
@@ -64,7 +65,7 @@ class Logs:
         if channel and channel.permissions_for(role.guild.me).send_messages:
             await channel.send(resolve_emoji('SUCCESS', channel)
                                + f'Role **{role}** was created.\n'
-                               + f'```diff\n+ID: {role.id}\n+Name: {role}\n'
+                               + f'```diff\n+ID: {role.id}\n+Name: {role}\nMentionanle: {role.mentionable}\n'
                                + f'+Colour: {role.colour}\n+Permissions: {role.permissions}\n```')
 
     async def on_guild_role_delete(self, role):
@@ -72,7 +73,7 @@ class Logs:
         if channel and channel.permissions_for(role.guild.me).send_messages:
             await channel.send(resolve_emoji('ERROR', channel)
                                + f'Role **{role}** was deleted.\n'
-                               + f'```diff\n-ID: {role.id}\n-Name: {role}\n'
+                               + f'```diff\n-ID: {role.id}\n-Name: {role}\nMentionable: {role.mentionable}\n'
                                + f'-Colour: {role.colour}\n-Permissions: {role.permissions}\n```')
 
     async def on_guild_role_update(self, before, after):
@@ -85,9 +86,12 @@ class Logs:
                 msg += f'\n-Colour: {before.colour}\n+Colour: {after.colour}'
             if before.permissions != after.permissions:
                 msg += f'\n-Permissions: {before.permissions}\n+Permissions: {after.permissions}'
-            await channel.send(resolve_emoji('WARN', channel)
-                               + f' Role **{after}** was updated.\n'
-                               + f'```diff{msg}\n```')
+            if before.mentionable is not after.mentionable:
+                msg += f'\n-Mentionable: {before.mentionable}\n+Mentionable: {after.mentionable}'
+            if msg != '':
+                await channel.send(resolve_emoji('WARN', channel)
+                                   + f' Role **{after}** was updated.\n'
+                                   + f'```diff{msg}\n```')
 
     async def on_guild_emojis_update(self, guild, before, after):
         channel = get_log_channel(self.bot, guild)
@@ -96,7 +100,7 @@ class Logs:
             before = sorted(before, key=lambda e: e.id)
             added = list(filter(lambda e: e not in before, after))
             removed = list(filter(lambda e: e not in after, before))
-            if len(before) == len(after):
+            if len(before) != len(after):
                 await channel.send(resolve_emoji('ERROR' if len(removed) == 1 else 'SUCCESS', channel)
                                    + f'Emoji `{removed[0].name if len(removed) == 1 else added[0].name}` '
                                    + 'removed' if len(removed) == 1 else 'added: '
@@ -111,15 +115,48 @@ class Logs:
         channel = get_log_channel(self.bot, guild)
         if channel and channel.permissions_for(guild.me).send_messages:
             await channel.send(resolve_emoji('INFO', channel)
-                               + f' ***{user} ({user.id}) just got banned from {guild}.***'
+                               + f' ***{user} ({user.id}) just got banned from {guild}.*** '
                                + resolve_emoji('INFO', channel))
 
     async def on_member_unban(self, guild, user):
         channel = get_log_channel(self.bot, guild)
         if channel and channel.permissions_for(guild.me).send_messages:
             await channel.send(resolve_emoji('SUCCESS', channel)
-                               + f' ***{user} ({user.id}) just got unbanned from {guild}.***'
+                               + f' ***{user} ({user.id}) just got unbanned from {guild}.*** '
                                + resolve_emoji('SUCCESS', channel))
+
+    async def on_guild_channel_create(self, channel):
+        c = get_log_channel(self.bot, channel.guild)
+        if c and c.permissions_for(channel.guild.me).send_messages:
+            chan_type = 'text' if isinstance(channel, TextChannel) else ('voice' if isinstance(channel, VoiceChannel) else 'category')
+            await c.send(resolve_emoji('SUCCESS', c)
+                         + f' Channel **{channel}** was created.\n'
+                         + f'```diff\n+Name: {channel}\n+ID: {channel.id}\n+Topic: {channel.topic}\n'
+                         + f'+Category: {channel.category}\n+Type: {chan_type}\n```')
+
+    async def on_guild_channel_delete(self, channel):
+        c = get_log_channel(self.bot, channel.guild)
+        if c and c.permissions_for(channel.guild.me).send_messages:
+            chan_type = 'text' if isinstance(channel, TextChannel) else ('voice' if isinstance(channel, VoiceChannel) else 'category')
+            await c.send(resolve_emoji('ERROR', c)
+                         + f' Channel **{channel}** was deleted.\n'
+                         + f'```diff\n-Name: {channel}\n-ID: {channel.id}\n-Topic: {channel.topic}\n'
+                         + f'-Category: {channel.category}\n-Type: {chan_type}\n```')
+
+    async def on_guild_channel_update(self, before, after):
+        channel = get_log_channel(self.bot, after.guild)
+        if channel and channel.permissions_for(after.guild.me).send_messages:
+            msg = ''
+            if before.name != after.name:
+                msg += f'\n-Name: {before.name}\n+Name: {after.name}'
+            if before.category != after.category:
+                msg += f'\n-Category: {before.category}\n+Category: {after.category}'
+            if before.topic != after.topic:
+                msg += f'\n-Topic: {before.topic}\n+Topic: {after.topic}'
+            if msg != '':
+                await channel.send(resolve_emoji('WARN', channel)
+                                   + f' Channel **{after}** was updated.\n'
+                                   + f'```diff{msg}\n```')
 
 
 def setup(bot):
