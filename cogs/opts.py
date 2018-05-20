@@ -149,10 +149,10 @@ class Settings:
             leave = data[4].replace('"', '\\"')
             self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel,mod_channel,muterole,
                                 welcome_message,leave_message,welcome_channel,leave_channel) VALUES
-                                ({ctx.guild.id}, {data[0]}, {data[1]}, {data[2]}, {join}, {leave}, 
+                                ({ctx.guild.id}, {data[0]}, {data[1]}, {data[2]}, "{join}", "{leave}", 
                                 {data[5]}, {data[5]}) ON DUPLICATE KEY UPDATE log_channel={data[0]},
-                                mod_channel={data[1]},muterole={data[2]},welcome_message={join},
-                                leave_message={leave},welcome_channel={data[5]},leave_channel={data[5]};''')
+                                mod_channel={data[1]},muterole={data[2]},welcome_message="{join}",
+                                leave_message="{leave}",welcome_channel={data[5]},leave_channel={data[5]};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully imported all data from Kumiko into Godavaru.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' I couldn\'t find any data from Kumiko to import.')
