@@ -349,6 +349,20 @@ class Utils:
         unicode_chars = b_string[2:len(b_string) - 1]
         await ctx.send(f"The unicode for `{character}` is: `{unicode_chars}`")
 
+    @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def snipe(self, ctx):
+        """Snipe a recently deleted message in this channel."""
+        try:
+            snipe = self.bot.snipes[str(ctx.channel.id)]
+        except KeyError:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + f' No recently deleted messages found here.')
+        em = discord.Embed(description=snipe['message'], color=ctx.author.color)
+        em.set_author(name=str(snipe['author']), icon_url=snipe['author'].avatar_url)
+        em.set_footer(text=f'Sniped by {ctx.author} | Sniped at', icon_url=ctx.author.avatar_url)
+        em.timestamp = datetime.datetime.now()
+        await ctx.send(embed=em)
+
 
 def setup(bot):
     bot.add_cog(Utils(bot))

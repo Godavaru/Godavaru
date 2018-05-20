@@ -39,6 +39,7 @@ class Godavaru(commands.Bot):
         self.reconnects = 0
         self.executed_commands = 0
         self.modlogs = dict()
+        self.snipes = dict()
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
         extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')] + ['events.' + f for f in

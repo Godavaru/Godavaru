@@ -8,6 +8,10 @@ class Logs:
         self.bot = bot
 
     async def on_message_delete(self, message):
+        self.bot.snipes[str(message.channel.id)] = {
+            'message': message.content,
+            'author': message.author
+        }
         channel = get_log_channel(self.bot, message.guild)
         if channel and \
                 channel.permissions_for(message.guild.me).send_messages and \
