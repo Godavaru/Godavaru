@@ -40,14 +40,16 @@ class Settings:
     @modlog.error
     async def modlog_error(self, ctx, error):
         """Catch a certain error (bad argument) to check if the user is trying to reset their modlog channel."""
+        chan = self.bot.get_channel(315252624645423105)
         try:
             if isinstance(error, commands.BadArgument):
+                await chan.send(ctx.kwargs)
                 if ctx.kwargs['channel'] == 'reset':
                     self.bot.query_db(f'''UPDATE settings SET mod_channel=NULL WHERE guildid={ctx.guild.id};''')
                     await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your mod log channel.')
         except:
             import traceback
-            await self.bot.get_channel(315252624645423105).send(f'```py\n{traceback.format_exc()}\n```')
+            await chan.send(f'```py\n{traceback.format_exc()}\n```')
 
     @commands.command()
     @commands.check(can_manage)
