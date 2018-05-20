@@ -89,8 +89,9 @@ class Settings:
                 self.bot.query_db(f'''INSERT INTO settings (guildid,welcome_channel,welcome_message)
                                     VALUES ({ctx.guild.id},{c.id},"{msg}") ON DUPLICATE KEY UPDATE
                                     welcome_channel={c.id},welcome_message="{msg}";''')
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set your welcome channel and message.')
             else:
-                await ctx.send(resolve_channel('ERROR', ctx) + ' You must supply the message you want after the channel.')
+                await ctx.send(resolve_emoji('ERROR', ctx) + ' You must supply the message you want after the channel.')
         elif channel == 'reset':
             self.bot.query_db(f'''UPDATE settings SET welcome_channel=NULL,welcome_message=NULL WHERE
                                 guildid={ctx.guild.id};''')
@@ -110,9 +111,10 @@ class Settings:
                 self.bot.query_db(f'''INSERT INTO settings (guildid,leave_channel,leave_message)
                                         VALUES ({ctx.guild.id},{c.id},"{msg}") ON DUPLICATE KEY UPDATE
                                         leave_channel={c.id},leave_message="{msg}";''')
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set your leave channel and message.')
             else:
                 await ctx.send(
-                    resolve_channel('ERROR', ctx) + ' You must supply the message you want after the channel.')
+                    resolve_emoji('ERROR', ctx) + ' You must supply the message you want after the channel.')
         elif channel == 'reset':
             self.bot.query_db(f'''UPDATE settings SET leave_channel=NULL,leave_message=NULL WHERE
                                     guildid={ctx.guild.id};''')
