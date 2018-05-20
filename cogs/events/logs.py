@@ -63,17 +63,19 @@ class Logs:
         channel = get_log_channel(self.bot, role.guild)
         if channel and channel.permissions_for(role.guild.me).send_messages:
             await channel.send(resolve_emoji('SUCCESS', channel)
-                               + f'Role **{role}** was created.\n'
-                               + f'```diff\n+ID: {role.id}\n+Name: {role}\nMentionanle: {role.mentionable}\n'
-                               + f'+Colour: {role.colour}\n+Permissions: {role.permissions}\n```')
+                               + f' Role **{role}** was created.\n'
+                               + f'```diff\n+ID: {role.id}\n+Name: {role}\n'
+                               + f'+Mentionable: {role.mentionable}\n+Hoisted: {role.hoist}\n'
+                               + f'+Colour: {role.colour}\n+Permissions: {role.permissions.value}\n```')
 
     async def on_guild_role_delete(self, role):
         channel = get_log_channel(self.bot, role.guild)
         if channel and channel.permissions_for(role.guild.me).send_messages:
             await channel.send(resolve_emoji('ERROR', channel)
-                               + f'Role **{role}** was deleted.\n'
-                               + f'```diff\n-ID: {role.id}\n-Name: {role}\nMentionable: {role.mentionable}\n'
-                               + f'-Colour: {role.colour}\n-Permissions: {role.permissions}\n```')
+                               + f' Role **{role}** was deleted.\n'
+                               + f'```diff\n-ID: {role.id}\n-Name: {role}\n'
+                               + f'-Mentionable: {role.mentionable}\n-Hoisted: {role.hoist}'
+                               + f'-Colour: {role.colour}\n-Permissions: {role.permissions.value}\n```')
 
     async def on_guild_role_update(self, before, after):
         channel = get_log_channel(self.bot, after.guild)
@@ -87,6 +89,8 @@ class Logs:
                 msg += f'\n-Permissions: {before.permissions}\n+Permissions: {after.permissions}'
             if before.mentionable is not after.mentionable:
                 msg += f'\n-Mentionable: {before.mentionable}\n+Mentionable: {after.mentionable}'
+            if before.hoist is not after.hoist:
+                msg += f'\n-Hoisted: {before.hoist}\n+Hoisted: {after.hoist}'
             if msg != '':
                 await channel.send(resolve_emoji('WARN', channel)
                                    + f' Role **{after}** was updated.\n'
