@@ -27,7 +27,6 @@ class Utils:
     async def _time(self, ctx, *, timezone: str):
         """Determine the current time in a timezone specified.
         The timezone is case sensitive as seen in [this list](https://pastebin.com/B5tLQdEY)."""
-        timezone = timezone.upper()
         try:
             if timezone.startswith('GMT'):
                 t = timezone
@@ -41,8 +40,8 @@ class Utils:
             await ctx.send("The time in **{0}** is {1}".format(timezone, datetime.datetime.now(tz).strftime(
                 "`%H:%M:%S` on `%d-%b-%Y`")))
         except pytz.UnknownTimeZoneError:
-            await ctx.send(
-                'Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
+            await ctx.send(resolve_emoji('ERROR',
+                                         ctx) + ' Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
 
     @commands.command()
     async def urban(self, ctx, *, params):
@@ -54,16 +53,16 @@ class Utils:
             try:
                 num = int(params[1]) - 1
             except:
-                await ctx.send(":x: You gave me an improper number!")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " You gave me an improper number!")
                 return
         else:
             num = 0
-        r = requests.get(f"http://api.urbandictionary.com/v0/define?term={word}")
-        j = r.json()
+        r = await self.bot.session.get(f"http://api.urbandictionary.com/v0/define?term={word}")
+        j = await r.json()
         try:
             request = j['list'][num]
         except IndexError:
-            await ctx.send(":x: There are no more results.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " There are no more results.")
             return
         definition = request['definition']
         if len(definition) > 1000:
@@ -107,18 +106,31 @@ class Utils:
 
     @commands.command(name="8ball", aliases=['mb', 'magicball'])
     async def _8ball(self, ctx, *, question):
-        """Consult the magic 8ball with a question!"""
-        url = 'https://8ball.delegator.com/magic/JSON/' + urllib.parse.quote_plus(question)
-        r = requests.get(url)
-        j = r.json()
-        a = j['magic']['answer']
-        t = j['magic']['type']
-        em = discord.Embed(description=f"**Question:** {question}\n**Answer:** {a}\n**Response Type:** {t}", color=0x00ff00)
-        em.set_thumbnail(url="https://8ball.delegator.com/images/8ball.png")
-        em.set_author(name="You consult the magic 8 ball...", icon_url=ctx.author.avatar_url.replace("?size=1024", ""))
-        em.set_footer(text="Powered by 8ball.delegator.com")
-        em.timestamp = datetime.datetime.now()
-        await ctx.send(embed=em)
+        """Consult the magic 8ball (tsundere edition) with a question!"""
+        answers = [
+            'Y-yes...',  # y
+            'U-uh, sure!',  # y
+            'I mean, n-not like I want to say y-yes or anything... b-baka!',  # y
+            'S-Sure, you baka!',  # y
+            'O-of course!', # y
+            'I-I don\'t know, b-baka!',  # i
+            'I\'m not all-knowing, you baka tako!',  # i
+            'Baka! How am I supposed to know that?',  # i
+            'I-I\'m b-busy right now, you baka...',  # i
+            'N-not like I want to g-give you an answer or anything!',  # i
+            'B-baka!', # i
+            'B-Baka! Don\'t make me slap you!',  # n
+            'N-no...',  # n
+            'I t-told you no, b-baka!',  # n
+            'Are you dumb?',  # n
+            'N-no... I-it\'s not like I\'m s-sorry about that or anything!',  # n
+            'No, you b-baka tako!',  # n
+            'N-no, you baka!', # n
+            'Geez, stop pushing yourself! You\'re going to get yourself hurt one day, you idiot!' # n
+        ]
+        if re.compile('will you go out with me\??').match(question.lower()):
+            return await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' W-why are y-you asking! I-it\'s not like I l-like you or anything...')
+        await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' ' + random.choice(answers))
 
     @commands.command()
     async def cat(self, ctx):
@@ -128,20 +140,19 @@ class Utils:
                    "Meeeooowwww!",
                    "Awww, so cute! Look at the kitty!!1!",
                    "Woof... wait wrong animal."]
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://nekos.life/api/v2/img/meow') as resp:
-                try:
-                    js = await resp.json()
-                    em = discord.Embed(
-                        color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
-                    em.set_image(url=js['url'])
-                    await ctx.send(content=random.choice(content), embed=em)
-                except:
-                    await ctx.send(":x: Error retrieving cat image :<")
+        async with self.bot.session.get('https://nekos.life/api/v2/img/meow') as resp:
+            try:
+                js = await resp.json()
+                em = discord.Embed(
+                    color=discord.Colour(int(''.join([random.choice('0123456789ABCDEF') for _ in range(6)]), 16)))
+                em.set_image(url=js['url'])
+                await ctx.send(content=random.choice(content), embed=em)
+            except:
+                await ctx.send(resolve_emoji('ERROR', ctx) + " Error retrieving cat image :<")
 
     @commands.command()
     async def dog(self, ctx):
-        """Get a random cat image!"""
+        """Get a random dog image!"""
         is_video = True
         url = None
         while is_video:
@@ -176,12 +187,13 @@ class Utils:
         else:
             try:
                 em = str(emote.encode('unicode_escape'))
-                uni = em[2:len(em)-1].replace('\\\\u', '-').replace('\\\\U000', '-')[1:]
-                cairosvg.svg2png(url="https://twemoji.maxcdn.com/2/svg/{}.svg".format(uni), write_to="./images/emote.png", parent_width=256, parent_height=256)
+                uni = em[2:len(em) - 1].replace('\\\\u', '-').replace('\\\\U000', '-')[1:]
+                cairosvg.svg2png(url="https://twemoji.maxcdn.com/2/svg/{}.svg".format(uni),
+                                 write_to="./images/emote.png", parent_width=256, parent_height=256)
                 await ctx.send(file=discord.File('./images/emote.png'))
                 os.remove('./images/emote.png')
             except urllib.error.HTTPError:
-                await ctx.send(":x: That is not a custom or unicode emoji!")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " That is not a custom or unicode emoji!")
 
     @commands.command(aliases=["color"])
     async def colour(self, ctx, hexcode: str):
@@ -190,17 +202,19 @@ class Utils:
             hexcode = hexcode.strip("0x#")
         match = re.compile(r'^[^g-zG-Z]{6}$').match(hexcode)
         if not match:
-            return await ctx.send(":x: That is not a valid hex colour.")
+            return await ctx.send(
+                resolve_emoji('ERROR', ctx) + " I-I'm sorry, that doesn't look like a hex colour to me.")
         hexcode = f'{match.group()}'
         try:
-            rgb = ImageColor.getrgb(hexcode)
+            rgb = ImageColor.getrgb('#' + hexcode)
         except ValueError:
-            return await ctx.send(":x: Something happened parsing this hex code :<")
+            return await ctx.send(resolve_emoji('ERROR',
+                                                ctx) + " S-sorry! Something happened parsing this hexcode. I'll be better next time!")
         c = discord.Color(int(match.group(), 16))
         em = discord.Embed(color=c)
         em.set_image(
             url="https://crimsonxv.pro/rendercolour?rgb={r},{g},{b}".format(r=rgb[0], g=rgb[1], b=rgb[2]))
-        em.set_author(name="Here is a preview of your colour.", icon_url=ctx.author.avatar_url_as(format='png'))
+        em.set_author(name="Here's the colour you wanted!", icon_url=ctx.author.avatar_url_as(format='png'))
         await ctx.send(embed=em)
 
     @commands.command()
@@ -238,9 +252,10 @@ class Utils:
                 if oper[1].lower() in available_endpoints:
                     op = oper[1].lower()
                 else:
-                    return await ctx.send(":x: The operation you gave me was invalid.")
+                    return await ctx.send(":x: S-Sorry! That operation seems invalid")
             except:
-                return await ctx.send(":x: You never gave me an operation. Check the command help.")
+                return await ctx.send(
+                    ":x: Y-you need to give me a valid operation! I made a list for you in the command help.")
         expr = oper[0].replace('/', '%2F')
         r = requests.get("https://newton.now.sh/" + op + "/" + expr)
         try:
@@ -256,7 +271,7 @@ class Utils:
         await ctx.send(embed=em)
 
     @commands.command(aliases=["request"])
-    @commands.cooldown(rate=4, per=43200, type=commands.BucketType.user)
+    @commands.cooldown(rate=2, per=86400, type=commands.BucketType.user)
     async def suggest(self, ctx, *, suggestion: str):
         """Suggest a feature to be added!
         Has a cooldown of 2 requests per day to prevent spamming."""
@@ -331,7 +346,7 @@ class Utils:
     async def unicode(self, ctx, *, character: str):
         """Get the unicodes for the input you give me!"""
         b_string = str(character.encode('unicode_escape'))
-        unicode_chars = b_string[2:len(b_string)-1]
+        unicode_chars = b_string[2:len(b_string) - 1]
         await ctx.send(f"The unicode for `{character}` is: `{unicode_chars}`")
 
 

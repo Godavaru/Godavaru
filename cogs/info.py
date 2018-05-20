@@ -10,16 +10,18 @@ from cogs.utils.tools import *
 
 about_description = """
 **H-hello!~~**
-My name is Godavaru, but you can call me Godava, as many people do. I was named after a community guild, which I am not directly linked to anymore, but you may check out if you wish using the link [here](https://discord.gg/QdxDhrz)! I-I mean, It's not like I want you to join or anything... baka!
+My name is Godavaru, but you can call me Goda, as many people do. I was named after a community server that my mom made when she first started out in discord, but she no longer focuses on it, and rather develops me as an individual project.
 Below, you can find a link to the actual support guild for me, where you may tell my mom if I misbehave and throw errors around again. :< Below, you can also find a link to invite me, if you so wish! I promise that I will do you good!
 I have quite a few features; I can list them for you now!
 
 **__I come with:__**
--> Action Commands (hug, kiss, even some lewd ones :eyes:)
+-> Action Commands (hug, kiss, and many more)
 -> Moderation Commands (ban, kick, prune, and more!)
 -> Utility Commands (urbandictionary search, normal dictionary, complex maths, and much more!)
 -> Fun Commands (slots, trivia, and other miscellanious features to keep you occupied!)
 -> Information Commands (userid lookup, discriminator lookup, role information, and more!)
+-> Customisation (set your prefix, enable logging, enable modlogs and even change modlog reasons!)
+-> NSFW commands (rule34, yandere, and a fuck action :eyes:)
 
 Check all my commands with `g_help` or `godavaru help`!
 """
@@ -60,7 +62,7 @@ class Info:
             em = discord.Embed(title='About Godavaru!', description=about_description, color=0x9B59B6)
             em.add_field(name='Version', value=self.bot.version + '\n' + self.bot.version_info, inline=False)
             em.add_field(name='Servers', value=str(server_count))
-            em.add_field(name='Users', value=f'{len(self.bot.users)} total/{member_count} unique')
+            em.add_field(name='Users', value=f'{len(self.bot.users)} unique/{member_count} total')
             em.add_field(
                 name='Invite Me!',
                 value='[Click Here](https://goo.gl/chLxM9)\n[Support guild](https://discord.gg/ewvvKHM)\n[Patreon page](https://www.patreon.com/desii)',
@@ -91,23 +93,37 @@ class Info:
         await ctx.send(embed=em)
 
     @commands.command(aliases=["links"])
-    async def invite(self, ctx):
-        """Get some important links about me."""
-        em = discord.Embed(
-            description='Here are some useful links for the Godavaru bot. If you have any questions at all, '
-                        + f'feel free to join the support guild and tag {self.bot.get_user(267207628965281792)} with your questions!\n'
-                        + 'Below you can also find the links to the support guild itself and the Patreon URL. '
-                        + 'Thanks for using the bot!',
-            color=0x9B59B6)
-        em.set_author(
-            name='Useful Links for Godavaru!',
-            icon_url=ctx.me.avatar_url.split('?')[0])
-        em.add_field(name='Invite URL', value='http://is.gd/godavaru')
-        em.add_field(name='Support Guild', value='https://discord.gg/ewvvKHM')
-        em.add_field(name="Patreon URL", value='https://patreon.com/desii')
-        em.add_field(name="Github", value="https://github.com/Desiiii/Godavaru")
-        em.add_field(name="Website", value="https://godavaru.site/")
-        await ctx.send(embed=em)
+    async def invite(self, ctx, noembed: str = None):
+        """Get some important links about me.
+        You can also place `noembed` at the end to send a mobile friendly message."""
+        if noembed != "noembed" and ctx.channel.permissions_for(ctx.me).embed_links:
+            em = discord.Embed(
+                description='Here are some useful links for the Godavaru bot. If you have any questions at all, '
+                            + f'feel free to join the support guild and tag {self.bot.get_user(267207628965281792)} with your questions!\n'
+                            + 'Below you can also find the links to the support guild itself and the Patreon URL. '
+                            + 'Thanks for using the bot!',
+                color=0x9B59B6)
+            em.set_author(
+                name='Useful Links for Godavaru!',
+                icon_url=ctx.me.avatar_url.split('?')[0])
+            em.add_field(name='Invite URL', value='http://is.gd/godavaru')
+            em.add_field(name='Support Guild', value='https://discord.gg/ewvvKHM')
+            em.add_field(name="Patreon URL", value='https://patreon.com/desii')
+            em.add_field(name="Github", value="https://github.com/Godavaru/Godavaru")
+            em.add_field(name="Website", value="https://godavaru.site/")
+            await ctx.send(embed=em)
+        else:
+            await ctx.send('**Useful Links for Godavaru!**\n'
+                           + 'Here are some useful links for the Godavaru bot. If you have any questions at all,'
+                           + ' feel free to join the support guild and tag '
+                           + f'{self.bot.get_user(267207628965281792)} with your questions!\n'
+                           + 'Below you can also find the links to the support guild itself and the Patreon URL. '
+                           + 'Thanks for using the bot!\n\n'
+                           + '**Invite:** <http://is.gd/godavaru>\n'
+                           + '**Support Guild:** <https://discord.gg/ewvvKHM>\n'
+                           + '**Patreon URL:** <https://patreon.com/desii>\n'
+                           + '**Github:** <https://github.com/Godavaru/Godavaru>\n'
+                           + '**Website:** <https://godavaru.site>')
 
     @commands.command()
     async def ping(self, ctx):
@@ -145,6 +161,7 @@ class Info:
     @commands.bot_has_permissions(embed_links=True)
     async def _help(self, ctx, *, command_or_category: str = None):
         """Shows a list of commands or gives extended help on the command/category you supplied."""
+        prefix = ctx.prefix.replace(ctx.me.mention, f'@{ctx.me}')
         if command_or_category:
             cmd = self.bot.all_commands.get(command_or_category)
             if cmd is None:
@@ -159,7 +176,7 @@ class Info:
                 em = discord.Embed(title=f"Commands in Category {cmds[0].cog_name} - [{len(cmds)}]", description=msg,
                                    color=ctx.author.color)
                 em.set_footer(
-                    text=f"Requested by {ctx.author.display_name} | For extended help, do {ctx.prefix}help <command>",
+                    text=f"Requested by {ctx.author.display_name} | For extended help, do {prefix}help <command>",
                     icon_url=ctx.author.avatar_url.split('?')[0])
                 return await ctx.send(embed=em)
             em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help,
@@ -167,11 +184,11 @@ class Info:
             comm = cmd.signature.split(' ')[0].split('|')[0].replace('[', '')
             usage = cmd.signature.split(' ')
             del usage[0]
-            em.add_field(name="Usage", value=f"`{ctx.prefix}{comm} {' '.join(usage)}`", inline=False)
+            em.add_field(name="Usage", value=f"`{prefix}{comm} {' '.join(usage)}`", inline=False)
             if len(cmd.aliases) > 0:
                 em.add_field(name="Alias(es)", value="`" + "`, `".join(cmd.aliases) + "`", inline=False)
             if hasattr(cmd, 'commands'):
-                cmds = list(cmd.commands)
+                cmds = sorted(list(cmd.commands), key=lambda c: c.name)
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
@@ -180,7 +197,7 @@ class Info:
             return await ctx.send(embed=em)
         em = discord.Embed(
             title="Godavaru Help",
-            description=f"Here is a list of all of my commands! You can do `{ctx.prefix}help <command>` without the brackets for extended help!",
+            description=f"Here is a list of all of my commands! You can do `{prefix}help <command>` without the brackets for extended help!",
             color=ctx.author.color)
         for cog in sorted(self.bot.cogs):
             if str(cog) == "Owner" and ctx.author.id not in config.owners:
@@ -212,18 +229,19 @@ class Info:
                        + '=========[ Bot Information ]=========\n\n'
                        + f'Commands           :  {len(self.bot.commands)}\n'
                        + f'Cogs               :  {len(self.bot.cogs)}\n'
-                       + 'Websocket Ping     :  {:.0f}ms\n'.format(ping)
-                       + f'Uptime             :  {self.get_bot_uptime()}\n'
                        + f'Guilds             :  {len(self.bot.guilds)}\n'
                        + f'Users              :  {member_count}\n'
                        + f'Channels           :  {channel_count}\n'
-                       + f'Messages Seen      :  {self.bot.seen_messages}\n\n'
+                       + f'Messages Seen      :  {self.bot.seen_messages}\n'
+                       + f'Commands Executed  :  {self.bot.executed_commands}\n\n'
                        + '=========[ Technical Information ]=========\n\n'
                        + f'Version            :  {self.bot.version}\n'
                        + f'DiscordPY Version  :  {discord.__version__}\n'
                        + f'Python Version     :  {platform.python_version()}\n'
                        + f'Hostname           :  {platform.node()}\n'
-                       + f'OS                 :  {platform.system()}\n```')
+                       + f'OS                 :  {platform.system()}\n'
+                       + f'Uptime             :  {self.get_bot_uptime()}\n'
+                       + 'Websocket Ping     :  {:.0f}ms\n```'.format(ping))
 
     @commands.command()
     async def avatar(self, ctx, *, user: discord.Member = None):
@@ -250,9 +268,6 @@ class Info:
     async def guildinfo(self, ctx):
         """Get information on the guild you are currently in!"""
         g = ctx.guild
-        num = 0
-        if ctx.channel.permissions_for(ctx.me).external_emojis:
-            num = 1
         online = len([m for m in g.members if m.status == discord.Status("online")])
         idle = len([m for m in g.members if m.status == discord.Status("idle")])
         dnd = len([m for m in g.members if m.status == discord.Status("dnd")])
@@ -272,9 +287,9 @@ class Info:
             inline=False
         ).add_field(
             name="Users - " + str(len(g.members)),
-            value=f"{get_status_emoji('online', num)} Online: {online}\n"
-                  + f"{get_status_emoji('idle', num)} Idle: {idle}\n"
-                  + f"{get_status_emoji('dnd', num)} DnD: {dnd}",
+            value=f"{resolve_emoji('ONLINE', ctx)} Online: {online}\n"
+                  + f"{resolve_emoji('IDLE', ctx)} Idle: {idle}\n"
+                  + f"{resolve_emoji('DND', ctx)} DnD: {dnd}",
             inline=False
         ).add_field(
             name="Days Since Creation",
@@ -332,8 +347,9 @@ class Info:
         em.add_field(name="Game:", value=user.activity, inline=False)
         em.add_field(name="Top Role:", value=user.top_role.name)
         em.add_field(name="Highest Position:", value=user.top_role.position)
-        em.add_field(name=f"Roles [{len(user.roles) - 1}]:", value=", ".join(
-            [r.name for r in sorted(user.roles, key=lambda x: -x.position) if not r.is_default()]))
+        em.add_field(name=f"Roles [{len(user.roles) - 1}]:", value=(", ".join(
+            [r.name for r in sorted(user.roles, key=lambda x: -x.position) if not r.is_default()])) if len(
+            user.roles) == 1 else "This user has no roles.")
         em.set_thumbnail(url=user.avatar_url.replace("?size=1024", ""))
         em.set_author(name=f"{user} ({user.id})", icon_url=user.avatar_url.replace("?size=1024", ""),
                       url=user.avatar_url.replace("?size=1024", ""))
@@ -347,10 +363,10 @@ class Info:
         If the member is not specified or an invalid member argument is passed, the member is the author."""
         a = " is "
         if not user:
-            user = ctx.message.author
+            user = ctx.author
             a = ", you are "
         if user.activity is None:
-            return await ctx.send('You are' if user is None else 'That person is' + ' not playing anything!')
+            return await ctx.send('You are' if user is ctx.author else 'That person is' + ' not playing anything!')
         else:
             game = user.activity
             if game.type == discord.ActivityType.listening:
@@ -386,31 +402,36 @@ class Info:
         await ctx.send(embed=em)
 
     @commands.command()
-    async def changelog(self, ctx):
-        """Check the most recent changelog for all of the newer features!"""
+    async def changelog(self, ctx, noembed: str = None):
+        """Check the most recent changelog for all of the newer features!
+        You can also place `noembed` at the end to send a mobile friendly message."""
         changelog_channel = self.bot.get_channel(315602734235516928)
         m = (await changelog_channel.history(limit=1).flatten())[0]
         changelog = m.clean_content
-        desii = m.author
-        last_update = m.created_at
-        em = discord.Embed(description=changelog, color=ctx.author.color)
-        em.set_author(icon_url=desii.avatar_url.replace("?size=1024", ""),
-                      name="Found the latest changelog from my support guild!")
-        em.timestamp = last_update
-        await ctx.send(embed=em)
+        if noembed != "noembed" and ctx.channel.permissions_for(ctx.me).embed_links:
+            em = discord.Embed(description=changelog, color=ctx.author.color)
+            em.set_author(icon_url=m.author.avatar_url.replace("?size=1024", ""),
+                          name="Found the latest changelog from my support guild!")
+            em.timestamp = m.created_at
+            await ctx.send(embed=em)
+        else:
+            await ctx.send("Found the latest changelog from my support guild!\n" + changelog)
 
     @commands.command()
-    async def news(self, ctx):
-        """Get the latest five messages from my announcements channel!"""
+    async def news(self, ctx, noembed: str = None):
+        """Get the latest five messages from my announcements channel!
+        You can also place `noembed` at the end to send a mobile friendly message."""
         announcements = self.bot.get_channel(315252885682389012)
         msgs = sorted(await announcements.history(limit=5).flatten(), key=lambda m: m.created_at)
-        em = discord.Embed(description='\n\n'.join(
-            map(lambda m: f'**{m.author.display_name} ({m.author})**\n{m.clean_content}', msgs)),
-                           color=ctx.author.color)
-        em.set_author(icon_url=msgs[0].author.avatar_url.replace('?size=1024', ''),
-                      name="The latest five announcements from my support guild!")
-        em.timestamp = msgs[0].created_at
-        await ctx.send(embed=em)
+        msg = '\n\n'.join(map(lambda m: f'**{m.author.display_name} ({m.author})**\n{m.clean_content}', msgs))
+        if noembed != "noembed" and ctx.channel.permissions_for(ctx.me).embed_links:
+            em = discord.Embed(description=msg, color=ctx.author.color)
+            em.set_author(icon_url=msgs[0].author.avatar_url.replace('?size=1024', ''),
+                          name="The latest five announcements from my support guild!")
+            em.timestamp = msgs[0].created_at
+            await ctx.send(embed=em)
+        else:
+            await ctx.send("The latest 5 announcements from my support guild!\n" + msg)
 
 
 def setup(bot):
