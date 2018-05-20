@@ -1,4 +1,5 @@
 import discord
+import asyncio
 import config
 from discord.ext import commands
 from .utils.db import get_all_prefixes
@@ -121,6 +122,35 @@ class Settings:
             await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your leave channel & message.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
+
+    @commands.command(name='import')
+    @commands.check(can_manage)
+    @commands.cooldown(rate=1, per=3600, type=commands.BucketType.guild)
+    async def _import(self, ctx):
+        """Import settings from Kumiko.
+        WARNING: THIS CAN NOT BE UNDONE."""
+        kum_query = self.bot.query_db(f'''SELECT logchannel,modlogchannel,muterole,
+                                        joinmessage,leavemessage,welcomechannel FROM desii.opts 
+                                        WHERE guildid={ctx.guild.id};''')
+        if kum_query:
+            await ctx.send('Found data! Are you ***sure*** that you want to do this? This can **NOT** be undone.'
+                           + ' This will replace all of your current settings in Godavaru. Are you ***bolded sure*** '
+                           + 'that you wish to go through with this? Please say `yes`.')
+            def check(m):
+                return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+            try:
+                await self.bot.wait_for('message', check=check, timeout=60.0)
+            except asyncio.TimeoutError:
+                return await ctx.send(resolve_emoji('ERROR', ctx) + f' The time ran out, cancelling import.')
+            data = kum_query[0]
+            join = data[3].replace('"', '\\"')
+            leave = data[4].replace('"', '\\"')
+            self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel,mod_channel,muterole,
+                                welcome_message,leave_message,welcome_channel,leave_channel) VALUES
+                                ({ctx.guild.id}, {data[0]}, {data[1]}, {data[2]}, {join}, {leave}, 
+                                {data[5]}, {data[5]}) ON DUPLICATE KEY UPDATE log_channel={data[0]},
+                                mod_channel={data[1]},muterole={data[2]},welcome_message={join},
+                                leave_message={leave},welcome_channel={data[5]},leave_channel={data[5]};''')
 
 
 def setup(bot):
