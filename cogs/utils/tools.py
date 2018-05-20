@@ -1,10 +1,15 @@
 import config
 import aiohttp
-from discord import Message, Forbidden, Member, User, TextChannel
+from discord import Message, Forbidden, Member, User, TextChannel, Role, utils
 from discord.ext.commands import Context, Bot
 from .bases import ModLog
 import string
 import random
+import re
+
+
+_CHANNEL_MENTION_MATCH = re.compile('<#([0-9]+)>$')
+_ROLE_MENTION_MATCH = re.compile('<@&([0-9]+)>$')
 
 
 def remove_html(string):
@@ -48,6 +53,50 @@ async def post(url, headers=None, data=None):
     async with aiohttp.ClientSession() as session:
         async with session.post(url=url, headers=headers, data=data) as resp:
             return await resp.read()
+
+
+def resolve_channel(string: str, ctx: Context) -> TextChannel or None:
+    """Resolve a channel based on mention, ID, or name.
+
+    Args:
+          string (str): The ``str`` used to get the channel from.
+          ctx (Context): The ``Context`` to get the guild from.
+
+    Returns:
+          TextChannel or None: The ``TextChannel`` found or None if none found.
+    """
+    match = _CHANNEL_MENTION_MATCH.match(string)
+    channel = None
+    if match:
+        channel = utils.get(ctx.guild.text_channels, id=int(match.group(1)))
+    else:
+        try:
+            channel = utils.get(ctx.guild.text_channels, id=int(string))
+        except ValueError:
+            channel = utils.get(ctx.guild.text_channels, name=string)
+    return channel
+
+
+def resolve_role(string: str, ctx: Context) -> Role or None:
+    """Resolve a role based on mention, ID, or name.
+
+    Args:
+          string (str): The ``str`` used to get the role from.
+          ctx (Context): The ``Context`` to get the guild from.
+
+    Returns:
+          Role or None: The ``Role`` found or None if none found.
+    """
+    match = _ROLE_MENTION_MATCH.match(string)
+    role = None
+    if match:
+        role = utils.get(ctx.guild.roles, id=int(match.group(1)))
+    else:
+        try:
+            role = utils.get(ctx.guild.roles, id=int(string))
+        except ValueError:
+            role = utils.get(ctx.guild.roles, name=string)
+    return role
 
 
 def generate_id(size: int = 6, chars: str = string.ascii_uppercase + string.digits) -> str:

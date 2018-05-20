@@ -1,7 +1,7 @@
-from discord.ext import commands
+from discord.ext.commands import CommandError, check
 
 
-class ChannelNotNSFW(commands.CommandError):
+class ChannelNotNSFW(CommandError):
     pass
 
 
@@ -11,4 +11,4 @@ def is_nsfw():
             return True
         else:
             raise ChannelNotNSFW("This channel is not marked as NSFW.")
-    return commands.check(pred)
+    return check(pred)

@@ -2,7 +2,7 @@ import discord
 import config
 from discord.ext import commands
 from .utils.db import get_all_prefixes
-from .utils.tools import resolve_emoji
+from .utils.tools import resolve_emoji, resolve_channel, resolve_role
 
 
 def can_manage(ctx):
@@ -30,44 +30,52 @@ class Settings:
 
     @commands.command()
     @commands.check(can_manage)
-    async def modlog(self, ctx, channel: discord.TextChannel):
+    async def modlog(self, ctx, channel: str):
         """Change the guild mod log channel.
         Note: to use this command, you must have the `MANAGE_GUILD` permission."""
-        self.bot.query_db(f'''INSERT INTO settings (guildid,mod_channel) VALUES ({ctx.guild.id}, {channel.id})
-                            ON DUPLICATE KEY UPDATE mod_channel={channel.id}''')
-        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the modlog channel to **#{channel}** (`{channel.id}`)')
-
-    @modlog.error
-    async def modlog_error(self, ctx, error):
-        """Catch a certain error (bad argument) to check if the user is trying to reset their modlog channel."""
-        chan = self.bot.get_channel(315252624645423105)
-        try:
-            if isinstance(error, commands.BadArgument):
-                if str(error) == 'Channel "reset" not found.':
-                    self.bot.query_db(f'''UPDATE settings SET mod_channel=NULL WHERE guildid={ctx.guild.id};''')
-                    await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your mod log channel.')
-        except:
-            import traceback
-            await chan.send(f'```py\n{traceback.format_exc()}\n```')
+        c = resolve_channel(channel, ctx)
+        if c:
+            self.bot.query_db(f'''INSERT INTO settings (guildid,mod_channel) VALUES ({ctx.guild.id}, {c.id})
+                                ON DUPLICATE KEY UPDATE mod_channel={c.id}''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the modlog channel to **#{c}** (`{c.id}`)')
+        elif channel == 'reset':
+            self.bot.query_db(f'''UPDATE settings SET mod_channel=NULL WHERE guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your mod log channel.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
 
     @commands.command()
     @commands.check(can_manage)
-    async def muterole(self, ctx, *, role: discord.Role):
+    async def muterole(self, ctx, *, role: str):
         """Change the guild mute role.
         Note: To use this command, you must have the `MANAGE_GUILD` permission.
         Note 2: The muterole does not automatically deny `SEND_MESSAGES`. You must do this yourself."""
-        self.bot.query_db(f'''INSERT INTO settings (guildid,muterole) VALUES ({ctx.guild.id},{role.id})
-                            ON DUPLICATE KEY UPDATE muterole={role.id};''')
-        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the mute role to **{role}** (`{role.id}`)')
+        r = resolve_role(role, ctx)
+        if r:
+            self.bot.query_db(f'''INSERT INTO settings (guildid,muterole) VALUES ({ctx.guild.id},{r.id})
+                                ON DUPLICATE KEY UPDATE muterole={r.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the mute role to **{r}** (`{r.id}`)')
+        elif role == 'reset':
+            self.bot.query_db(f'''UPDATE settings SET muterole=NULL WHERE guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your mute role.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' Role "{role}" not found.')
 
     @commands.command()
     @commands.check(can_manage)
-    async def logs(self, ctx, channel: discord.TextChannel):
+    async def logs(self, ctx, channel: str):
         """Change the guild logging channel.
         Note: To use this command, you must have the `MANAGE_GUILD` permission."""
-        self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel) VALUES ({ctx.guild.id},{channel.id})
-                            ON DUPLICATE KEY UPDATE log_channel={channel.id};''')
-        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the logging channel to **#{channel}** (`{channel.id}`)')
+        c = resolve_channel(channel, ctx)
+        if c:
+            self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel) VALUES ({ctx.guild.id},{c.id})
+                                ON DUPLICATE KEY UPDATE log_channel={c.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the logging channel to **#{c}** (`{c.id}`)')
+        elif channel == 'reset':
+            self.bot.query_db(f'''UPDATE settings SET log_channel=NULL WHERE guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your log channel.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
 
 
 def setup(bot):
