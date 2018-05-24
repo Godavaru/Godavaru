@@ -39,7 +39,9 @@ class Currency:
             return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer to yourself, silly.')
         if user.bot:
             return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer to a bot, silly.')
-        bal = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={user.id};''')
+        if amount <= 0:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' Nice try. You cannot transfer negative or zero money.')
+        bal = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id};''')
         if not bal or not bal[0][0] >= amount:
             return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer more than what you have.')
         self.bot.query_db(f'''INSERT INTO users (userid, balance) VALUES ({user.id}, {amount})
@@ -219,7 +221,7 @@ class Currency:
     async def divorce(self, ctx):
         """Divorce the person you are married to :sob:"""
         married = self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')
-        if not married and not married[0][0]:
+        if not married or not married[0][0]:
             return await ctx.send(":x: You are not married.")
         await ctx.send(":ok_hand: You're single now. Cool.")
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={ctx.author.id}''')
