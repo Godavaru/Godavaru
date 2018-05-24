@@ -49,7 +49,7 @@ class Godavaru(commands.Bot):
             try:
                 self.load_extension('cogs.' + ext[:-3])
             except:
-                print(f'Failed to load extension ' + ext)
+                # print(f'Failed to load extension ' + ext)
                 print(traceback.format_exc())
                 continue
 
