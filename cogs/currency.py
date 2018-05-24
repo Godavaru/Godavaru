@@ -4,6 +4,7 @@ import asyncio
 import json
 from .assets import items
 from .utils import db
+from .utils.tools import resolve_emoji
 from discord.ext import commands
 
 
@@ -29,6 +30,22 @@ class Currency:
             await ctx.send(f":tada: You looted **{amnt}** from this channel!")
         else:
             await ctx.send(":slight_frown: You didn't loot anything")
+
+    @commands.command()
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    async def transfer(self, ctx, user: discord.Member, amount: int):
+        """Transfer money to another user."""
+        if user.id == ctx.author:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer to yourself, silly.')
+        if user.bot:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer to a bot, silly.')
+        bal = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={user.id};''')
+        if not bal or not bal[0][0] >= amount:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer more than what you have.')
+        self.bot.query_db(f'''INSERT INTO users (userid, balance) VALUES ({user.id}, {amount})
+                            ON DUPLICATE KEY UPDATE balance = balance + {amount};''')
+        self.bot.query_db(f'''UPDATE users SET balance = balance - {amount} WHERE userid={ctx.author.id};''')
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successully transfered **{amount}** credits to **{user}**')
 
     @commands.command()
     async def profile(self, ctx, *, member: discord.Member = None):

@@ -111,13 +111,13 @@ class Logs:
             removed = list(filter(lambda e: e not in after, before))
             if len(before) != len(after):
                 await channel.send(resolve_emoji('ERROR' if len(removed) == 1 else 'SUCCESS', channel)
-                                   + f'Emoji `{removed[0].name if len(removed) == 1 else added[0].name}` '
-                                   + 'removed' if len(removed) == 1 else 'added: '
+                                   + f' Emoji `{removed[0].name if len(removed) == 1 else added[0].name}` '
+                                   + ('removed' if len(removed) == 1 else 'added: ')
                                    + str(removed[0] if len(removed) == 1 else added[0]))
             for i in range(len(after)):
                 if after[i].name != before[i].name:
                     await channel.send(resolve_emoji('WARN', channel)
-                                       + f'Name of emoji `{before[i].name}` updated to `{after[i].name}`'
+                                       + f' Name of emoji `{before[i].name}` updated to `{after[i].name}`'
                                        + f': {after[i]}')
 
     async def on_member_ban(self, guild, user):
@@ -140,8 +140,10 @@ class Logs:
             chan_type = 'text' if isinstance(channel, TextChannel) else ('voice' if isinstance(channel, VoiceChannel) else 'category')
             await c.send(resolve_emoji('SUCCESS', c)
                          + f' Channel **{channel}** was created.\n'
-                         + f'```diff\n+Name: {channel}\n+ID: {channel.id}\n+Topic: {channel.topic}\n'
-                         + f'+Category: {channel.category}\n+Type: {chan_type}\n```')
+                         + f'```diff\n+Name: {channel}\n+ID: {channel.id}'
+                         + (f'\n+Topic: {channel.topic}' if hasattr(channel, 'topic') else '')
+                         + (f'\n+Category: {channel.category}' if hasattr(channel, 'category') else '')
+                         + f'\n+Type: {chan_type}\n```')
 
     async def on_guild_channel_delete(self, channel):
         c = get_log_channel(self.bot, channel.guild)
@@ -149,19 +151,25 @@ class Logs:
             chan_type = 'text' if isinstance(channel, TextChannel) else ('voice' if isinstance(channel, VoiceChannel) else 'category')
             await c.send(resolve_emoji('ERROR', c)
                          + f' Channel **{channel}** was deleted.\n'
-                         + f'```diff\n-Name: {channel}\n-ID: {channel.id}\n-Topic: {channel.topic}\n'
-                         + f'-Category: {channel.category}\n-Type: {chan_type}\n```')
+                         + f'```diff\n-Name: {channel}\n-ID: {channel.id}\n-Topic: {channel.topic}'
+                         + (f'\n+Topic: {channel.topic}' if hasattr(channel, 'topic') else '')
+                         + (f'\n-Category: {channel.category}' if hasattr(channel, 'category') else '')
+                         + f'\n-Type: {chan_type}\n```')
 
     async def on_guild_channel_update(self, before, after):
         channel = get_log_channel(self.bot, after.guild)
         if channel and channel.permissions_for(after.guild.me).send_messages:
+            chan_type = 'text' if isinstance(channel, TextChannel) else (
+                'voice' if isinstance(channel, VoiceChannel) else 'category')
             msg = ''
             if before.name != after.name:
                 msg += f'\n-Name: {before.name}\n+Name: {after.name}'
-            if before.category != after.category:
-                msg += f'\n-Category: {before.category}\n+Category: {after.category}'
-            if before.topic != after.topic:
-                msg += f'\n-Topic: {before.topic}\n+Topic: {after.topic}'
+            if hasattr(before, 'category') and hasattr(after, 'category'):
+                if before.category != after.category:
+                    msg += f'\n-Category: {before.category}\n+Category: {after.category}'
+            if chan_type == 'text':
+                if before.topic != after.topic:
+                    msg += f'\n-Topic: {before.topic}\n+Topic: {after.topic}'
             if msg != '':
                 await channel.send(resolve_emoji('WARN', channel)
                                    + f' Channel **{after}** was updated.\n'
