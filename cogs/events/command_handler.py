@@ -34,8 +34,6 @@ class CommandHandler:
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(resolve_emoji('ERROR', ctx) + f" Missing required argument `{error.param.name}`, check `{ctx.prefix}help {ctx.command}`")
             ctx.command.reset_cooldown(ctx)
-        elif isinstance(error, ValueError):
-            await ctx.send('issa value error')
         elif isinstance(error, self.__sendable_exceptions):
             await ctx.send(resolve_emoji('ERROR', ctx) + ' ' + str(error))
         else:
