@@ -33,9 +33,10 @@ class Currency:
 
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)
-    async def transfer(self, ctx, user: discord.Member, amount: int):
+    async def transfer(self, ctx, user: discord.Member, amount: float):
         """Transfer money to another user."""
-        if user.id == ctx.author:
+        amount = round(amount)
+        if user.id == ctx.author.id:
             return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer to yourself, silly.')
         if user.bot:
             return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer to a bot, silly.')

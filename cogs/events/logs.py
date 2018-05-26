@@ -151,7 +151,7 @@ class Logs:
             chan_type = 'text' if isinstance(channel, TextChannel) else ('voice' if isinstance(channel, VoiceChannel) else 'category')
             await c.send(resolve_emoji('ERROR', c)
                          + f' Channel **{channel}** was deleted.\n'
-                         + f'```diff\n-Name: {channel}\n-ID: {channel.id}\n-Topic: {channel.topic}'
+                         + f'```diff\n-Name: {channel}\n-ID: {channel.id}'
                          + (f'\n+Topic: {channel.topic}' if hasattr(channel, 'topic') else '')
                          + (f'\n-Category: {channel.category}' if hasattr(channel, 'category') else '')
                          + f'\n-Type: {chan_type}\n```')
@@ -159,8 +159,8 @@ class Logs:
     async def on_guild_channel_update(self, before, after):
         channel = get_log_channel(self.bot, after.guild)
         if channel and channel.permissions_for(after.guild.me).send_messages:
-            chan_type = 'text' if isinstance(channel, TextChannel) else (
-                'voice' if isinstance(channel, VoiceChannel) else 'category')
+            chan_type = 'text' if isinstance(before, TextChannel) else (
+                'voice' if isinstance(before, VoiceChannel) else 'category')
             msg = ''
             if before.name != after.name:
                 msg += f'\n-Name: {before.name}\n+Name: {after.name}'
