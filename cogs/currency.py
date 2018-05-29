@@ -165,30 +165,33 @@ class Currency:
     async def gamble(self, ctx, amount: str):
         """Gamble your life away!"""
         profile = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id}''')
-        if amount == 'all':
-            amount = profile[0][0]
-        elif amount.endswith('%'):
+        if profile:
+            if amount == 'all':
+                amount = profile[0][0]
+            elif amount.endswith('%'):
+                try:
+                    amount = round((int(amount[:-1]) * 0.01) * profile[0][0])
+                except ValueError:
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + ' That is not a valid percentage.')
             try:
-                amount = round((int(amount[:-1]) * 0.01) * profile[0][0])
+                amount = int(amount)
             except ValueError:
-                return await ctx.send(':x: That is not a valid percentage.')
-        try:
-            amount = int(amount)
-        except ValueError:
-            return await ctx.send(':x: That is not a valid number.')
-        if amount <= 0:
-            return await ctx.send(':x: Don\'t even try it...')
-        if profile and profile[0][0] >= amount:
-            win = random.randint(1, 10) >= 7
-            if win:
-                bal = f'balance+{round(amount * 0.7)}'
-                await ctx.send(f':tada: You won {round(amount * 0.7)} credits!')
+                return await ctx.send(resolve_emoji('ERROR', ctx) + ' That is not a valid number.')
+            if amount <= 0:
+                return await ctx.send(resolve_emoji('ERROR', ctx) + ' Don\'t even try it...')
+            if profile[0][0] >= amount:
+                win = random.randint(1, 10) >= 7
+                if win:
+                    bal = f'balance+{round(amount * 0.7)}'
+                    await ctx.send(f':tada: You won {round(amount * 0.7)} credits!')
+                else:
+                    bal = f'balance-{amount}'
+                    await ctx.send(f':sob: Sadly, you lost {amount} credits.')
+                self.bot.query_db(f'''UPDATE users SET balance={bal} WHERE userid={ctx.author.id}''')
             else:
-                bal = f'balance-{amount}'
-                await ctx.send(f':sob: Sadly, you lost {amount} credits.')
-            self.bot.query_db(f'''UPDATE users SET balance={bal} WHERE userid={ctx.author.id}''')
+                await ctx.send(resolve_emoji('ERROR', ctx) + ' You don\'t have the money to do that.')
         else:
-            await ctx.send(':x: You don\'t have the money to do that.')
+            await ctx.send(resolve_emoji('ERROR', ctx) + ' You don\'t have the money to do that.')
 
     @commands.command()
     async def marry(self, ctx, *, member: discord.Member):

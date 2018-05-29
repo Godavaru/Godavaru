@@ -29,23 +29,6 @@ class MessageEvents:
                 await channel.send(random.choice(prefix_messages))
             if message.author.id not in config.blacklist:
                 await self.bot.process_commands(message)
-        if not message.author.bot:
-            if message.guild is None:
-                await message.channel.send(
-                    "Hey! Weirdo! Stop sending me dms. If you're trying to use commands, use it in a server.")
-                self.bot.webhook.send(content="[`" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "`][`Godavaru`]\n"
-                                          + "[`CommandHandler`][`InterceptDirectMessage`]\n"
-                                          + "[`AuthorInformation`]: {} ({})\n".format(str(message.author),
-                                                                                      str(message.author.id))
-                                          + "[`MessageInformation`]: {} ({})\n".format(message.clean_content,
-                                                                                       str(message.id))
-                                          + "Intercepted direct message and sent alternate message.")
-                print("[" + str(datetime.datetime.now().strftime("%H:%M:%S")) + "][Godavaru]\n"
-                      + "[CommandHandler][InterceptDirectMessage]\n"
-                      + "[AuthorInformation]: {} ({})\n".format(str(message.author), str(message.author.id))
-                      + "[MessageInformation]: {} ({})\n".format(message.clean_content, str(message.id))
-                      + "Intercepted direct message and sent alternate message.\n")
-                return
 
 def setup(bot):
     bot.add_cog(MessageEvents(bot))
