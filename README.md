@@ -2,8 +2,8 @@
 ![](https://i.pinimg.com/originals/b8/ed/c9/b8edc912a7f63d819899bbfcdcaea79c.png)
 # Godavaru
 This is the official repository for the Godavaru Discord bot. The main developer is
-[@Desiiii](https://github.com/Desiiii) (Desiree 🌺#0611). Below you will find a list of features that come with
-this bot. As this was last updated (24/05/2018), Godavaru is in version **2.2.1**. Note that if the version
+[@Desiiii](https://github.com/Desiiii) (Desiree 🌸#0611). Below you will find a list of features that come with
+this bot. As this was last updated (01/06/2018), Godavaru is in version **2.2.1**. Note that if the version
 number is followed by **ALPHA** or **BETA**, it is only available via the Development instance, not on the public
 instance.
 ```
@@ -27,9 +27,9 @@ Why use a different name? Why not make my own avatar? Quite simply, I like the i
 
 # Developers
 The following is a list of developers of the Godavaru bot.
-<br>[@Desiiii](https://github.com/Desiiii) (Desiree 🌺#0611) - Main Developer and Owner
+<br>[@Desiiii](https://github.com/Desiiii) (Desiree 🌸#0611) - Main Developer and Owner
 <br>[@attributeerror](https://github.com/attributeerror) (AttributeError#2513) - Secondary developer
-<br>[@MrLar](https://github.com/MrLar) (MrLar 🌺#0611) - Web Developer
+<br>[@MrLar](https://github.com/MrLar) (MrLar 🌸#0611) - Web Developer
 
 # Running the bot
 Running the bot is not recommended and while it may be quite simple to do, you will not receive support on
@@ -38,11 +38,11 @@ I do things, which even so is not the most effective way of doing things.
 
 # Inqueries
 If you'd like to contact me about working together on the bot or some other inquery, contact me via my business
-email at: `godavaru@gmail.com`. Alternatively, you may message me on Discord. My tag is Desiree 🌺#0611 and my ID
+email at: `godavaru@gmail.com`. Alternatively, you may message me on Discord. My tag is Desiree 🌸#0611 and my ID
 is 267207628965281792. I may not respond at first, but I will almost always see it. 👍
 
 # Thanks ya!
-Thanks for using the Godavaru bot! It means a lot to see my own personal creation being used in over **400**
+Thanks for using the Godavaru bot! It means a lot to see my own personal creation being used in over **600**
 servers!
 
 # License
