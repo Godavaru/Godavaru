@@ -101,7 +101,7 @@ class Owner:
                     f".* ```py\n{content}```" if content else " with no returns.*"))
             except discord.HTTPException:
                 await ctx.send("*Executed in {}ms and returned:*\nContent too long. Haste: ".format(
-                    ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + self.bot.post_to_haste(content))
+                    ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + await self.bot.post_to_haste(content))
 
     @commands.command()
     @commands.check(is_owner)
