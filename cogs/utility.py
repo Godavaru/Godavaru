@@ -174,6 +174,7 @@ class Utils:
         await ctx.send(content=content[con], embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def jumbo(self, ctx, emote: str):
         """Get a larger version of a custom emote."""
         match = re.compile(r"<(a)?:(\w*):(\d*)>").match(emote)

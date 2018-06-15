@@ -85,7 +85,7 @@ class Fun:
         await ctx.send(embed=em)
 
     @commands.command(aliases=["awooo"])
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.bot_has_permissions(attach_files=True)
     async def awoo(self, ctx, face_colour: str = None, hair_colour: str = None):
         """Generate an awoo image with customizable face & hair colours.
         The colours must be hex codes."""
@@ -101,18 +101,21 @@ class Fun:
         await ctx.send(file=discord.File(img, filename='awoo.png'))
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def eyes(self, ctx):
         """Generate some random facing eyes!"""
         img = await self.bot.weeb.generate_image(imgtype="eyes")
         await ctx.send(file=discord.File(img, filename='eyes.png'))
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def won(self, ctx):
         """Generate a won image with randomly facing eyes."""
         img = await self.bot.weeb.generate_image(imgtype='won')
         await ctx.send(file=discord.File(img, filename='won.png'))
 
     @commands.command(aliases=['insult', 'waifu', 'shitwaifu', 'garbage'])
+    @commands.bot_has_permissions(attach_files=True)
     async def waifuinsult(self, ctx, *, member: discord.Member = None):
         """Generate a waifu insult of someone."""
         if member is None:
@@ -238,7 +241,7 @@ class Fun:
         await ctx.send(":mega: {}".format(x.text))
 
     @commands.command()
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.bot_has_permissions(embed_links=True, attach_files=True)
     async def love(self, ctx, *members: discord.Member):
         """Use some magic numbers to calculate the compatibility between two users.
         If only one user is given, you will be used as the second."""
@@ -315,6 +318,7 @@ class Fun:
         await ctx.send(":game_die: You rolled a **{}**!".format(random.randint(1, 6)))
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def achievement(self, ctx, *, text: str):
         """Generate a minecraft achievement."""
         num = random.randint(1, 26)
