@@ -1,6 +1,4 @@
-from discord import Embed, User, Member, File
-from .tools import resolve_emoji
-from .lang import get_lang_string
+from discord import Embed, User, Member
 import datetime
 
 
@@ -26,7 +24,7 @@ class ModLog(Embed):
         self.color = self.types[action]
 
 
-class SimpleActionCommand:
+"""class SimpleActionCommand:
     def __init__(self, name, bot, weebsh_name=None):
         self.name = name
         self.bot = bot
@@ -45,3 +43,4 @@ class SimpleActionCommand:
         gif = await self.bot.weeb.get_image(imgtype=self.weebsh, filetype="gif")
         img = await self.bot.session.get(url=gif[0])
         await ctx.send(content=msg, file=File(img, filename=f"{self.name}-{gif[1]}.gif"))
+"""
