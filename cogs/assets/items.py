@@ -6,8 +6,8 @@ all_items = {
     },
     "DIAMOND": {
         "emoji": "💎",
-        "buy": 3000,
-        "sell": 1000
+        "buy": 1500,
+        "sell": 500
     },
     "BUG": {
         "emoji": "🐛",
@@ -27,6 +27,6 @@ all_items = {
     "SPIDER": {
         "emoji": "🕷",
         "buy": None,
-        "sell": 30
+        "sell": 300
     }
 }

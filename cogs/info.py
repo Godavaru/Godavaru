@@ -233,6 +233,8 @@ class Info:
                        + f'Users              :  {member_count}\n'
                        + f'Channels           :  {channel_count}\n'
                        + f'Messages Seen      :  {self.bot.seen_messages}\n'
+                       + f'Reconnects         :  {self.bot.reconnects}\n'
+                       + f'DB Calls           :  {self.bot.db_calls}'
                        + f'Commands Executed  :  {self.bot.executed_commands}\n\n'
                        + '=========[ Technical Information ]=========\n\n'
                        + f'Version            :  {self.bot.version}\n'
@@ -274,7 +276,7 @@ class Info:
         roles = ", ".join([r.name for r in sorted(g.roles, key=lambda x: -x.position) if not r.is_default()])
         roles_haste = await self.bot.post_to_haste(roles)
         emotes = " ".join([str(e) for e in g.emojis]) if len(g.emojis) > 0 else "No emotes are in this guild."
-        emotes_haste = await self.bot.post_to_haste(emotes)
+        emotes_haste = await self.bot.post_to_haste("\n".join([e.name for e in g.emojis]))
         guild_embed = discord.Embed(
             title=g.name,
             description=f"Guild ID: {g.id}",

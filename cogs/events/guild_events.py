@@ -1,6 +1,5 @@
-import aiohttp
 import datetime
-import config
+
 
 class GuildEvents:
     def __init__(self, bot):

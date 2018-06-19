@@ -1,6 +1,5 @@
 import config
 import random
-import datetime
 
 
 class MessageEvents:
@@ -8,13 +7,11 @@ class MessageEvents:
         self.bot = bot
 
     async def on_message_edit(self, before, after):
-        if after.guild.name is not None and str(after.content) != str(
-                before.content) and before.author.bot is False:
+        if after.guild.name is not None and after.content != before.content and before.author.bot is False:
             await self.bot.process_commands(after)
 
     async def on_message(self, message):
         self.bot.seen_messages += 1
-        channel = message.channel
         if not message.author.bot and message.guild is not None:
             if message.content == message.guild.me.mention:
                 prefix = config.prefix[0]
@@ -26,7 +23,7 @@ class MessageEvents:
                     f"Y-yes? Looks like you were trying to use a command, my prefix is `{prefix}`! Use it like: `{prefix}help`",
                     f"Baka! Don't you know pinging is rude! O-oh, you want to use my commands? Well, the prefix is `{prefix}`. Try it like this: `{prefix}help`"
                 ]
-                await channel.send(random.choice(prefix_messages))
+                await message.channel.send(random.choice(prefix_messages))
             if message.author.id not in config.blacklist:
                 await self.bot.process_commands(message)
 

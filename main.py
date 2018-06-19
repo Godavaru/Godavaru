@@ -1,23 +1,13 @@
 import asyncio
 import datetime
-import json
-import random
 import signal
-import string
 import sys
 import traceback
-import urllib
-import config
-
-import aiohttp
 import discord
-import pymysql
 import os
 import weeb
+import pymysql as mysql
 from discord.ext import commands
-import logging
-from threading import Thread
-from flask import Flask, Response, request
 
 from cogs.utils.db import *
 from cogs.utils.tools import *
@@ -28,16 +18,15 @@ class Godavaru(commands.Bot):
         self.start_time = datetime.datetime.now()
         self.prefixes = get_all_prefixes()
         super().__init__(command_prefix=get_prefix, case_insensitive=True)
-        self.token = 'no u'  # yes this is a necessary change
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
         self.session = aiohttp.ClientSession()
-        self.weeb = weeb.Client(token=config.weeb_token,
-                                user_agent='Godavaru/' + self.version + '/' + config.environment)
+        self.weeb = weeb.Client(token=config.weeb_token, user_agent=f'Godavaru/{self.version}/{config.environment}')
         self.seen_messages = 0
         self.reconnects = 0
         self.executed_commands = 0
+        self.db_calls = 0
         self.modlogs = dict()
         self.snipes = dict()
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
@@ -92,9 +81,7 @@ class Godavaru(commands.Bot):
                     activity=discord.Game(name=config.prefix[0] + "help | " + pr))
                 data = {'server_count': len(self.guilds)}
                 dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
-                terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
                 await self.session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
-                await self.session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
                 await asyncio.sleep(900)
 
     async def on_resumed(self):
@@ -108,7 +95,8 @@ class Godavaru(commands.Bot):
         sys.exit(0)
 
     def query_db(self, query):
-        db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
+        self.db_calls += 1
+        db = mysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
         cur = db.cursor()
         cur.execute(query)
         res = cur.fetchall()

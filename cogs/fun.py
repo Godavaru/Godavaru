@@ -6,10 +6,11 @@ import discord
 import re
 import requests
 import aiohttp
+import urllib.parse
 from discord.ext import commands
 
 import config
-from cogs.utils import tools
+from cogs.utils.tools import remove_html, resolve_emoji
 
 
 class Fun:
@@ -177,6 +178,7 @@ class Fun:
     # ddd
     # owo
     # sometimes im worried for myself
+    # watashi the fuck did you just say about me?
 
     @commands.command()
     async def slots(self, ctx):
@@ -252,7 +254,7 @@ class Fun:
             return await ctx.send(":x: You need to specify the two users or one to compare with yourself.")
         if (l[0].id == l[1].id) and l[0].id != ctx.author.id:
             sum = 101
-            msg = f"Be sure to tell {l[0].display_name} that they should love themself!"
+            msg = f"Be sure to tell {l[0].display_name} that they should love themselves!"
         elif (l[0].id == l[1].id) and l[0].id == ctx.author.id:
             sum = 9001
             msg = "You are a special creature and should love yourself <3"
@@ -318,9 +320,29 @@ class Fun:
     async def achievement(self, ctx, *, text: str):
         """Generate a minecraft achievement."""
         num = random.randint(1, 26)
-        img = await tools.get(
+        img = await self.bot.session.get(
             f'https://www.minecraftskinstealer.com/achievement/a.php?i={num}&h=Achievement+Get%21&t={text[:26].replace(" ", "+")}')
         await ctx.send(file=discord.File(img, filename='achievement.png'))
+
+    @commands.command()
+    async def lyrics(self, ctx, *, song: str):
+        """Search up the lyrics to a song on Genius!"""
+        async with self.bot.session.get('api.genius.com/search?q=' + urllib.parse.quote_plus(song)) as resp:
+            r = await resp.json()
+        try:
+            song = r['response']['hits'][0]['results']
+            em = discord.Embed(description='[' + song['title_with_featured'] + '](' + song['url'] + ')')
+            em.add_field(name='Pyongs (Upvotes)', value=song['pyongs_count'])
+            em.add_field(name='State', value=song['lyrics_state'])
+            em.add_field(name='Artist', value='[' + song['primary_artist']['name'] + '](' + song['primary_artist']['url'] + ')')
+            em.add_field(name='Annotations', value=song['annotation_count'])
+            em.add_field(name='Hot?', value=song['stats']['hot'])
+            em.add_field(name='Artist Verified?', value=song['primary_artist']['is_verified'])
+            em.set_author(name='Found song! (Click the hyperlink below!)', icon_url=song['header_image_thumbnail_url'])
+            em.set_thumbnail(url=song['song_art_image_thumbnail'])
+            await ctx.send(embed=em)
+        except KeyError:
+            await ctx.send(resolve_emoji('ERROR', ctx) + ' Sorry, I couldn\'t find that song.')
 
     @commands.command()
     async def person(self, ctx):
@@ -402,15 +424,15 @@ class Fun:
             url += "&difficulty=" + difficulty
         r = await self.bot.session.get(url)
         j = await r.json()
-        correct = tools.remove_html(j['results'][0]['correct_answer'])
+        correct = remove_html(j['results'][0]['correct_answer'])
         x = j['results'][0]['incorrect_answers']
         x.append(correct)
         y = []
         for val in x:
-            val = tools.remove_html(val)
+            val = remove_html(val)
             y.append(val)
         z = sorted(y, key=lambda l: l.lower())
-        em = discord.Embed(description=tools.remove_html(j['results'][0]['question']), color=ctx.author.color)
+        em = discord.Embed(description=remove_html(j['results'][0]['question']), color=ctx.author.color)
         em.add_field(name="Category", value=j['results'][0]['category'])
         em.add_field(name="Difficulty", value=j['results'][0]['difficulty'])
         em.add_field(name="Answers", value=("\n".join(z)), inline=False)

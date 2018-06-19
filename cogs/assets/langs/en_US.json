@@ -1,0 +1,27 @@
+{
+  "language_name": "English",
+  "action": {
+    "no_mentions": "{emote} You must mention at least one user.",
+    "self_mentions": {
+      "cuddle": "*cuddles with you*",
+      "hug": "*hugs* Are you okay now, **{author}**?",
+      "slap": "Uh, ok. Sure. *slaps*",
+      "kiss": "I'll kiss you! *kisses*",
+      "pat": "*pats you*",
+      "poke": "*pokes you* hi *pokes more*",
+      "tease": "*teases you* hehe",
+      "stare": "*stares at you*",
+      "wakeup": "Uh, don't you need to be awake to send a message? Oh well. Wake up!",
+      "sleep": "Self-discipline. I like it! Go sleep!",
+      "cry": "**{author}** is crying!",
+      "triggered": "**{author}** is triggered! REEEEEEEEEEEEEE"
+    }
+  },
+  "currency": {},
+  "fun": {},
+  "info": {},
+  "mod": {},
+  "nsfw": {},
+  "opts": {},
+  "utility": {}
+}

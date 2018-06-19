@@ -152,7 +152,7 @@ class Logs:
             await c.send(resolve_emoji('ERROR', c)
                          + f' Channel **{channel}** was deleted.\n'
                          + f'```diff\n-Name: {channel}\n-ID: {channel.id}'
-                         + (f'\n+Topic: {channel.topic}' if hasattr(channel, 'topic') else '')
+                         + (f'\n-Topic: {channel.topic}' if hasattr(channel, 'topic') else '')
                          + (f'\n-Category: {channel.category}' if hasattr(channel, 'category') else '')
                          + f'\n-Type: {chan_type}\n```')
 

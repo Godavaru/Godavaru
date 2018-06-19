@@ -36,6 +36,7 @@ class CommandHandler:
             ctx.command.reset_cooldown(ctx)
         elif isinstance(error, self.__sendable_exceptions):
             await ctx.send(resolve_emoji('ERROR', ctx) + ' ' + str(error))
+            ctx.command.reset_cooldown(ctx)
         else:
             errid = generate_id()
             await ctx.send(resolve_emoji('ERROR', ctx)
