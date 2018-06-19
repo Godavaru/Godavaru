@@ -327,21 +327,23 @@ class Fun:
     @commands.command()
     async def lyrics(self, ctx, *, song: str):
         """Search up the lyrics to a song on Genius!"""
-        async with self.bot.session.get('https://api.genius.com/search?q=' + urllib.parse.quote_plus(song), headers={'Authorization': config.genius_token}) as resp:
+        async with self.bot.session.get('https://api.genius.com/search?q=' + urllib.parse.quote_plus(song).replace('+', '%20'),
+                                        headers={'Authorization': config.genius_token}) as resp:
             r = await resp.json()
         try:
             song = r['response']['hits'][0]['result']
             em = discord.Embed(description='[' + song['title_with_featured'] + '](' + song['url'] + ')')
             em.add_field(name='Pyongs (Upvotes)', value=song['pyongs_count'])
             em.add_field(name='State', value=song['lyrics_state'])
-            em.add_field(name='Artist', value='[' + song['primary_artist']['name'] + '](' + song['primary_artist']['url'] + ')')
+            em.add_field(name='Artist',
+                         value='[' + song['primary_artist']['name'] + '](' + song['primary_artist']['url'] + ')')
             em.add_field(name='Annotations', value=song['annotation_count'])
             em.add_field(name='Hot?', value=song['stats']['hot'])
             em.add_field(name='Artist Verified?', value=song['primary_artist']['is_verified'])
             em.set_author(name='Found song! (Click the hyperlink below!)', icon_url=song['header_image_thumbnail_url'])
             em.set_thumbnail(url=song['song_art_image_thumbnail'])
             await ctx.send(embed=em)
-        except KeyError:
+        except IndexError:
             await ctx.send(resolve_emoji('ERROR', ctx) + ' Sorry, I couldn\'t find that song.')
 
     @commands.command()
