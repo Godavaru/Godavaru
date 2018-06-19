@@ -341,7 +341,7 @@ class Fun:
             em.add_field(name='Hot?', value=song['stats']['hot'])
             em.add_field(name='Artist Verified?', value=song['primary_artist']['is_verified'])
             em.set_author(name='Found song! (Click the hyperlink below!)', icon_url=song['header_image_thumbnail_url'])
-            em.set_thumbnail(url=song['song_art_image_thumbnail'])
+            em.set_thumbnail(url=song['song_art_image_thumbnail_url'])
             await ctx.send(embed=em)
         except IndexError:
             await ctx.send(resolve_emoji('ERROR', ctx) + ' Sorry, I couldn\'t find that song.')
