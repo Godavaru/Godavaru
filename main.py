@@ -8,9 +8,11 @@ import os
 import weeb
 import pymysql as mysql
 from discord.ext import commands
-
-from cogs.utils.db import *
-from cogs.utils.tools import *
+import config
+import random
+import aiohttp
+from cogs.utils.db import get_all_prefixes
+from cogs.utils.tools import get_prefix
 
 
 class Godavaru(commands.Bot):
