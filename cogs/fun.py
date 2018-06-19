@@ -330,7 +330,7 @@ class Fun:
         async with self.bot.session.get('https://api.genius.com/search?q=' + urllib.parse.quote_plus(song), headers={'Authorization': config.genius_token}) as resp:
             r = await resp.json()
         try:
-            song = r['response']['hits'][0]['results']
+            song = r['response']['hits'][0]['result']
             em = discord.Embed(description='[' + song['title_with_featured'] + '](' + song['url'] + ')')
             em.add_field(name='Pyongs (Upvotes)', value=song['pyongs_count'])
             em.add_field(name='State', value=song['lyrics_state'])
