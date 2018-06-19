@@ -327,7 +327,7 @@ class Fun:
     @commands.command()
     async def lyrics(self, ctx, *, song: str):
         """Search up the lyrics to a song on Genius!"""
-        async with self.bot.session.get('api.genius.com/search?q=' + urllib.parse.quote_plus(song)) as resp:
+        async with self.bot.session.get('https://api.genius.com/search?q=' + urllib.parse.quote_plus(song), headers={'Authorization': config.genius_token}) as resp:
             r = await resp.json()
         try:
             song = r['response']['hits'][0]['results']
