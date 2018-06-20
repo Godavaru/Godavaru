@@ -31,6 +31,19 @@ class Info:
     def __init__(self, bot):
         self.bot = bot
 
+    def get_temp(self, n):
+        cel = n - 273.15
+        fa = n * 9 / 5 - 459.67
+        return f"{round(cel)} °C | {round(fa)} °F"
+
+    def get_wind(self, n):
+        imp = n * 2.2
+        return f"{n} m/s | {round(imp)} mph"
+
+    def get_pressure(self, n):
+        bar = n / 1000
+        return f"{round(bar)} bar | {n} hPA"
+
     @commands.command()
     async def roleinfo(self, ctx, *, role: discord.Role = None):
         """Get information on a role.
@@ -358,6 +371,39 @@ class Info:
         em.set_footer(text=f"Requested by {ctx.author.display_name}",
                       icon_url=ctx.author.avatar_url.replace("?size=1024", ""))
         await ctx.send(embed=em)
+
+    @commands.command()
+    async def weather(self, ctx, *, city: str):
+        """Get weather information for a specified city."""
+        r = await self.bot.session.get(f"http://api.openweathermap.org/data/2.5/weather/?q={city}&APPID={config.weather_token}")
+        if (await r.text()).startswith('{"coord"'):
+            j = await r.json()
+            em = discord.Embed(
+                title=f":flag_{j['sys']['country'].lower()}: Weather for {j['name']}, {j['sys']['country']}",
+                description=f"{j['weather'][0]['main']} ({j['clouds']['all']}% clouds)",
+                color=ctx.author.color
+            )
+
+            em.add_field(
+                name="🌡 Temperature",
+                value=f"Current: {self.get_temp(j['main']['temp'])}\n"
+                      + f"Max: {self.get_temp(j['main']['temp_max'])}\n"
+                      + f"Min: {self.get_temp(j['main']['temp_min'])}"
+            ).add_field(
+                name="💧 Humidity",
+                value=f"{j['main']['humidity']}%"
+            ).add_field(
+                name="💨 Wind Speeds",
+                value=self.get_wind(j['wind']['speed'])
+            ).add_field(
+                name="🎐 Pressure",
+                value=self.get_pressure(j['main']['pressure'])
+            ).set_thumbnail(
+                url=f"http://openweathermap.org/img/w/{j['weather'][0]['icon']}.png"
+            )
+            await ctx.send(embed=em)
+        else:
+            await ctx.send(":x: U-uh, I'm sorry, but that c-city doesn't seem to exist!")
 
     @commands.command()
     async def status(self, ctx, *, user: discord.Member = None):

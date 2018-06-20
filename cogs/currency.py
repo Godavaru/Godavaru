@@ -98,7 +98,7 @@ class Currency:
                 + (
                 f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
                     ctx.author) else ""))
-        description = description.replace('"', '\"').replace('\\', '\\\\')  # in theory prevents borking.
+        description = description.replace('"', '\\"').replace('\\', '\\\\')  # in theory prevents borking.
         self.bot.query_db(f'''INSERT INTO users (userid, description) VALUES ({ctx.author.id}, "{description}") 
                             ON DUPLICATE KEY UPDATE description="{description}"''')
         await ctx.send(f":ok_hand: Set your description! Check it out on `{ctx.prefix}profile`!")

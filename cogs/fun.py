@@ -332,7 +332,8 @@ class Fun:
             r = await resp.json()
         try:
             song = r['response']['hits'][0]['result']
-            em = discord.Embed(description='[' + song['title_with_featured'] + '](' + song['url'] + ')')
+            em = discord.Embed(description='[' + song['title_with_featured'] + '](' + song['url'] + ')',
+                               color=ctx.author.color)
             em.add_field(name='Pyongs (Upvotes)', value=song['pyongs_count'])
             em.add_field(name='State', value=song['lyrics_state'])
             em.add_field(name='Artist',
