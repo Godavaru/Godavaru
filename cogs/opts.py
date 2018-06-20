@@ -23,9 +23,9 @@ class Settings:
             try:
                 return await ctx.send(f'My prefix here is `{self.bot.prefixes[str(ctx.guild.id)]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
             except KeyError:
-                return await ctx.send(f'My prefix here is `{config.prefix[0]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
-        self.bot.query_db(f"""INSERT INTO settings (guildid, prefix) VALUES ({ctx.guild.id}, "{prefix}") 
-                            ON DUPLICATE KEY UPDATE prefix = "{prefix}";""")
+                return await ctx.send(f'There is no custom prefix here. You can change that with `{config.prefix[0]}prefix <prefix>`')
+        self.bot.query_db(f"""INSERT INTO settings (guildid, prefix) VALUES ({ctx.guild.id}, %s) 
+                            ON DUPLICATE KEY UPDATE prefix = %s;""", (prefix))
         self.bot.prefixes = get_all_prefixes()
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set my prefix here to `{prefix}`')
 
@@ -88,8 +88,8 @@ class Settings:
             if msg:
                 msg = msg.replace('"', '\\"')
                 self.bot.query_db(f'''INSERT INTO settings (guildid,welcome_channel,welcome_message)
-                                    VALUES ({ctx.guild.id},{c.id},"{msg}") ON DUPLICATE KEY UPDATE
-                                    welcome_channel={c.id},welcome_message="{msg}";''')
+                                    VALUES ({ctx.guild.id},{c.id},%s) ON DUPLICATE KEY UPDATE
+                                    welcome_channel={c.id},welcome_message=%s;''', (msg))
                 await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set your welcome channel and message.')
             else:
                 await ctx.send(resolve_emoji('ERROR', ctx) + ' You must supply the message you want after the channel.')
@@ -108,10 +108,9 @@ class Settings:
         c = resolve_channel(channel, ctx)
         if c:
             if msg:
-                msg = msg.replace('"', '\\"')
                 self.bot.query_db(f'''INSERT INTO settings (guildid,leave_channel,leave_message)
-                                        VALUES ({ctx.guild.id},{c.id},"{msg}") ON DUPLICATE KEY UPDATE
-                                        leave_channel={c.id},leave_message="{msg}";''')
+                                        VALUES ({ctx.guild.id},{c.id},%s) ON DUPLICATE KEY UPDATE
+                                        leave_channel={c.id},leave_message=%s;''', (msg))
                 await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set your leave channel and message.')
             else:
                 await ctx.send(
@@ -145,18 +144,11 @@ class Settings:
             except asyncio.TimeoutError:
                 return await ctx.send(resolve_emoji('ERROR', ctx) + f' The time ran out, cancelling import.')
             data = kum_query[0]
-            logs = str(data[0]).replace('None', 'NULL')
-            mod = str(data[1]).replace('None', 'NULL')
-            mute = str(data[2]).replace('None', 'NULL')
-            join = '"' + data[3].replace('"', '\\"') + '"' if data[3] else 'NULL'
-            leave = '"' + data[4].replace('"', '\\"') + '"' if data[4] else 'NULL'
-            channel = str(data[5]).replace('None', 'NULL')
-            self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel,mod_channel,muterole,
-                                welcome_message,leave_message,welcome_channel,leave_channel) VALUES
-                                ({ctx.guild.id}, {logs}, {mod}, {mute}, {join}, {leave}, 
-                                {channel}, {channel}) ON DUPLICATE KEY UPDATE log_channel={logs},
-                                mod_channel={mod},muterole={mute},welcome_message={join},
-                                leave_message={leave},welcome_channel={channel},leave_channel={channel};''')
+            self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel,mod_channel,muterole,welcome_message,
+                                leave_message,welcome_channel,leave_channel) VALUES ({ctx.guild.id}, %s, %s, %s, 
+                                %s, %s, %s, %s) ON DUPLICATE KEY UPDATE log_channel=%s,mod_channel=%s,muterole=%s,
+                                welcome_message=%s, leave_message=%s,welcome_channel=%s,leave_channel=%s;''',
+                              (data[0], data[1], data[2], data[3], data[4], data[5], data[5]))
             await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully imported all data from Kumiko into Godavaru.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' I couldn\'t find any data from Kumiko to import.')
