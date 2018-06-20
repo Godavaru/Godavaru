@@ -21,11 +21,13 @@ class Settings:
         Note: to use this command, you must have the `MANAGE_GUILD` permission. If you wish to have a prefix with spaces, surround it in "quotes" """
         if not prefix:
             try:
-                return await ctx.send(f'My prefix here is `{self.bot.prefixes[str(ctx.guild.id)]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
+                return await ctx.send(
+                    f'My prefix here is `{self.bot.prefixes[str(ctx.guild.id)]}`. You can change that with `{ctx.prefix}prefix <prefix>`')
             except KeyError:
-                return await ctx.send(f'There is no custom prefix here. You can change that with `{config.prefix[0]}prefix <prefix>`')
+                return await ctx.send(
+                    f'There is no custom prefix here. You can change that with `{config.prefix[0]}prefix <prefix>`')
         self.bot.query_db(f"""INSERT INTO settings (guildid, prefix) VALUES ({ctx.guild.id}, %s) 
-                            ON DUPLICATE KEY UPDATE prefix = %s;""", (prefix))
+                            ON DUPLICATE KEY UPDATE prefix = %s;""", (prefix, prefix))
         self.bot.prefixes = get_all_prefixes()
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set my prefix here to `{prefix}`')
 
@@ -38,7 +40,8 @@ class Settings:
         if c:
             self.bot.query_db(f'''INSERT INTO settings (guildid,mod_channel) VALUES ({ctx.guild.id}, {c.id})
                                 ON DUPLICATE KEY UPDATE mod_channel={c.id}''')
-            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the modlog channel to **#{c}** (`{c.id}`)')
+            await ctx.send(
+                resolve_emoji('SUCCESS', ctx) + f' Successfully changed the modlog channel to **#{c}** (`{c.id}`)')
         elif channel == 'reset':
             self.bot.query_db(f'''UPDATE settings SET mod_channel=NULL WHERE guildid={ctx.guild.id};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your mod log channel.')
@@ -71,7 +74,8 @@ class Settings:
         if c:
             self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel) VALUES ({ctx.guild.id},{c.id})
                                 ON DUPLICATE KEY UPDATE log_channel={c.id};''')
-            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the logging channel to **#{c}** (`{c.id}`)')
+            await ctx.send(
+                resolve_emoji('SUCCESS', ctx) + f' Successfully changed the logging channel to **#{c}** (`{c.id}`)')
         elif channel == 'reset':
             self.bot.query_db(f'''UPDATE settings SET log_channel=NULL WHERE guildid={ctx.guild.id};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your log channel.')
@@ -86,10 +90,9 @@ class Settings:
         c = resolve_channel(channel, ctx)
         if c:
             if msg:
-                msg = msg.replace('"', '\\"')
                 self.bot.query_db(f'''INSERT INTO settings (guildid,welcome_channel,welcome_message)
                                     VALUES ({ctx.guild.id},{c.id},%s) ON DUPLICATE KEY UPDATE
-                                    welcome_channel={c.id},welcome_message=%s;''', (msg))
+                                    welcome_channel={c.id},welcome_message=%s;''', (msg, msg))
                 await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set your welcome channel and message.')
             else:
                 await ctx.send(resolve_emoji('ERROR', ctx) + ' You must supply the message you want after the channel.')
@@ -110,7 +113,7 @@ class Settings:
             if msg:
                 self.bot.query_db(f'''INSERT INTO settings (guildid,leave_channel,leave_message)
                                         VALUES ({ctx.guild.id},{c.id},%s) ON DUPLICATE KEY UPDATE
-                                        leave_channel={c.id},leave_message=%s;''', (msg))
+                                        leave_channel={c.id},leave_message=%s;''', (msg, msg))
                 await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set your leave channel and message.')
             else:
                 await ctx.send(
@@ -148,8 +151,10 @@ class Settings:
                                 leave_message,welcome_channel,leave_channel) VALUES ({ctx.guild.id}, %s, %s, %s, 
                                 %s, %s, %s, %s) ON DUPLICATE KEY UPDATE log_channel=%s,mod_channel=%s,muterole=%s,
                                 welcome_message=%s, leave_message=%s,welcome_channel=%s,leave_channel=%s;''',
-                              (data[0], data[1], data[2], data[3], data[4], data[5], data[5]))
-            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully imported all data from Kumiko into Godavaru.')
+                              (data[0], data[1], data[2], data[3], data[4], data[5], data[5], data[0], data[1], data[2],
+                               data[3], data[4], data[5], data[5]))
+            await ctx.send(
+                resolve_emoji('SUCCESS', ctx) + f' Successfully imported all data from Kumiko into Godavaru.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' I couldn\'t find any data from Kumiko to import.')
 
