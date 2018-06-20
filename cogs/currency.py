@@ -11,6 +11,22 @@ from discord.ext import commands
 class Currency:
     def __init__(self, bot):
         self.bot = bot
+        self.crime_quotes = {
+            'win': [
+                'You robbed a bank, scoring ${0} without even digging into your money for funding.',
+                'You stole candy from a baby and sold it for ${0}!',
+                'After a long and unsuccessful day, you finally managed to mug a dog. It had ${0} in its fur.',
+                'You stole a car! There was ${0} in the back seat, so double score!'
+            ],
+            'lose': [
+                'You were going to steal candy from a baby, but then you accidentally mistook the baby for the mom. You lost $500.',
+                'You stole a car, but crashed it. You paid $500 for repairs, but atleast you got a car.',
+                'When trying to hack into the Pentagon, your laptop exploded, revealing your location. You paid $500 for bail.',
+                'Your mom called you and scolded you for trying to commit a crime. She took your money and your phone for a week :<',
+                'Your selfbot usage was discovered by b1nzy. You got banned instantly, losing all $500 you spent on Discord.',
+                'You stepped on an ant. You paid for its life support, costing you $500.'
+            ]
+        }
 
     def is_premium(self, member):
         support = self.bot.get_guild(315251940999299072)
@@ -158,6 +174,23 @@ class Currency:
             color=ctx.author.color
         )
         await ctx.send(embed=em)
+
+    @commands.command()
+    @commands.cooldown(1, 1800, commands.BucketType.user)
+    async def crime(self, ctx):
+        """Commit a crime and get up to $1000, but risk $500."""
+        profile = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id}''')
+        if profile and profile[0][0] >= 500:
+            win = random.randint(1, 10) > 8
+            if win:
+                amount = random.randint(500, 1000)
+                self.bot.query_db(f'''UPDATE users SET balance=balance+{amount} WHERE userid={ctx.author.id}''')
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + random.choice(self.crime_quotes['win']).format(amount))
+            else:
+                self.bot.query_db(f'''UPDATE users SET balance=balance-500 WHERE userid={ctx.author.id}''')
+                await ctx.send(resolve_emoji('ERROR', ctx) + random.choice(self.crime_quotes['lose']))
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + 'You need at least $500 to fund the crime!')
 
     @commands.command()
     @commands.cooldown(rate=1, per=8, type=commands.BucketType.user)

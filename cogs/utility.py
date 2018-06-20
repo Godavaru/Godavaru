@@ -280,8 +280,7 @@ class Utils:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " Um, I'm sorry? The suggestions channel seems to be missing. "
                                   + "My owner must have deleted it. Sorry. :/ "
                                   + "Feel free to suggest your idea in person at my support server "
-                                  + "in **#{}**! (https://discord.gg/ewvvKHM)".format(
-                self.bot.get_channel(315252572812214273).name))
+                                  + "in **#suggestions**! (https://discord.gg/ewvvKHM)")
         await request_channel.send(f"**User Suggestion By:** {ctx.author} ({ctx.author.id})\n"
                                    + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
                                    + f"**Suggestion:** {suggestion.replace('@', '@‍')}")
