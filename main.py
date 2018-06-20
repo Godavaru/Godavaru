@@ -96,11 +96,11 @@ class Godavaru(commands.Bot):
         self.logout()
         sys.exit(0)
 
-    def query_db(self, query):
+    def query_db(self, query, *args, **kwargs):
         self.db_calls += 1
         db = mysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
         cur = db.cursor()
-        cur.execute(query)
+        cur.execute(query, *args, **kwargs)
         res = cur.fetchall()
         db.commit()
         cur.close()
