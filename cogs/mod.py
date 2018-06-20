@@ -26,7 +26,7 @@ class Mod:
             await ctx.send(f":ok_hand: I banned **{member}** successfully.")
             await process_modlog(ctx, self.bot, 'ban', member, reason)
         else:
-            await ctx.send(":x: I-I'm sorry, but you can't ban someone with a higher role than you!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I-I'm sorry, but you can't ban someone with a higher role than you!")
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
@@ -40,12 +40,12 @@ class Mod:
                 await ctx.guild.unban(member)
             except discord.Forbidden:
                 await ctx.send(
-                    f":x: I-I'm sorry, I couldn't ban `{member}` because my role seems to be lower than theirs.")
+                    resolve_emoji('ERROR', ctx) + f" I-I'm sorry, I couldn't ban `{member}` because my role seems to be lower than theirs.")
                 return
             await ctx.send(f":ok_hand: I soft-banned **{member}** successfully.")
             await process_modlog(ctx, self.bot, 'softban', member, reason)
         else:
-            await ctx.send(":x: I-I'm sorry, but you can't ban someone with a higher role than you!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I-I'm sorry, but you can't ban someone with a higher role than you!")
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
@@ -58,12 +58,12 @@ class Mod:
                 await ctx.guild.kick(member, reason=f'Responsible Moderator: {ctx.author} | Reason: ' + (reason if reason else 'No reason specified.'))
             except discord.Forbidden:
                 await ctx.send(
-                    f":x: I-I'm sorry, I couldn't kick `{member}` because my role seems to be lower than theirs.")
+                    resolve_emoji('ERROR', ctx) + f" I-I'm sorry, I couldn't kick `{member}` because my role seems to be lower than theirs.")
                 return
             await ctx.send(f":ok_hand: I kicked **{member}** successfully.")
             await process_modlog(ctx, self.bot, 'kick', member, reason)
         else:
-            await ctx.send(":x: I-I'm sorry, but you can't ban someone with a higher role than you!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I-I'm sorry, but you can't ban someone with a higher role than you!")
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
@@ -78,12 +78,12 @@ class Mod:
                 await ctx.guild.ban(member, reason=f'Responsible Moderator: {ctx.author} | Reason: ' + (reason if reason else 'No reason specified.'))
             except discord.Forbidden:
                 await ctx.send(
-                    f":x: I-I'm sorry, I couldn't ban `{member}` because my role seems to be lower than theirs.")
+                    resolve_emoji('ERROR', ctx) + f" I-I'm sorry, I couldn't ban `{member}` because my role seems to be lower than theirs.")
                 return
             await ctx.send(f":ok_hand: I banned **{member}** successfully.")
             await process_modlog(ctx, self.bot, 'hackban', member, reason)
         else:
-            await ctx.send(":x: I-I'm sorry, but you can't ban someone with a higher role than you!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I-I'm sorry, but you can't ban someone with a higher role than you!")
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
@@ -91,7 +91,7 @@ class Mod:
     async def unban(self, ctx, user_id: int, *, reason: str = None):
         """This command allows you to unban a user by their ID."""
         if user_id not in [u.user.id for u in await ctx.guild.bans()]:
-            await ctx.send(":x: U-uh, excuse me! That user doesn't seem to be banned!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " U-uh, excuse me! That user doesn't seem to be banned!")
             return
         user = await self.bot.get_user_info(user_id)
         await ctx.guild.unban(user, reason=f'Responsible Moderator: {ctx.author} | Reason: ' + (reason if reason else 'No reason specified.'))
@@ -107,7 +107,7 @@ class Mod:
         if number_of_messages > 100:
             number_of_messages = 100
         if number_of_messages < 3:
-            await ctx.send(":x: B-baka! That's too few messages!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " B-baka! That's too few messages!")
             return
         mgs = []
         async for m in ctx.channel.history(limit=number_of_messages).filter(lambda x: (datetime.datetime.now() - x.created_at).days < 14):
@@ -115,9 +115,9 @@ class Mod:
         try:
             await ctx.channel.delete_messages(mgs)
         except discord.HTTPException:
-            await ctx.send(":x: I can't delete messages older than 14 days.\nNote: If you see this message, it is a bug. Please report this.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I can't delete messages older than 14 days.\nNote: If you see this message, it is a bug. Please report this.")
             return
-        await ctx.send(f":white_check_mark: Deleted `{len(mgs)}` messages!", delete_after=5)
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Deleted `{len(mgs)}` messages!", delete_after=5)
 
     @commands.command()
     @commands.has_permissions(manage_roles=True)
@@ -126,9 +126,9 @@ class Mod:
         """Apply or remove a role from a user.
         If you are searching with username/nickname, you must surround the user in quotations ("). The role field should not have this unless the role name has it."""
         if role.position >= ctx.author.top_role.position:
-            await ctx.send(":x: You can't manage roles higher than your highest role.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " You can't manage roles higher than your highest role.")
         elif role.position >= ctx.me.top_role.position:
-            await ctx.send(":x: I can't manage that role.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I can't manage that role.")
         else:
             if role not in user.roles:
                 await user.add_roles(role)

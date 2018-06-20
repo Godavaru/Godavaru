@@ -60,7 +60,7 @@ class Currency:
         if member is None:
             member = ctx.author
         if member.bot:
-            return await ctx.send(":x: Bots don't have profiles.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " Bots don't have profiles.")
         results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
         if results:
             profile = list(results)[0]
@@ -94,13 +94,13 @@ class Currency:
         max_value = 300 if not self.is_premium(ctx.author) else 500
         if len(description) > max_value:
             return await ctx.send(
-                f":x: The maximum the description can be is `{max_value}` characters for you! "
+                resolve_emoji('ERROR', ctx) + f" The maximum the description can be is `{max_value}` characters for you! "
                 + (
                 f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
                     ctx.author) else ""))
         self.bot.query_db(f'''INSERT INTO users (userid, description) VALUES ({ctx.author.id}, %s) 
                             ON DUPLICATE KEY UPDATE description=%s''', (description, description))
-        await ctx.send(f":ok_hand: Set your description! Check it out on `{ctx.prefix}profile`!")
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Set your description! Check it out on `{ctx.prefix}profile`!")
 
     @commands.command()
     @commands.cooldown(rate=1, per=43200, type=commands.BucketType.user)
@@ -108,20 +108,20 @@ class Currency:
         """Give reputation to a user."""
         if member == ctx.author:
             ctx.command.reset_cooldown(ctx)
-            return await ctx.send(":x: You can not rep yourself.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You can not rep yourself.")
         if member.bot:
             ctx.command.reset_cooldown(ctx)
-            return await ctx.send(":x: Yes, bots are cool, but you can not rep them.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " Yes, bots are cool, but you can not rep them.")
         self.bot.query_db(f'''INSERT INTO users (userid, reps) VALUES ({member.id}, 1) 
                             ON DUPLICATE KEY UPDATE reps=reps+1''')
-        await ctx.send(f":white_check_mark: Added reputation point to **{member}**")
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Added reputation point to **{member}**")
 
     @commands.group(aliases=["richest", "top", "lb"])
     async def leaderboard(self, ctx):
         """Check the leaderboard of money."""
         if ctx.invoked_subcommand is None:
             results = self.bot.query_db(f'SELECT userid,balance FROM users ORDER BY balance DESC LIMIT 15')
-            msg = ""
+            msg = "```ldif\n"
             for i in range(len(results)):
                 row = results[i]
                 user = self.bot.get_user(int(row[0]))
@@ -130,10 +130,10 @@ class Currency:
                 n = i + 1
                 if n < 10:
                     n = f'0{i+1}'
-                msg += f':star: **{n} | {user}** - ${row[1]}\n'
+                msg += f'{n} | {user}: ${row[1]}\n'
             em = discord.Embed(
                 title="Richest Users",
-                description=msg,
+                description=msg + '```',
                 color=ctx.author.color
             )
             await ctx.send(embed=em)
@@ -142,7 +142,7 @@ class Currency:
     async def leaderboard_rep(self, ctx):
         """Check the leaderboard of reputation."""
         results = self.bot.query_db(f'SELECT userid,reps FROM users ORDER BY reps DESC LIMIT 15')
-        msg = ""
+        msg = "```ldif\n"
         for i in range(len(results)):
             row = results[i]
             user = self.bot.get_user(int(row[0]))
@@ -151,10 +151,10 @@ class Currency:
             n = i + 1
             if n < 10:
                 n = f'0{i+1}'
-            msg += f':star: **{n} | {user}** - {row[1]} points\n'
+            msg += f'{n} | {user}: {row[1]} points\n'
         em = discord.Embed(
             title="Richest Users in Reputation",
-            description=msg,
+            description=msg + '```',
             color=ctx.author.color
         )
         await ctx.send(embed=em)
@@ -196,13 +196,13 @@ class Currency:
     async def marry(self, ctx, *, member: discord.Member):
         """Marry a user!"""
         if member == ctx.author:
-            return await ctx.send(":x: You can't marry yourself.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You can't marry yourself.")
         if member.bot:
-            return await ctx.send(":x: You can't marry a bot.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You can't marry a bot.")
         if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''') and self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''')[0][0]:
-            return await ctx.send(":x: That person is already married!")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That person is already married!")
         if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''') and self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')[0][0]:
-            return await ctx.send(":x: You are already married!")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You are already married!")
         await ctx.send(
             f'{member.display_name}, say `yes` or `no` to the marriage proposal from {ctx.author.display_name}')
 
@@ -229,7 +229,7 @@ class Currency:
         """Divorce the person you are married to :sob:"""
         married = self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')
         if not married or not married[0][0]:
-            return await ctx.send(":x: You are not married.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You are not married.")
         await ctx.send(":ok_hand: You're single now. Cool.")
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={ctx.author.id}''')
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={married[0][0]}''')
@@ -256,15 +256,14 @@ class Currency:
         self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items)
                             VALUES ({user_id}, DEFAULT, {daily_coins}, DEFAULT, DEFAULT, DEFAULT)
                             ON DUPLICATE KEY UPDATE balance = balance + {daily_coins}''')
-        await ctx.send(
-            f':white_check_mark: You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
 
     @commands.command()
     async def buy(self, ctx, item: str, amount: int = 1):
         """Buy an item.
         Use `list` as the param for a list of all items that can be bought."""
         if amount <= 0:
-            return await ctx.send("You can not buy less than one of an item.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You can not buy less than one of an item.")
         item = item.upper()
         if item == 'LIST':
             msg = ""
@@ -273,7 +272,7 @@ class Currency:
                     msg += f"{items.all_items[it]['emoji']} - ${items.all_items[it]['buy']} - {it.capitalize()}\n"
             return await ctx.send(msg)
         if item not in items.all_items:
-            return await ctx.send(":x: That is not an item.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That is not an item.")
         if items.all_items[item]['buy']:
             results = self.bot.query_db(f'''SELECT balance,items FROM users WHERE userid={ctx.author.id}''')
             if results:
@@ -289,20 +288,20 @@ class Currency:
                     self.bot.query_db(
                         f'''UPDATE users SET balance=balance-{items.all_items[item]["buy"] * amount} WHERE userid={ctx.author.id}''')
                     await ctx.send(
-                        f':white_check_mark: You purchased {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
+                        resolve_emoji('SUCCESS', ctx) + f' You purchased {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
                 else:
-                    await ctx.send(":x: You do not have the money for that.")
+                    await ctx.send(resolve_emoji('ERROR', ctx) + " You do not have the money for that.")
             else:
-                await ctx.send(":x: You do not have the money for that.")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " You do not have the money for that.")
         else:
-            await ctx.send(":x: That item can not be bought.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " That item can not be bought.")
 
     @commands.command()
     async def sell(self, ctx, item: str, amount: int = 1):
         """Sell an item.
         Use `list` as the param for a list of all items that can be sold."""
         if amount <= 0:
-            return await ctx.send("You can not sell less than one of an item.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You can not sell less than one of an item.")
         item = item.upper()
         if item == 'LIST':
             msg = ""
@@ -311,7 +310,7 @@ class Currency:
                     msg += f"{items.all_items[it]['emoji']} - ${items.all_items[it]['sell']} - {it.capitalize()}\n"
             return await ctx.send(msg)
         if item not in items.all_items:
-            return await ctx.send(":x: That is not an item.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That is not an item.")
         if items.all_items[item]['sell']:
             results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
             if results:
@@ -319,18 +318,18 @@ class Currency:
                 try:
                     amnt = itms[item]
                     if amount > amnt:
-                        return await ctx.send(":x: You do not have enough of that item.")
+                        return await ctx.send(resolve_emoji('ERROR', ctx) + " You do not have enough of that item.")
                     itms[item] = amnt - amount
                     self.bot.query_db(
                         f'''UPDATE users SET items="{str(itms)}",balance=balance+{items.all_items[item]["sell"] * amount} WHERE userid={ctx.author.id}''')
                     await ctx.send(
-                        f':white_check_mark: You successfully sold {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["sell"] * amount}')
+                        resolve_emoji('SUCCESS', ctx) + f' You successfully sold {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["sell"] * amount}')
                 except KeyError:
-                    return await ctx.send(":x: You do not have enough of that item.")
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + " You do not have enough of that item.")
             else:
-                return await ctx.send(":x: You do not have enough of that item.")
+                return await ctx.send(resolve_emoji('ERROR', ctx) + " You do not have enough of that item.")
         else:
-            await ctx.send(":x: That item can not be sold.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " That item can not be sold.")
 
     @commands.command()
     @commands.cooldown(rate=1, per=300, type=commands.BucketType.user)
@@ -341,7 +340,7 @@ class Currency:
         itms = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
         if 'PICKAXE' not in itms or itms['PICKAXE'] == 0:
             ctx.command.reset_cooldown(ctx)
-            return await ctx.send(":x: You don't seem to have a pickaxe.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You don't seem to have a pickaxe.")
         gets_diamond = random.randint(1, 10) >= 7
         pick_breaks = random.randint(1, 10) >= 8
         max_value = 150 if not self.is_premium(ctx.author) else 300

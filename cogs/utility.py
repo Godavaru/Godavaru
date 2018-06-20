@@ -87,7 +87,7 @@ class Utils:
     async def choose(self, ctx, *choices):
         """Choose a random item from a list."""
         if len(choices) < 2:
-            await ctx.send(":x: I-I need at least two things to choose!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I-I need at least two things to choose!")
             return
         await ctx.send(f":thinking: O-oh, you want me to choose? I guess I choose `{random.choice(choices)}`")
 
@@ -97,12 +97,12 @@ class Utils:
         Note that this does have a joke if the word "dick" is included. To avoid this, end the string with '--bypass'"""
         if 'dick' in string.lower():
             if not string.lower().endswith('--bypass'):
-                await ctx.send("\N{CROSS MARK} That is too " + ("small" if 'lars' not in string.lower() else 'long'))
+                await ctx.send(resolve_emoji('ERROR', ctx) + " That is too " + ("small" if 'lars' not in string.lower() else 'long'))
             else:
-                await ctx.send(f"\N{WHITE HEAVY CHECK MARK} That string is `{len(string) - 9}` characters long "
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + f" That string is `{len(string) - 9}` characters long "
                                "(excluding the bypass)")
         else:
-            await ctx.send(f"\N{WHITE HEAVY CHECK MARK} The string you gave me is `{len(string)}` characters long.")
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f" The string you gave me is `{len(string)}` characters long.")
 
     @commands.command(name="8ball", aliases=['mb', 'magicball'])
     async def _8ball(self, ctx, *, question):
@@ -156,8 +156,8 @@ class Utils:
         is_video = True
         url = None
         while is_video:
-            r = requests.get('https://random.dog/woof.json')
-            js = r.json()
+            r = await self.bot.session.get('https://random.dog/woof.json')
+            js = await r.json()
             if js['url'].endswith('.mp4'):
                 pass
             else:
@@ -277,7 +277,7 @@ class Utils:
         Has a cooldown of 2 requests per day to prevent spamming."""
         request_channel = self.bot.get_channel(316674935898636289)
         if request_channel is None:  # shouldn't happen but /shrug
-            return await ctx.send(":x: Um, I'm sorry? The suggestions channel seems to be missing. "
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " Um, I'm sorry? The suggestions channel seems to be missing. "
                                   + "My owner must have deleted it. Sorry. :/ "
                                   + "Feel free to suggest your idea in person at my support server "
                                   + "in **#{}**! (https://discord.gg/ewvvKHM)".format(
@@ -309,9 +309,9 @@ class Utils:
                               icon_url=ctx.message.author.avatar_url.replace('?size=1024', ''))
                 await ctx.send(embed=em)
             except KeyError:
-                await ctx.send(":x: No results found.")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " No results found.")
         else:
-            await ctx.send(":x: No results found.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " No results found.")
 
     @commands.command()
     async def remindme(self, ctx, time: str, *, msg: str):
@@ -326,7 +326,7 @@ class Utils:
         seconds = int(seconds_match[1]) if seconds_match is not None else 0
         total = (days * 86400) + (hours * 3600) + (minutes * 60) + seconds
         if total <= 10:
-            return await ctx.send(":x: That's too little time!")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That's too little time!")
         m, s = divmod(total, 60)
         h, m = divmod(m, 60)
         d, h = divmod(h, 24)

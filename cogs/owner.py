@@ -248,7 +248,7 @@ class Owner:
                 await ctx.send(f'Content too long. Hastepaste: ' + await self.bot.post_to_haste(table))
         except pymysql.err.ProgrammingError as e:
             err_msg = str(e).split(',')[1].replace(')', '').replace('"', '')
-            await ctx.send(f":x: {err_msg}")
+            await ctx.send(resolve_emoji('ERROR', ctx) + err_msg)
 
     @commands.command()
     @commands.check(is_owner)

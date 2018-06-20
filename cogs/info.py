@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 
 import config
-from cogs.utils.tools import *
+from cogs.utils.tools import resolve_emoji
 
 about_description = """
 **H-hello!~~**
@@ -179,10 +179,10 @@ class Info:
             cmd = self.bot.all_commands.get(command_or_category)
             if cmd is None:
                 if self.bot.get_cog(command_or_category) is None:
-                    return await ctx.send(":x: I did not find that command or category.")
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + " I did not find that command or category.")
                 cmds = sorted(list(self.bot.get_cog_commands(command_or_category)), key=lambda c: c.name)
                 if len(cmds) == 0:  # Shouldn't happen, but it's a failsafe
-                    return await ctx.send(":x: There are no commands in that category.")
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + " There are no commands in that category.")
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
@@ -403,7 +403,7 @@ class Info:
             )
             await ctx.send(embed=em)
         else:
-            await ctx.send(":x: U-uh, I'm sorry, but that c-city doesn't seem to exist!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " U-uh, I'm sorry, but that c-city doesn't seem to exist!")
 
     @commands.command()
     async def status(self, ctx, *, user: discord.Member = None):

@@ -179,6 +179,9 @@ class Fun:
     # owo
     # sometimes im worried for myself
     # watashi the fuck did you just say about me?
+    # hi desii in the future, how're you
+    # wait, you're not desii?
+    # uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
 
     @commands.command()
     async def slots(self, ctx):
@@ -251,7 +254,7 @@ class Fun:
         if len(members) == 1:
             l = [ctx.author, members[0]]
         if len(members) == 0:
-            return await ctx.send(":x: You need to specify the two users or one to compare with yourself.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " You need to specify the two users or one to compare with yourself.")
         if (l[0].id == l[1].id) and l[0].id != ctx.author.id:
             sum = 101
             msg = f"Be sure to tell {l[0].display_name} that they should love themselves!"
@@ -379,7 +382,7 @@ class Fun:
         bot_choice = random.choice(opts)
         user_choice = choice.lower()
         if user_choice not in opts:
-            return await ctx.send(":x: That is not rock, paper, or scissors.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That is not rock, paper, or scissors.")
         bot_index = opts.index(bot_choice)
         user_index = opts.index(user_choice)
         win = False
@@ -447,10 +450,10 @@ class Fun:
         try:
             msg = await self.bot.wait_for('message', check=check1, timeout=120.0)
         except asyncio.TimeoutError:
-            await ctx.send("You didnt answer in time, the correct answer was `{}`".format(correct))
+            await ctx.send(resolve_emoji('ERROR', ctx) + "You didn't answer in time, the correct answer was `{}`".format(correct))
             return
         if msg.content.lower() == correct.lower():
-            await ctx.send(":white_check_mark: **{}** got the correct answer!".format(
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + " **{}** got the correct answer!".format(
                 ctx.author.display_name))
             return
         elif msg.content.lower() == "end":
@@ -458,7 +461,7 @@ class Fun:
             return
         else:
             if len(j['results'][0]['incorrect_answers']) > 2:
-                await ctx.send(":x: That isn't right. You have one more try.")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " That isn't right. You have one more try.")
 
                 def check2(m):
                     return m.author.id == ctx.author.id and m.channel == ctx.channel
@@ -466,19 +469,19 @@ class Fun:
                 try:
                     msg2 = await self.bot.wait_for('message', check=check2, timeout=120.0)
                 except asyncio.TimeoutError:
-                    await ctx.send("You didnt answer in time, the correct answer was `{}`".format(correct))
+                    await ctx.send(resolve_emoji('ERROR', ctx) + "You didn't answer in time, the correct answer was `{}`".format(correct))
                     return
                 if msg2.content.lower() == correct.lower():
-                    await ctx.send(":white_check_mark: **{}** got the correct answer!".format(
+                    await ctx.send(resolve_emoji('SUCCESS', ctx) + " **{}** got the correct answer!".format(
                         ctx.author.display_name))
                     return
                 elif msg2.content.lower() == "end":
                     await ctx.send(f":ok_hand: Ended your game, the correct answer was `{correct}`")
                     return
                 else:
-                    await ctx.send(":x: That's not right. The correct answer was `{}`".format(correct))
+                    await ctx.send(resolve_emoji('ERROR', ctx) + " That's not right. The correct answer was `{}`".format(correct))
             else:
-                await ctx.send(":x: That's not right. The correct answer was `{}`".format(correct))
+                await ctx.send(resolve_emoji('ERROR', ctx) + " That's not right. The correct answer was `{}`".format(correct))
 
     @commands.command()
     async def joke(self, ctx, *, phrase: str = None):
