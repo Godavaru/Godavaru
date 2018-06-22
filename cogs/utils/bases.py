@@ -20,7 +20,7 @@ class ModLog(Embed):
         self.set_author(name=f'{mod} ({mod.id})', icon_url=mod.avatar_url)
         self.description = f'**User:** {user} ({user.id})\n**Action:** {action.capitalize()}\n**Reason:** {reason}'
         self.set_footer(text=f'Case #{case}')
-        self.timestamp = datetime.datetime.now()
+        self.timestamp = datetime.datetime.utcnow()
         self.color = self.types[action]
 
 

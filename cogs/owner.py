@@ -296,6 +296,22 @@ class Owner:
                            + f" I-I'm sorry, I couldn't load the `{extension}` module >w< "
                            + f"```py\n{traceback.format_exc()}```")
 
+    @commands.command()
+    @commands.check(is_owner)
+    async def blacklist(self, ctx, id: int, *, reason: str = None):
+        """Blacklist a user or a guild."""
+        if str(id) in self.bot.blacklist.keys():
+            return await ctx.send(resolve_emoji('ERROR', ctx) + f' That ID is already blacklisted for `{self.bot.blacklist[str(id)]}`')
+        self.bot.blacklist[str(id)] = reason if reason else 'Not defined.'
+        self.bot.query_db(f'INSERT INTO blacklist VALUES(%s, %s)', (id, reason if reason else 'Not defined.'))
+        em = discord.Embed(description=f'**ID:** {id}\n**Action:** Blacklist\n**Reason:** {reason}', color=0xff0000)
+        em.set_author(icon_url=ctx.author.avatar_url, name=str(ctx.author))
+        em.timestamp = datetime.datetime.utcnow()
+        await self.bot.get_channel(388274450870829057).send(embed=em)
+        if self.bot.get_guild(id):
+            await self.bot.get_guild(id).leave()
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Blacklisted ID **{id}** for `{reason if reason else "Not defined."}`')
+
 
 def setup(bot):
     bot.add_cog(Owner(bot))

@@ -191,6 +191,7 @@ class Currency:
                 await ctx.send(resolve_emoji('ERROR', ctx) + random.choice(self.crime_quotes['lose']))
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + 'You need at least $500 to fund the crime!')
+            ctx.command.reset_cooldown(ctx)
 
     @commands.command()
     @commands.cooldown(rate=1, per=8, type=commands.BucketType.user)

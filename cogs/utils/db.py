@@ -17,6 +17,14 @@ def get_all_prefixes():
     return d
 
 
+def get_blacklist(bot):
+    results = bot.query_db('SELECT * FROM blacklist')
+    d = dict()
+    for row in results:
+        d[str(row[0])] = row[1]
+    return d
+
+
 def get_log_channel(bot: Bot, guild: Guild) -> TextChannel or None:
     """Get the log channel of the given guild.
 

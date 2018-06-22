@@ -11,7 +11,7 @@ from discord.ext import commands
 import config
 import random
 import aiohttp
-from cogs.utils.db import get_all_prefixes
+from cogs.utils.db import get_all_prefixes, get_blacklist
 from cogs.utils.tools import get_prefix
 
 
@@ -72,6 +72,8 @@ class Godavaru(commands.Bot):
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
+        if not hasattr(self, 'blacklist'):
+            self.blacklist = get_blacklist(self)  # in on_ready so user cache is loaded
         is_prod = config.environment == "Production"
         if is_prod:
             self.weeb_types = await self.weeb.get_types()

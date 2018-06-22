@@ -7,7 +7,8 @@ class MessageEvents:
         self.bot = bot
 
     async def on_message_edit(self, before, after):
-        if after.guild.name is not None and after.content != before.content and before.author.bot is False:
+        if after.guild.name is not None and after.content != before.content \
+                and before.author.bot is False and str(after.author.id) not in self.bot.blacklist.keys():
             await self.bot.process_commands(after)
 
     async def on_message(self, message):
@@ -24,8 +25,9 @@ class MessageEvents:
                     f"Baka! Don't you know pinging is rude! O-oh, you want to use my commands? Well, the prefix is `{prefix}`. Try it like this: `{prefix}help`"
                 ]
                 await message.channel.send(random.choice(prefix_messages))
-            if message.author.id not in config.blacklist:
+            if str(message.author.id) not in self.bot.blacklist.keys():
                 await self.bot.process_commands(message)
+
 
 def setup(bot):
     bot.add_cog(MessageEvents(bot))
