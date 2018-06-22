@@ -300,17 +300,33 @@ class Owner:
     @commands.check(is_owner)
     async def blacklist(self, ctx, id: int, *, reason: str = None):
         """Blacklist a user or a guild."""
+        if not reason:
+            reason = 'Not defined.'
         if str(id) in self.bot.blacklist.keys():
-            return await ctx.send(resolve_emoji('ERROR', ctx) + f' That ID is already blacklisted for `{self.bot.blacklist[str(id)]}`')
-        self.bot.blacklist[str(id)] = reason if reason else 'Not defined.'
-        self.bot.query_db(f'INSERT INTO blacklist VALUES(%s, %s)', (id, reason if reason else 'Not defined.'))
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' That ID is already blacklisted for `{self.bot.blacklist[str(id)]}`\n'
+                                                         f'Do you wish to remove this blacklist?')
+            def check(m):
+                return m.content.lower() == 'yes' and m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+            try:
+                await self.bot.wait_for('message', check=check, timeout=60.0)
+            except asyncio.TimeoutError:
+                return await ctx.send('Kept blacklist due to request timeout.')
+            del self.bot.blacklist[str(id)]
+            self.bot.query_db(f'DELETE FROM blacklist WHERE id={id};')
+            em = discord.Embed(description=f'**ID:** {id}\n**Action:** Un-Blacklist\n**Reason:** {reason}', color=0x00ff00)
+            em.set_author(icon_url=ctx.author.avatar_url, name=str(ctx.author))
+            em.timestamp = datetime.datetime.utcnow()
+            await self.bot.get_channel(388274450870829057).send(embed=em)
+            return await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Removed the blacklist for **{id}**.')
+        self.bot.blacklist[str(id)] = reason
+        self.bot.query_db(f'INSERT INTO blacklist VALUES(%s, %s)', (id, reason))
         em = discord.Embed(description=f'**ID:** {id}\n**Action:** Blacklist\n**Reason:** {reason}', color=0xff0000)
         em.set_author(icon_url=ctx.author.avatar_url, name=str(ctx.author))
         em.timestamp = datetime.datetime.utcnow()
         await self.bot.get_channel(388274450870829057).send(embed=em)
         if self.bot.get_guild(id):
             await self.bot.get_guild(id).leave()
-        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Blacklisted ID **{id}** for `{reason if reason else "Not defined."}`')
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Blacklisted ID **{id}** for `{reason}`')
 
 
 def setup(bot):
