@@ -137,7 +137,7 @@ class Settings:
             results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
             selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
             selfroles[name] = role.id
-            self.bot.query_db(f'''UPDATE settings SET self_roles={str(selfroles)} WHERE guildid={ctx.guild.id};''')
+            self.bot.query_db(f'''UPDATE settings SET self_roles="{str(selfroles)}" WHERE guildid={ctx.guild.id};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully added self role **{name}** which gives role **{role}**. This can be applied with `{ctx.prefix}iam {name}`')
         elif func in ['rm', 'rem', 'remove', 'delete', 'del']:
             results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
@@ -146,7 +146,7 @@ class Settings:
                 del selfroles[name]
             except KeyError:
                 return await ctx.send(resolve_emoji('ERROR', ctx) + f' There is no self role with the name `{name}`')
-            self.bot.query_db(f'''UPDATE settings SET self_roles={str(selfroles)} WHERE guildid={ctx.guild.id};''')
+            self.bot.query_db(f'''UPDATE settings SET self_roles="{str(selfroles)}" WHERE guildid={ctx.guild.id};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully removed self role **{name}**.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Invalid function, check `{ctx.prefix}help {ctx.command}`')
