@@ -381,14 +381,14 @@ class Utils:
         if name in ['list', 'ls']:
             msg = ''
             for key in selfroles.keys():
-                if ctx.guild.get_role(selfroles[key]):
-                    msg += f'**Self role name:** {key} | **Gives:** {ctx.guild.get_role(selfroles[key])}\n'
+                if discord.utils.get(ctx.guild.roles, id=selfroles[key]):
+                    msg += f'**Self role name:** {key} | **Gives:** {discord.utils.get(ctx.guild.roles, id=selfroles[key])}\n'
             em = discord.Embed(title='All Self Assignable Roles', description=msg if msg != '' else 'None (yet!)',
                                color=ctx.author.color)
             em.set_footer(text='Requested by ' + ctx.author.display_name)
             return await ctx.send(embed=em)
         try:
-            role = ctx.guild.get_role(selfroles[name])
+            role = discord.utils.get(ctx.guild.roles, id=selfroles[name])
             if role:
                 if role not in ctx.author.roles:
                     await ctx.author.add_roles(role)
@@ -408,7 +408,7 @@ class Utils:
         results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
         selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
         try:
-            role = ctx.guild.get_role(selfroles[name])
+            role = discord.utils.get(ctx.guild.roles, id=selfroles[name])
             if role:
                 if role in ctx.author.roles:
                     await ctx.author.remove_roles(role)
