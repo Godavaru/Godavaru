@@ -128,17 +128,20 @@ class Settings:
 
     @commands.command()
     @commands.check(can_manage)
-    async def selfroles(self, ctx, func: str, name: str, *, role: discord.Role):
+    async def selfroles(self, ctx, func: str, name: str, *, role: discord.Role = None):
         """Manage the guild self roles for the `iam` command.
         Valid functions: `add`, `new`, `remove`, `rm`, `rem`, `delete`, `del`"""
         if func in ['add', 'new']:
-            if role.is_default():
-                return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as a self role.')
-            results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
-            selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
-            selfroles[name] = role.id
-            self.bot.query_db(f'''UPDATE settings SET self_roles="{str(selfroles)}" WHERE guildid={ctx.guild.id};''')
-            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully added self role **{name}** which gives role **{role}**. This can be applied with `{ctx.prefix}iam {name}`')
+            if role:
+                if role.is_default():
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as a self role.')
+                results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
+                selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
+                selfroles[name] = role.id
+                self.bot.query_db(f'''UPDATE settings SET self_roles="{str(selfroles)}" WHERE guildid={ctx.guild.id};''')
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully added self role **{name}** which gives role **{role}**. This can be applied with `{ctx.prefix}iam {name}`')
+            else:
+                await ctx.send(resolve_emoji('ERROR', ctx) + f' Missing required argument `role`, check `{ctx.prefix}help {ctx.command}`')
         elif func in ['rm', 'rem', 'remove', 'delete', 'del']:
             results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
             selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
