@@ -1,6 +1,7 @@
 import discord
 import asyncio
 import config
+import json
 from discord.ext import commands
 from .utils.db import get_all_prefixes
 from .utils.tools import resolve_emoji, resolve_channel, resolve_role
@@ -124,6 +125,31 @@ class Settings:
             await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your leave channel & message.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
+
+    @commands.command()
+    @commands.check(can_manage)
+    async def selfroles(self, ctx, func: str, name: str, *, role: discord.Role):
+        """Manage the guild self roles for the `iam` command.
+        Valid functions: `add`, `new`, `remove`, `rm`, `rem`, `delete`, `del`"""
+        if func in ['add', 'new']:
+            if role.is_default():
+                return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as a self role.')
+            results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
+            selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
+            selfroles[name] = role.id
+            self.bot.query_db(f'''UPDATE settings SET self_roles={str(selfroles)} WHERE guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully added self role **{name}** which gives role **{role}**. This can be applied with `{ctx.prefix}iam {name}`')
+        elif func in ['rm', 'rem', 'remove', 'delete', 'del']:
+            results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
+            selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
+            try:
+                del selfroles[name]
+            except KeyError:
+                return await ctx.send(resolve_emoji('ERROR', ctx) + f' There is no self role with the name `{name}`')
+            self.bot.query_db(f'''UPDATE settings SET self_roles={str(selfroles)} WHERE guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully removed self role **{name}**.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' Invalid function, check `{ctx.prefix}help {ctx.command}`')
 
     @commands.command(name='import')
     @commands.check(can_manage)

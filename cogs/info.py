@@ -223,7 +223,7 @@ class Info:
                       icon_url=ctx.author.avatar_url.split('?')[0])
         await ctx.send(embed=em)
 
-    @commands.command(pass_context=True)
+    @commands.command(aliases=['botinfo'])
     async def info(self, ctx):
         """Show some of the more statistical information about me.
         This information includes the current version(s), number of commands, amount of servers, channels, users, uptime, and average websocket ping."""
