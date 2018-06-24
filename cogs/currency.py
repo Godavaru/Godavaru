@@ -61,7 +61,8 @@ class Currency:
         if user.bot:
             return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer to a bot, silly.')
         if amount <= 0:
-            return await ctx.send(resolve_emoji('ERROR', ctx) + ' Nice try. You cannot transfer negative or zero money.')
+            return await ctx.send(
+                resolve_emoji('ERROR', ctx) + ' Nice try. You cannot transfer negative or zero money.')
         bal = self.bot.query_db(f'''SELECT balance FROM users WHERE userid={ctx.author.id};''')
         if not bal or not bal[0][0] >= amount:
             return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot transfer more than what you have.')
@@ -91,7 +92,7 @@ class Currency:
         em = discord.Embed(
             description=profile[1] if profile[1] else ('No description set.'
                                                        + (
-                                                       f' Set one with `{ctx.prefix}description <description>`!' if member is ctx.author else "")),
+                                                           f' Set one with `{ctx.prefix}description <description>`!' if member is ctx.author else "")),
             color=ctx.author.color)
         em.set_author(
             name=name + ("'s" if not name.endswith('s') else "'") + " Profile")
@@ -110,10 +111,11 @@ class Currency:
         max_value = 300 if not self.is_premium(ctx.author) else 500
         if len(description) > max_value:
             return await ctx.send(
-                resolve_emoji('ERROR', ctx) + f" The maximum the description can be is `{max_value}` characters for you! "
+                resolve_emoji('ERROR',
+                              ctx) + f" The maximum the description can be is `{max_value}` characters for you! "
                 + (
-                f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
-                    ctx.author) else ""))
+                    f"Get the max raised to 500 by donating! Find the link in `{ctx.prefix}links`!" if not self.is_premium(
+                        ctx.author) else ""))
         self.bot.query_db(f'''INSERT INTO users (userid, description) VALUES ({ctx.author.id}, %s) 
                             ON DUPLICATE KEY UPDATE description=%s''', (description, description))
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Set your description! Check it out on `{ctx.prefix}profile`!")
@@ -233,9 +235,11 @@ class Currency:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You can't marry yourself.")
         if member.bot:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You can't marry a bot.")
-        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''') and self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''')[0][0]:
+        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''') and \
+                self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''')[0][0]:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " That person is already married!")
-        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''') and self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')[0][0]:
+        if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''') and \
+                self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')[0][0]:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You are already married!")
         await ctx.send(
             f'{member.display_name}, say `yes` or `no` to the marriage proposal from {ctx.author.display_name}')
@@ -290,7 +294,8 @@ class Currency:
         self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items)
                             VALUES ({user_id}, DEFAULT, {daily_coins}, DEFAULT, DEFAULT, DEFAULT)
                             ON DUPLICATE KEY UPDATE balance = balance + {daily_coins}''')
-        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
+        await ctx.send(resolve_emoji('SUCCESS',
+                                     ctx) + f' You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
 
     @commands.command()
     async def buy(self, ctx, item: str, amount: int = 1):
@@ -322,7 +327,8 @@ class Currency:
                     self.bot.query_db(
                         f'''UPDATE users SET balance=balance-{items.all_items[item]["buy"] * amount} WHERE userid={ctx.author.id}''')
                     await ctx.send(
-                        resolve_emoji('SUCCESS', ctx) + f' You purchased {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
+                        resolve_emoji('SUCCESS',
+                                      ctx) + f' You purchased {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["buy"] * amount}')
                 else:
                     await ctx.send(resolve_emoji('ERROR', ctx) + " You do not have the money for that.")
             else:
@@ -357,7 +363,8 @@ class Currency:
                     self.bot.query_db(
                         f'''UPDATE users SET items="{str(itms)}",balance=balance+{items.all_items[item]["sell"] * amount} WHERE userid={ctx.author.id}''')
                     await ctx.send(
-                        resolve_emoji('SUCCESS', ctx) + f' You successfully sold {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["sell"] * amount}')
+                        resolve_emoji('SUCCESS',
+                                      ctx) + f' You successfully sold {amount}x {items.all_items[item]["emoji"]} for ${items.all_items[item]["sell"] * amount}')
                 except KeyError:
                     return await ctx.send(resolve_emoji('ERROR', ctx) + " You do not have enough of that item.")
             else:
@@ -381,7 +388,7 @@ class Currency:
         num = random.randint(0, max_value)
         if num > 50:
             msg = f":pick: You mined {num} credits" + (" and you found a diamond" if gets_diamond else "") + (
-            " but your pickaxe broke :<" if pick_breaks else "") + '.'
+                " but your pickaxe broke :<" if pick_breaks else "") + '.'
             await ctx.send(msg)
             if gets_diamond:
                 try:

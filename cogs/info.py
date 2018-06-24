@@ -27,22 +27,25 @@ Check all my commands with `g_help` or `godavaru help`!
 """
 
 
+def get_pressure(n):
+    bar = n / 1000
+    return f"{round(bar)} bar | {n} hPA"
+
+
+def get_wind(n):
+    imp = n * 2.2
+    return f"{n} m/s | {round(imp)} mph"
+
+
+def get_temp(n):
+    cel = n - 273.15
+    fa = n * 9 / 5 - 459.67
+    return f"{round(cel)} °C | {round(fa)} °F"
+
+
 class Info:
     def __init__(self, bot):
         self.bot = bot
-
-    def get_temp(self, n):
-        cel = n - 273.15
-        fa = n * 9 / 5 - 459.67
-        return f"{round(cel)} °C | {round(fa)} °F"
-
-    def get_wind(self, n):
-        imp = n * 2.2
-        return f"{n} m/s | {round(imp)} mph"
-
-    def get_pressure(self, n):
-        bar = n / 1000
-        return f"{round(bar)} bar | {n} hPA"
 
     @commands.command()
     async def roleinfo(self, ctx, *, role: discord.Role = None):
@@ -264,17 +267,16 @@ class Info:
         If the user is none, it will grab your avatar. If the user is not found, this message will be shown."""
         if user is None:
             user = ctx.author
-        url = user.avatar_url + ('&.gif' if user.avatar.startswith('a_') else '')
         embed = discord.Embed(
             color=ctx.author.color
         ).set_image(
-            url=url
+            url=user.avatar_url
         ).set_footer(
-            icon_url=url,
+            icon_url=ctx.author.avatar_url,
             text=f"Requested by {ctx.author.display_name}"
         ).set_author(
-            icon_url=url,
-            url=url,
+            icon_url=user.avatar_url,
+            url=user.avatar_url,
             name=f"{user.display_name}'s avatar"
         )
         await ctx.send(embed=embed)
@@ -386,18 +388,18 @@ class Info:
 
             em.add_field(
                 name="🌡 Temperature",
-                value=f"Current: {self.get_temp(j['main']['temp'])}\n"
-                      + f"Max: {self.get_temp(j['main']['temp_max'])}\n"
-                      + f"Min: {self.get_temp(j['main']['temp_min'])}"
+                value=f"Current: { get_temp(j['main']['temp'])}\n"
+                      + f"Max: { get_temp(j['main']['temp_max'])}\n"
+                      + f"Min: { get_temp(j['main']['temp_min'])}"
             ).add_field(
                 name="💧 Humidity",
                 value=f"{j['main']['humidity']}%"
             ).add_field(
                 name="💨 Wind Speeds",
-                value=self.get_wind(j['wind']['speed'])
+                value=get_wind(j['wind']['speed'])
             ).add_field(
                 name="🎐 Pressure",
-                value=self.get_pressure(j['main']['pressure'])
+                value=get_pressure(j['main']['pressure'])
             ).set_thumbnail(
                 url=f"http://openweathermap.org/img/w/{j['weather'][0]['icon']}.png"
             )

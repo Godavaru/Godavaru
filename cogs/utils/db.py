@@ -39,4 +39,5 @@ def get_log_channel(bot: Bot, guild: Guild) -> TextChannel or None:
     if query and query[0][0]:
         return get(guild.channels, id=int(query[0][0]))
 
+
 default_profile_values = [None, None, 0, None, 0, None]

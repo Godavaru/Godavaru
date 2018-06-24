@@ -11,4 +11,5 @@ def is_nsfw():
             return True
         else:
             raise ChannelNotNSFW("This channel is not marked as NSFW.")
+
     return check(pred)

@@ -1,12 +1,11 @@
 import asyncio
-import os
 import random
-import string
-import discord
 import re
-import requests
-import aiohttp
+import string
 import urllib.parse
+
+import discord
+import requests
 from discord.ext import commands
 
 import config
@@ -254,7 +253,8 @@ class Fun:
         if len(members) == 1:
             l = [ctx.author, members[0]]
         if len(members) == 0:
-            return await ctx.send(resolve_emoji('ERROR', ctx) + " You need to specify the two users or one to compare with yourself.")
+            return await ctx.send(
+                resolve_emoji('ERROR', ctx) + " You need to specify the two users or one to compare with yourself.")
         if (l[0].id == l[1].id) and l[0].id != ctx.author.id:
             sum = 101
             msg = f"Be sure to tell {l[0].display_name} that they should love themselves!"
@@ -330,8 +330,9 @@ class Fun:
     @commands.command()
     async def lyrics(self, ctx, *, song: str):
         """Search up the lyrics to a song on Genius!"""
-        async with self.bot.session.get('https://api.genius.com/search?q=' + urllib.parse.quote_plus(song).replace('+', '%20'),
-                                        headers={'Authorization': config.genius_token}) as resp:
+        async with self.bot.session.get(
+                'https://api.genius.com/search?q=' + urllib.parse.quote_plus(song).replace('+', '%20'),
+                headers={'Authorization': config.genius_token}) as resp:
             r = await resp.json()
         try:
             song = r['response']['hits'][0]['result']
@@ -413,11 +414,11 @@ class Fun:
     async def owoify(self, ctx, *, msg: str):
         """Do you want youw wowds to be owoified? UwU  I know I do~ ^w^"""
         faces = ["(・`ω´・)", ";;w;;", "owo", "UwU", ">w<", "^w^"]
-        r = re.sub('(?:r|l)', "w", msg)
-        r = re.sub('(?:R|L)', "W", r)
+        r = re.sub('(?:[rl])', "w", msg)
+        r = re.sub('(?:[RL])', "W", r)
         r = re.sub('ove', 'uv', r)
         r = re.sub('OVE', 'UV', r)
-        r = re.sub('(n|N)([aeiouAEIOU])', "\g<1>y\g<2>", r)
+        r = re.sub('([nN])([aeiouAEIOU])', "\g<1>y\g<2>", r)
         r = re.sub('!+', " " + random.choice(faces) + " ", r)
         await ctx.send(r)
 
@@ -450,7 +451,8 @@ class Fun:
         try:
             msg = await self.bot.wait_for('message', check=check1, timeout=120.0)
         except asyncio.TimeoutError:
-            await ctx.send(resolve_emoji('ERROR', ctx) + "You didn't answer in time, the correct answer was `{}`".format(correct))
+            await ctx.send(
+                resolve_emoji('ERROR', ctx) + "You didn't answer in time, the correct answer was `{}`".format(correct))
             return
         if msg.content.lower() == correct.lower():
             await ctx.send(resolve_emoji('SUCCESS', ctx) + " **{}** got the correct answer!".format(
@@ -469,7 +471,9 @@ class Fun:
                 try:
                     msg2 = await self.bot.wait_for('message', check=check2, timeout=120.0)
                 except asyncio.TimeoutError:
-                    await ctx.send(resolve_emoji('ERROR', ctx) + "You didn't answer in time, the correct answer was `{}`".format(correct))
+                    await ctx.send(
+                        resolve_emoji('ERROR', ctx) + "You didn't answer in time, the correct answer was `{}`".format(
+                            correct))
                     return
                 if msg2.content.lower() == correct.lower():
                     await ctx.send(resolve_emoji('SUCCESS', ctx) + " **{}** got the correct answer!".format(
@@ -479,9 +483,11 @@ class Fun:
                     await ctx.send(f":ok_hand: Ended your game, the correct answer was `{correct}`")
                     return
                 else:
-                    await ctx.send(resolve_emoji('ERROR', ctx) + " That's not right. The correct answer was `{}`".format(correct))
+                    await ctx.send(
+                        resolve_emoji('ERROR', ctx) + " That's not right. The correct answer was `{}`".format(correct))
             else:
-                await ctx.send(resolve_emoji('ERROR', ctx) + " That's not right. The correct answer was `{}`".format(correct))
+                await ctx.send(
+                    resolve_emoji('ERROR', ctx) + " That's not right. The correct answer was `{}`".format(correct))
 
     @commands.command()
     async def joke(self, ctx, *, phrase: str = None):

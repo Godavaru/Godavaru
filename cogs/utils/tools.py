@@ -7,7 +7,6 @@ import string
 import random
 import re
 
-
 _CHANNEL_MENTION_MATCH = re.compile('<#([0-9]+)>$')
 _ROLE_MENTION_MATCH = re.compile('<@&([0-9]+)>$')
 
@@ -27,9 +26,7 @@ def get_prefix(bot: Bot, msg: Message) -> list:
     Returns:
         A ``list`` of prefixes that will be used in this server.
     """
-    prefixes = []
-    prefixes.append(msg.guild.me.mention)
-    prefixes.append(msg.guild.me.mention + ' ')
+    prefixes = [msg.guild.me.mention, msg.guild.me.mention + ' ']
     for p in config.prefix:
         prefixes.append(p)
         prefixes.append(p + ' ')
@@ -66,7 +63,6 @@ def resolve_channel(string: str, ctx: Context) -> TextChannel or None:
           TextChannel or None: The ``TextChannel`` found or None if none found.
     """
     match = _CHANNEL_MENTION_MATCH.match(string)
-    channel = None
     if match:
         channel = utils.get(ctx.guild.text_channels, id=int(match.group(1)))
     else:
@@ -88,7 +84,6 @@ def resolve_role(string: str, ctx: Context) -> Role or None:
           Role or None: The ``Role`` found or None if none found.
     """
     match = _ROLE_MENTION_MATCH.match(string)
-    role = None
     if match:
         role = utils.get(ctx.guild.roles, id=int(match.group(1)))
     else:

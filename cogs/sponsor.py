@@ -37,16 +37,18 @@ class Sponsor:
     @template.command(name="3")
     async def _3(self, ctx):
         """The "template" for the third tier of Sponsor commands, achieved at $50"""
-        return await ctx.send('There is no template. You have full control, so long as you follow the following rules:\n'
-                              + '**1:** The name of your item & the creator(s) must be shown somewhere in a visible place, '
-                              + 'preferably at the top\n'
-                              + '**2:** You must not place anything harmful, aka IP loggers, `@everyone` pings in simple '
-                              + 'text messages, or anything of the like. Your sponsor command goes through a quick '
-                              + 'verification process, and if you break these rules, it will never be verified.\n'
-                              + '**3:** You must fit in with the limitations of Discord and have common sense. (message no '
-                              + 'longer than 2000 chars (ofc) and dont have a wall of emojis)\n\n'
-                              + 'Aside from that, thanks for your pledge if you have already or if you are considering it, '
-                              + 'thanks as well :)')
+        return await ctx.send(
+            'There is no template. You have full control, so long as you follow the following rules:\n'
+            + '**1:** The name of your item & the creator(s) must be shown somewhere in a visible place, '
+            + 'preferably at the top\n'
+            + '**2:** You must not place anything harmful, aka IP loggers, `@everyone` pings in simple '
+            + 'text messages, or anything of the like. Your sponsor command goes through a quick '
+            + 'verification process, and if you break these rules, it will never be verified.\n'
+            + '**3:** You must fit in with the limitations of Discord and have common sense. (message no '
+            + 'longer than 2000 chars (ofc) and dont have a wall of emojis)\n\n'
+            + 'Aside from that, thanks for your pledge if you have already or if you are considering it, '
+            + 'thanks as well :)')
+
 
 def setup(bot):
     bot.add_cog(Sponsor(bot))

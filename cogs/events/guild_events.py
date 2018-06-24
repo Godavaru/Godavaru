@@ -19,5 +19,6 @@ class GuildEvents:
                               + f'I left the server `{server.name}` ({server.id}), owned by `'
                               + f'{server.owner}` ({server.owner.id}).')
 
+
 def setup(bot):
     bot.add_cog(GuildEvents(bot))

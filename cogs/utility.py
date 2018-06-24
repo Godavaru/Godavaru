@@ -15,7 +15,6 @@ import pytz
 from discord.ext import commands
 from PIL import ImageColor
 
-from cogs.utils import image
 from cogs.utils.tools import *
 from cogs.utils.checks import is_nsfw
 
@@ -186,8 +185,8 @@ class Utils:
             anim = False if not match.group(1) else True
             suffix = ".png" if not anim else ".gif"
             url = f"https://cdn.discordapp.com/emojis/{match.group(3)}{suffix}?size=1024"
-            image.save_to_image(url=url, name=match.group(2) + suffix)
-            await ctx.send(file=discord.File(f'./images/{match.group(2)}{suffix}'))
+            img = await (await self.bot.session.get(url)).read()
+            await ctx.send(file=discord.File(img, filename=f'{match.group(2)}{suffix}'))
             os.remove(f'./images/{match.group(2)}{suffix}')
         else:
             try:
@@ -398,8 +397,8 @@ class Utils:
             else:
                 await ctx.send(resolve_emoji('ERROR', ctx) + ' The role corresponding to this self role was deleted.')
         except discord.Forbidden:
-            await ctx.send(resolve_emoji('ERROR', ctx) + ' I could not give you that role. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
-
+            await ctx.send(resolve_emoji('ERROR',
+                                         ctx) + ' I could not give you that role. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
 
     @commands.command()
     @commands.bot_has_permissions(manage_roles=True)
@@ -418,8 +417,8 @@ class Utils:
             else:
                 await ctx.send(resolve_emoji('ERROR', ctx) + ' The role corresponding to this self role was deleted.')
         except discord.Forbidden:
-            await ctx.send(resolve_emoji('ERROR', ctx) + ' I could not take that role from you. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
-
+            await ctx.send(resolve_emoji('ERROR',
+                                         ctx) + ' I could not take that role from you. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
 
 
 def setup(bot):
