@@ -1,6 +1,6 @@
 from ..utils.db import get_log_channel
 from ..utils.tools import resolve_emoji, escape_markdown, process_join_leave
-from discord import TextChannel, VoiceChannel
+from discord import TextChannel, VoiceChannel, utils
 
 
 class Logs:
@@ -38,6 +38,12 @@ class Logs:
             await channel.send(resolve_emoji('INFO', channel)
                                + f' `{member}` (`{member.id}`) has joined `{member.guild}` (`Member #{len(member.guild.members)}`)')
         await process_join_leave(self.bot, member.guild, member, 'join')
+        query = self.bot.query_db(f'''SELECT autorole FROM settings WHERE guildid={member.guild.id};''')
+        if not member.bot:
+            if query and query[0][0]:
+                role = utils.get(member.guild.roles, id=int(query[0][0]))
+                if role:
+                    await member.add_roles(role, reason='Guild Autorole Assigner')
 
     async def on_member_remove(self, member):
         channel = get_log_channel(self.bot, member.guild)

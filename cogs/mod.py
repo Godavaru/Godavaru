@@ -186,7 +186,7 @@ class Mod:
             query = self.bot.query_db(f'''SELECT muterole FROM settings WHERE guildid={ctx.guild.id};''')
             if query and query[0][0]:
                 role = discord.utils.get(ctx.guild.roles, id=int(query[0][0]))
-                if role:
+                if role and not role.is_default():
                     try:
                         await member.add_roles(role, reason=f'Responsible Moderator: {ctx.author} | Reason: ' + (
                             reason if reason else 'No reason specified.'))
@@ -197,7 +197,7 @@ class Mod:
                                                      ctx) + ' I don\'t seem to be able to manage the mute role. Make sure my highest role is above the set muterole.')
                 else:
                     await ctx.send(
-                        resolve_emoji('ERROR', ctx) + ' I can\' seem to find the mute role set. Maybe it was deleted.')
+                        resolve_emoji('ERROR', ctx) + ' I can\' seem to find the mute role set. Maybe it was deleted or the role is the default everyone role.')
             else:
                 await ctx.send(resolve_emoji('ERROR', ctx) + ' The muterole is not set in this server.')
         else:

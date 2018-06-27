@@ -57,6 +57,9 @@ class Settings:
         Note 2: The muterole does not automatically deny `SEND_MESSAGES`. You must do this yourself."""
         r = resolve_role(role, ctx)
         if r:
+            if r.is_default():
+                return await ctx.send(
+                    resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as a muterole.')
             self.bot.query_db(f'''INSERT INTO settings (guildid,muterole) VALUES ({ctx.guild.id},{r.id})
                                 ON DUPLICATE KEY UPDATE muterole={r.id};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully changed the mute role to **{r}** (`{r.id}`)')
@@ -153,6 +156,25 @@ class Settings:
             await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully removed self role **{name}**.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Invalid function, check `{ctx.prefix}help {ctx.command}`')
+
+    @commands.command()
+    @commands.check(can_manage)
+    async def autorole(self, ctx, *, role: str):
+        """Set the guild autorole (the role that will be assigned on member join).
+        Use `reset` as an argument to reset the autorole."""
+        r = resolve_role(role, ctx)
+        if r:
+            if r.is_default():
+                return await ctx.send(
+                    resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as an autorole.')
+            self.bot.query_db(f'''INSERT INTO settings (guildid,autorole) VALUES ({ctx.guild.id},{r.id})
+                                ON DUPLICATE KEY UPDATE autorole={r.id};''')
+            await ctx.send(resolve_role('SUCCESS', ctx) + f' Set the guild autorole to **{r.name}**.')
+        elif r == 'reset':
+            self.bot.query_db(f'''UPDATE settings SET autorole=NULL WHERE guildid={ctx.guild.id};''')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your autorole.')
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' Role "{role}" not found.')
 
     @commands.command(name='import')
     @commands.check(can_manage)
