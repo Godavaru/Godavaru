@@ -169,7 +169,7 @@ class Settings:
                     resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as an autorole.')
             self.bot.query_db(f'''INSERT INTO settings (guildid,autorole) VALUES ({ctx.guild.id},{r.id})
                                 ON DUPLICATE KEY UPDATE autorole={r.id};''')
-            await ctx.send(resolve_role('SUCCESS', ctx) + f' Set the guild autorole to **{r.name}**.')
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Set the guild autorole to **{r.name}**.')
         elif r == 'reset':
             self.bot.query_db(f'''UPDATE settings SET autorole=NULL WHERE guildid={ctx.guild.id};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your autorole.')
