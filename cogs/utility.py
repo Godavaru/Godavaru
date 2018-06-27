@@ -187,7 +187,6 @@ class Utils:
             url = f"https://cdn.discordapp.com/emojis/{match.group(3)}{suffix}?size=1024"
             img = await (await self.bot.session.get(url)).read()
             await ctx.send(file=discord.File(img, filename=f'{match.group(2)}{suffix}'))
-            os.remove(f'./images/{match.group(2)}{suffix}')
         else:
             try:
                 em = str(emote.encode('unicode_escape'))

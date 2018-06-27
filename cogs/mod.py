@@ -3,7 +3,7 @@ import datetime
 import discord
 from discord.ext import commands
 from .utils.bases import ModLog
-from .utils.tools import resolve_emoji, process_modlog
+from .utils.tools import resolve_emoji, process_modlog, parse_flags
 
 
 class Mod:
@@ -15,10 +15,23 @@ class Mod:
     @commands.bot_has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason: str = None):
         """Ban a member from the guild.
-        You can also supply an optional reason."""
+        You can also supply an optional reason.
+        Add `--delete-days <day>` to the end to add an amount of days to delete."""
         if ctx.author.top_role.position > member.top_role.position:
+            days = 7
+            flags = parse_flags(reason)
+            if flags.get('delete-days'):
+                try:
+                    days = int(flags.get('delete-days'))
+                except ValueError:
+                    days = 7
+            if days > 7:
+                days = 7
+            if days < 0:
+                days = 0
+            reason = reason.split('--delete-days')[0] if reason else None
             try:
-                await ctx.guild.ban(member, reason=reason)
+                await ctx.guild.ban(member, reason=reason, delete_message_days=days)
             except discord.Forbidden:
                 await ctx.send(
                     f"{resolve_emoji('ERROR', ctx)} I-I'm sorry, I couldn't ban `{member}` because my role seems to be lower than theirs.")
@@ -34,11 +47,24 @@ class Mod:
     @commands.bot_has_permissions(ban_members=True)
     async def softban(self, ctx, member: discord.Member, *, reason: str = None):
         """Kick a member from the guild and clean messages from the last 7 days.
-        You can also supply an optional reason."""
+        You can also supply an optional reason.
+        Add `--delete-days <day>` to the end to add an amount of days to delete."""
         if ctx.author.top_role.position > member.top_role.position:
+            days = 7
+            flags = parse_flags(reason)
+            if flags.get('delete-days'):
+                try:
+                    days = int(flags.get('delete-days'))
+                except ValueError:
+                    days = 7
+            if days > 7:
+                days = 7
+            if days < 0:
+                days = 0
+            reason = reason.split('--delete-days')[0] if reason else None
             try:
                 await ctx.guild.ban(member, reason=f'Responsible Moderator: {ctx.author} | Reason: ' + (
-                    reason if reason else 'No reason specified.'))
+                    reason if reason else 'No reason specified.'), delete_message_days=days)
                 await ctx.guild.unban(member)
             except discord.Forbidden:
                 await ctx.send(

@@ -218,3 +218,10 @@ async def process_join_leave(bot, guild, user, action):
         channel = guild.get_channel(int(query[0][0]))
         if channel and channel.permissions_for(guild.me).send_messages:
             await channel.send(query[0][1].format(guild=guild, user=user))
+
+
+def parse_flags(string):
+    if not isinstance(string, str):
+        return dict()
+    match = re.findall('--(?P<key>\S+) (?P<value>"[^"]*"|[^\r\n\t\f\v -]*)', string)
+    return dict(match)
