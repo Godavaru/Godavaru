@@ -55,6 +55,7 @@ class Currency:
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successully transfered **{amount}** credits to **{user}**')
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def profile(self, ctx, *, member: discord.Member = None):
         """Show yours or someone else's profile."""
         if member is None:
