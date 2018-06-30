@@ -181,6 +181,7 @@ class Fun:
     # hi desii in the future, how're you
     # wait, you're not desii?
     # uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+    # why does this exist again?
 
     @commands.command()
     async def slots(self, ctx):
@@ -459,7 +460,7 @@ class Fun:
                 ctx.author.display_name))
             return
         elif msg.content.lower() == "end":
-            await ctx.send(f":ok_hand: Ended your game, the correct answer was `{correct}`")
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Ended your game, the correct answer was `{correct}`")
             return
         else:
             if len(j['results'][0]['incorrect_answers']) > 2:
@@ -480,7 +481,7 @@ class Fun:
                         ctx.author.display_name))
                     return
                 elif msg2.content.lower() == "end":
-                    await ctx.send(f":ok_hand: Ended your game, the correct answer was `{correct}`")
+                    await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Ended your game, the correct answer was `{correct}`")
                     return
                 else:
                     await ctx.send(

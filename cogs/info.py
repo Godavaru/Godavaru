@@ -267,19 +267,9 @@ class Info:
         If the user is none, it will grab your avatar. If the user is not found, this message will be shown."""
         if user is None:
             user = ctx.author
-        embed = discord.Embed(
-            color=ctx.author.color
-        ).set_image(
-            url=user.avatar_url
-        ).set_footer(
-            icon_url=ctx.author.avatar_url,
-            text=f"Requested by {ctx.author.display_name}"
-        ).set_author(
-            icon_url=user.avatar_url,
-            url=user.avatar_url,
-            name=f"{user.display_name}'s avatar"
-        )
-        await ctx.send(embed=embed)
+        img = await (await self.bot.session.get(user.avatar_url)).read()
+        await ctx.send(content=resolve_emoji('SUCCESS', ctx) + f' **{user.display_name}**\'s avatar!',
+                       file=discord.File(img, filename=f'{user.avatar}.{"png" if not user.avatar.startswith("a_") else "gif"}'))
 
     @commands.command(aliases=["guild", "ginfo", "server", "serverinfo", "sinfo"])
     async def guildinfo(self, ctx):
@@ -377,7 +367,8 @@ class Info:
     @commands.command()
     async def weather(self, ctx, *, city: str):
         """Get weather information for a specified city."""
-        r = await self.bot.session.get(f"http://api.openweathermap.org/data/2.5/weather/?q={city}&APPID={config.weather_token}")
+        r = await self.bot.session.get(
+            f"http://api.openweathermap.org/data/2.5/weather/?q={city}&APPID={config.weather_token}")
         if (await r.text()).startswith('{"coord"'):
             j = await r.json()
             em = discord.Embed(

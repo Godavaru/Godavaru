@@ -10,12 +10,11 @@ import urllib
 import urllib.parse
 import re
 
-import aiohttp
 import pytz
 from discord.ext import commands
 from PIL import ImageColor
 
-from cogs.utils.tools import *
+from cogs.utils.tools import resolve_emoji
 from cogs.utils.checks import is_nsfw
 
 
@@ -45,6 +44,7 @@ class Utils:
 
     @commands.command()
     @is_nsfw()
+    @commands.bot_has_permissions(embed_links=True)
     async def urban(self, ctx, *, params):
         """Search up a word on urban dictionary.
         To get another result for the same argument, simply use `urban <word> -number <int>`"""
@@ -137,6 +137,7 @@ class Utils:
         await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' ' + random.choice(answers))
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def cat(self, ctx):
         """Get a random cat image!"""
         content = [";w; Don't be sad, here's a cat!",
@@ -155,6 +156,7 @@ class Utils:
                 await ctx.send(resolve_emoji('ERROR', ctx) + " Error retrieving cat image :<")
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def dog(self, ctx):
         """Get a random dog image!"""
         is_video = True
@@ -178,6 +180,7 @@ class Utils:
         await ctx.send(content=content[con], embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def jumbo(self, ctx, emote: str):
         """Get a larger version of a custom emote."""
         match = re.compile(r"<(a)?:(\w*):(\d*)>").match(emote)
@@ -199,6 +202,7 @@ class Utils:
                 await ctx.send(resolve_emoji('ERROR', ctx) + " That is not a custom or unicode emoji!")
 
     @commands.command(aliases=["color"])
+    @commands.bot_has_permissions(embed_links=True)
     async def colour(self, ctx, hexcode: str):
         """Show a preview of a hex colour."""
         if hexcode.startswith("0x") or hexcode.startswith("#"):
@@ -221,6 +225,7 @@ class Utils:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def discrim(self, ctx, *, discrim: str):
         """Find users with the discriminator provided.
         If you are unaware, a discriminator is the 4 digit number following your discord name, as seen [here](https://i.imgur.com/kdbY9Nx.png)."""
@@ -242,6 +247,7 @@ class Utils:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def math(self, ctx, *, expression: str):
         """Evaluate complex mathematical equations (or simple ones, whatever you prefer).
         The available operations are as follows:
@@ -345,7 +351,10 @@ class Utils:
                 f"{scnds} second{'s' if scnds > 1 else ''} " if scnds > 0 else "")
         await ctx.send(f":ok_hand: Okay! I'll remind you in " + t)
         await asyncio.sleep(total)
-        await ctx.author.send(":wave: You asked me to remind you of: " + msg)
+        try:
+            await ctx.author.send(":wave: You asked me to remind you of: " + msg)
+        except:
+            await ctx.send(ctx.author.mention + ': Sorry, I couldn\'t DM you, but you asked to be reminded of: ' + msg)
 
     @commands.command()
     async def unicode(self, ctx, *, character: str):

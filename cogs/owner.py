@@ -1,10 +1,7 @@
 """
 NOTICE:
     The following is taken with minor (to no) modification from https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/admin.py:
-        cleanup_code
-        get_syntax_error
         _eval
-        repl
 """
 import datetime
 import io
@@ -27,18 +24,6 @@ import config
 
 def is_owner(ctx):
     return ctx.author.id in config.owners
-
-
-def get_syntax_error(e):
-    if e.text is None:
-        return f'```py\n{e.__class__.__name__}: {e}\n```'
-    return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
-
-
-def cleanup_code(content):
-    if content.startswith('```') and content.endswith('```'):
-        return '\n'.join(content.split('\n')[1:-1])
-    return content.strip('` \n')
 
 
 class Owner:
@@ -117,13 +102,10 @@ class Owner:
             sp.kill()
             return await ctx.send(
                 resolve_emoji('ERROR', ctx) + ' S-sorry! The command timed out... I-I\'ll try harder next time!')
-        msg = "Executing...\n"
         if out:
-            msg += 'Success! ```\n{}```\n'.format(out.decode())
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Returncode: {sp.returncode} ```\n{out.decode()}```\n')
         if err:
-            msg += 'Error/Info/Warn! ```\n{}```\n'.format(err.decode())
-        msg += "Returncode: {}".format(sp.returncode)
-        await ctx.send(msg)
+            await ctx.send(resolve_emoji('WARN', ctx) + f' Returncode: {sp.returncode} ```\n{err.decode()}```\n')
 
     @commands.command(aliases=["die", "reboot"])
     @commands.check(is_owner)

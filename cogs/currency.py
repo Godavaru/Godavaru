@@ -6,6 +6,7 @@ from .assets import items
 from .utils import db
 from .utils.tools import resolve_emoji
 from discord.ext import commands
+import config
 
 
 class Currency:
@@ -72,18 +73,22 @@ class Currency:
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successully transfered **{amount}** credits to **{user}**')
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def profile(self, ctx, *, member: discord.Member = None):
         """Show yours or someone else's profile."""
         if member is None:
             member = ctx.author
         if member.bot:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " Bots don't have profiles.")
+        if str(member.id) in self.bot.blacklist.keys():
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That user is blacklisted.")
         results = self.bot.query_db(f'''SELECT * FROM users WHERE userid={member.id}''')
         if results:
             profile = list(results)[0]
         else:
             profile = db.default_profile_values
-        name = ("💰 | " if self.is_premium(member) else "") + member.display_name
+        emote = ('⚙ ' if member.id in config.owners else '') + ('💰 ' if self.is_premium(member) else '')
+        name = (emote + '| ' if emote != '' else '') + member.display_name
         itms = json.loads(profile[5].replace("'", '"')) if profile[5] else json.loads('{}')
         msg = []
         for i in itms:
@@ -101,7 +106,7 @@ class Currency:
         em.add_field(name='Married with',
                      value=await self.bot.get_user_info(int(profile[3])) if profile[3] else "Nobody.", inline=False)
         em.add_field(name="Items", value=", ".join(msg) if len(msg) > 0 else "None (yet!)")
-        em.set_thumbnail(url=member.avatar_url.replace('?size=1024', ''))
+        em.set_thumbnail(url=member.avatar_url)
         await ctx.send(embed=em)
 
     @commands.command()
@@ -130,6 +135,9 @@ class Currency:
         if member.bot:
             ctx.command.reset_cooldown(ctx)
             return await ctx.send(resolve_emoji('ERROR', ctx) + " Yes, bots are cool, but you can not rep them.")
+        if str(member.id) in self.bot.blacklist.keys():
+            ctx.command.reset_cooldown(ctx)
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That user is blacklisted.")
         self.bot.query_db(f'''INSERT INTO users (userid, reps) VALUES ({member.id}, 1) 
                             ON DUPLICATE KEY UPDATE reps=reps+1''')
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Added reputation point to **{member}**")
@@ -268,7 +276,7 @@ class Currency:
         married = self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')
         if not married or not married[0][0]:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You are not married.")
-        await ctx.send(":ok_hand: You're single now. Cool.")
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + " You're single now. Cool.")
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={ctx.author.id}''')
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={married[0][0]}''')
 

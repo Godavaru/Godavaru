@@ -31,6 +31,7 @@ class Godavaru(commands.Bot):
         self.db_calls = 0
         self.modlogs = dict()
         self.snipes = dict()
+        self.blacklist = get_blacklist(self)
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
         extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')] + ['events.' + f for f in
@@ -72,8 +73,6 @@ class Godavaru(commands.Bot):
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
-        if not hasattr(self, 'blacklist'):
-            self.blacklist = get_blacklist(self)  # in on_ready so user cache is loaded
         is_prod = config.environment == "Production"
         if is_prod:
             self.weeb_types = await self.weeb.get_types()
