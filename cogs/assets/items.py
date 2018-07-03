@@ -14,19 +14,9 @@ all_items = {
         "buy": None,
         "sell": 300
     },
-    "BEETLE": {
-        "emoji": "🐞",
-        "buy": None,
-        "sell": 300
-    },
-    "ANT": {
-        "emoji": "🐜",
-        "buy": None,
-        "sell": 300
-    },
-    "SPIDER": {
-        "emoji": "🕷",
-        "buy": None,
-        "sell": 300
+    "BLOSSOM": {
+        "emoji": "🌸",
+        "buy": 300,
+        "sell": 100
     }
 }

@@ -31,15 +31,14 @@ class MessageEvents:
             if str(message.author.id) not in self.bot.blacklist.keys():
                 results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={message.author.id}''')
                 items = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
-                if items.get('BUG') and items.get('BUG') > 0 and random.randint(1, 10) > 6:
+                if items.get('BUG') and items.get('BUG') > 0 and random.randint(1, 10) > 8:
                     await message.channel.send(resolve_emoji('ERROR', message)
                                                       + ' Unhandewed exception owo Wepowt this on my suppowt guiwd '
-                                                      + f'(discrod.qq/desiibuttshub) with the Ewwow ID **{generate_id}** '
+                                                      + f'(discrod.qq/desiibuttshub) with the Ewwow ID **{generate_id()}** '
                                                       + 'UwU\n\nJust kidding! You got this error as a random chance '
                                                       + 'because you have a bug item in your inventory. '
                                                       + 'If you wish to never see this message, just sell your bug :3\n'
                                                       + 'Now, I\'ll execute your command for you :3')
-                    await asyncio.sleep(1)
                 await self.bot.process_commands(message)
 
 

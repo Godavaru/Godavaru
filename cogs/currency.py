@@ -40,13 +40,25 @@ class Currency:
         """Loot the current channel for goodies!"""
         max_num = 100 if not self.is_premium(ctx.author) else 500
         amnt = random.randint(0, max_num)
+        gets_blossom = random.randint(0, 10) >= 7
         if amnt > 50:
-            self.bot.query_db(f'''INSERT INTO users (userid, description, balance, marriage, reps, items) 
-                                VALUES ({ctx.author.id}, DEFAULT, {amnt}, DEFAULT, DEFAULT, DEFAULT) 
+            self.bot.query_db(f'''INSERT INTO users (userid, balance) VALUES ({ctx.author.id}, {amnt}) 
                                 ON DUPLICATE KEY UPDATE balance = balance + {amnt}''')
-            await ctx.send(f":tada: You looted **{amnt}** from this channel!")
+            msg = f":tada: You looted **{amnt}** from this channel!" + (' Also, ' if gets_blossom else '')
         else:
-            await ctx.send(":slight_frown: You didn't loot anything")
+            msg = ":slight_frown: You didn't loot anything" + (', but ' if gets_blossom else '.')
+        if gets_blossom:
+            amount = random.randint(1, 5)
+            msg += f'you found {amount} blossoms! 🌸'
+            results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
+            itms = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
+            try:
+                blossoms = itms['BLOSSOM']
+                itms['BLOSSOM'] = blossoms + amount
+            except KeyError:
+                itms['BLOSSOM'] = amount
+            self.bot.query_db(f'''INSERT INTO users (userid, items) VALUES ({ctx.author.id}, "{str(itms)}") 
+                                        ON DUPLICATE KEY UPDATE items="{str(itms)}";''')
 
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)
