@@ -147,7 +147,7 @@ class Currency:
         """Check the leaderboard of money."""
         if ctx.invoked_subcommand is None:
             results = self.bot.query_db(f'SELECT userid,balance FROM users ORDER BY balance DESC LIMIT 15')
-            msg = "```ldif\n"
+            msg = ""
             for i in range(len(results)):
                 row = results[i]
                 user = self.bot.get_user(int(row[0]))
@@ -156,10 +156,10 @@ class Currency:
                 n = i + 1
                 if n < 10:
                     n = f'0{i+1}'
-                msg += f'{n} | {user}: ${row[1]}\n'
+                msg += f'{n}.- {user}: ${row[1]}\n'
             em = discord.Embed(
                 title="Richest Users",
-                description=msg + '```',
+                description=msg,
                 color=ctx.author.color
             )
             await ctx.send(embed=em)
@@ -168,7 +168,7 @@ class Currency:
     async def leaderboard_rep(self, ctx):
         """Check the leaderboard of reputation."""
         results = self.bot.query_db(f'SELECT userid,reps FROM users ORDER BY reps DESC LIMIT 15')
-        msg = "```ldif\n"
+        msg = ""
         for i in range(len(results)):
             row = results[i]
             user = self.bot.get_user(int(row[0]))
@@ -177,10 +177,10 @@ class Currency:
             n = i + 1
             if n < 10:
                 n = f'0{i+1}'
-            msg += f'{n} | {user}: {row[1]} points\n'
+            msg += f'{n}.- {user}: {row[1]} points\n'
         em = discord.Embed(
             title="Richest Users in Reputation",
-            description=msg + '```',
+            description=msg,
             color=ctx.author.color
         )
         await ctx.send(embed=em)

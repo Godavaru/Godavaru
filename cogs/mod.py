@@ -170,10 +170,10 @@ class Mod:
             await ctx.send(resolve_emoji('ERROR', ctx) + " I can't manage that role.")
         else:
             if role not in user.roles:
-                await user.add_roles(role)
+                await user.add_roles(role, reason=f'Responsible Moderator: {ctx.author}')
                 await ctx.send(f":ok_hand: Added the {role.name} role to {user.display_name}")
             else:
-                await user.remove_roles(role)
+                await user.remove_roles(role, reason=f'Responsible Moderator: {ctx.author}')
                 await ctx.send(f":ok_hand: Removed the {role.name} role from {user.display_name}")
 
     @commands.command()

@@ -40,18 +40,6 @@ def get_prefix(bot: Bot, msg: Message) -> list:
     return prefixes
 
 
-async def get(url, headers=None):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url=url, headers=headers) as resp:
-            return await resp.read()
-
-
-async def post(url, headers=None, data=None):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url=url, headers=headers, data=data) as resp:
-            return await resp.read()
-
-
 def resolve_channel(string: str, ctx: Context) -> TextChannel or None:
     """Resolve a channel based on mention, ID, or name.
 

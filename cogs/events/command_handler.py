@@ -1,6 +1,8 @@
 from discord.ext import commands
 import discord
 import traceback
+import random
+import json
 from cogs.utils import checks
 from cogs.utils.tools import generate_id, resolve_emoji
 
@@ -52,6 +54,16 @@ class CommandHandler:
                 self.bot.webhook.send(err_msg + f"**Traceback:** ```py\n{trace}\n```")
             except discord.HTTPException:
                 self.bot.webhook.send(err_msg + '**Traceback:** ' + await self.bot.post_to_haste(trace))
+            if random.randint(1, 5) == 3:
+                await ctx.send('O-oh? Looks like you found a bug! Added it to your inventory!')
+                results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
+                items = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
+                try:
+                    amnt = items['BUG']
+                    items['BUG'] = amnt + 1
+                except KeyError:
+                    items['BUG'] = 1
+                self.bot.query_db(f'''UPDATE users SET items={str(items)} WHERE userid={ctx.author.id}''')
 
 
 def setup(bot):

@@ -30,7 +30,6 @@ class Owner:
     def __init__(self, bot):
         self.bot = bot
         self.last_result = None
-        self.sessions = set()
 
     @commands.command(name="eval", aliases=["ev", "debug"])
     @commands.check(is_owner)
@@ -141,9 +140,9 @@ class Owner:
                                                                               ctx) + " Nothing was returned in this query.")
             except discord.HTTPException:
                 await ctx.send(f'Content too long. Hastepaste: ' + await self.bot.post_to_haste(table))
-        except pymysql.err.ProgrammingError as e:
-            err_msg = str(e).split(',')[1].replace(')', '').replace('"', '')
-            await ctx.send(resolve_emoji('ERROR', ctx) + err_msg)
+        except Exception as e:
+            await ctx.send(resolve_emoji('ERROR', ctx) + e.__class__.__name__ + ': ' + str(e))
+
 
     @commands.command()
     @commands.check(is_owner)

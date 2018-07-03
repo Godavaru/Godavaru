@@ -44,8 +44,9 @@ class NSFW:
             response = non_loli[random.randint(0, len(non_loli) - 1)]
             img = f"https://img.rule34.xxx/images/{response['directory']}/{response['image']}"
             tags = ', '.join(response['tags'].split(' '))
+            safe = "`" + tags + "`" if len(tags) < 5000 else ("[Click me for the tags](" + await self.bot.post_to_haste(tags) + ')')
             em = discord.Embed(
-                description=f'{"`" + tags + "`" if len(tags) < 5000 else "[Click me for the tags](" + self.bot.post_to_haste(tags)})`',
+                description=f'{safe}',
                 colour=0xff0000)
             em.set_image(url=img)
             em.set_author(name='Found Image! Click me if it doesn\'t load!', url=img)
@@ -72,9 +73,10 @@ class NSFW:
                 response = non_loli[random.randint(0, len(non_loli) - 1)]
                 img = response['file_url']
                 tags = ', '.join(response['tags'].split(' '))
+                safe = "`" + tags + "`" if len(tags) < 5000 else ("[Click me for the tags](" + await self.bot.post_to_haste(tags) + ')')
                 em = discord.Embed(
                     description=f'**Rating:** {(rating if rating in ["safe", "questionable", "explicit"] else "safe")}'
-                                + f'\n`{"`" + tags + "`" if len(tags) < 5000 else "[Click me for the tags](" + self.bot.post_to_haste(tags)}`',
+                                + f'\n{safe}',
                     colour=0xff0000)
                 em.set_image(url=img)
                 em.set_author(name='Found Image! Click me if it doesn\'t load!', url=img)

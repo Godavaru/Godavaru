@@ -262,6 +262,7 @@ class Info:
                        + 'Websocket Ping     :  {:.0f}ms\n```'.format(ping))
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def avatar(self, ctx, *, user: discord.Member = None):
         """Get the avatar of a user!
         If the user is none, it will grab your avatar. If the user is not found, this message will be shown."""
@@ -430,15 +431,6 @@ class Info:
                 m2, s2 = divmod(game.duration.total_seconds(), 60)
                 em.add_field(name="Duration", value="`%02d:%02d/%02d:%02d`" % (m, s, m2, s2))
                 em.set_thumbnail(url=game.album_cover_url)
-            elif hasattr(game, 'assets'):
-                ###################################################
-                # UNFINISHED COMMAND, WILL FINISH AT A LATER DATE #
-                ###################################################
-                em.add_field(name="Large Text", value=game.assets['large_text'])
-                em.add_field(name="Small Text", value=game.assets['small_text'])
-                em.add_field(name="State", value=game.state)
-                em.add_field(name="Details", value=game.details)
-                em.set_thumbnail(url=game.assets['large_image'])
             em.set_footer(text="Hope you enjoy it!")
         await ctx.send(embed=em)
 
@@ -451,7 +443,7 @@ class Info:
         changelog = m.clean_content
         if noembed != "noembed" and ctx.channel.permissions_for(ctx.me).embed_links:
             em = discord.Embed(description=changelog, color=ctx.author.color)
-            em.set_author(icon_url=m.author.avatar_url.replace("?size=1024", ""),
+            em.set_author(icon_url=m.author.avatar_url,
                           name="Found the latest changelog from my support guild!")
             em.timestamp = m.created_at
             await ctx.send(embed=em)
@@ -467,7 +459,7 @@ class Info:
         msg = '\n\n'.join(map(lambda m: f'**{m.author.display_name} ({m.author})**\n{m.clean_content}', msgs))
         if noembed != "noembed" and ctx.channel.permissions_for(ctx.me).embed_links:
             em = discord.Embed(description=msg, color=ctx.author.color)
-            em.set_author(icon_url=msgs[0].author.avatar_url.replace('?size=1024', ''),
+            em.set_author(icon_url=msgs[0].author.avatar_url,
                           name="The latest five announcements from my support guild!")
             em.timestamp = msgs[0].created_at
             await ctx.send(embed=em)

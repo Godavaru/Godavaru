@@ -398,7 +398,7 @@ class Utils:
             role = discord.utils.get(ctx.guild.roles, id=selfroles[name])
             if role:
                 if role not in ctx.author.roles:
-                    await ctx.author.add_roles(role)
+                    await ctx.author.add_roles(role, reason='Self Assignable Role')
                     await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Gave you the **{role}** role.')
                 else:
                     await ctx.send(resolve_emoji('ERROR', ctx) + ' Silly, I can\'t give you a role you already have.')
@@ -418,7 +418,7 @@ class Utils:
             role = discord.utils.get(ctx.guild.roles, id=selfroles[name])
             if role:
                 if role in ctx.author.roles:
-                    await ctx.author.remove_roles(role)
+                    await ctx.author.remove_roles(role, reason='Self Assignable Role')
                     await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Removed the **{role}** role from you.')
                 else:
                     await ctx.send(resolve_emoji('ERROR', ctx) + ' Silly, I can\'t take a role that you don\'t have.')
