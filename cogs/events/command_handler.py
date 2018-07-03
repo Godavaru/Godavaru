@@ -63,7 +63,7 @@ class CommandHandler:
                     items['BUG'] = amnt + 1
                 except KeyError:
                     items['BUG'] = 1
-                self.bot.query_db(f'''UPDATE users SET items={str(items)} WHERE userid={ctx.author.id}''')
+                self.bot.query_db(f'''UPDATE users SET items="{str(items)}" WHERE userid={ctx.author.id}''')
 
 
 def setup(bot):
