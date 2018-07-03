@@ -59,6 +59,7 @@ class Currency:
                 itms['BLOSSOM'] = amount
             self.bot.query_db(f'''INSERT INTO users (userid, items) VALUES ({ctx.author.id}, "{str(itms)}") 
                                         ON DUPLICATE KEY UPDATE items="{str(itms)}";''')
+        await ctx.send(msg)
 
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)
