@@ -79,6 +79,9 @@ class Godavaru(commands.Bot):
             self.uptime = datetime.datetime.utcnow()
         self.weeb_types = await self.weeb.get_types()
 
+    async def on_error(self, event, *args, **kwargs):
+        self.webhook.send(f':x: **I ran into an error in event `{event}`!**\nArgs: ```\n{args}\n``` KWArgs: ```\n{kwargs}\n```')
+
     async def change_game(self):
         await self.wait_until_ready()
         while not self.is_closed():
