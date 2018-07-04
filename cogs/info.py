@@ -193,7 +193,7 @@ class Info:
                                    color=ctx.author.color)
                 em.set_footer(
                     text=f"Requested by {ctx.author.display_name} | For extended help, do {prefix}help <command>",
-                    icon_url=ctx.author.avatar_url.split('?')[0])
+                    icon_url=ctx.author.avatar_url)
                 return await ctx.send(embed=em)
             em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help,
                                color=ctx.author.color)
@@ -209,7 +209,7 @@ class Info:
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
                 em.add_field(name="Subcommands", value=msg, inline=False)
-            em.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url.split('?')[0])
+            em.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             return await ctx.send(embed=em)
         em = discord.Embed(
             title="Godavaru Help",
@@ -223,7 +223,8 @@ class Info:
                 continue
             em.add_field(name=f'[{len(cmds)}] - {cog}', value=f"`{'`, `'.join([c.name for c in cmds])}`", inline=False)
         em.set_footer(text=f"Requested by {ctx.author.display_name} | Total commands: {len(self.bot.commands)}",
-                      icon_url=ctx.author.avatar_url.split('?')[0])
+                      icon_url=ctx.author.avatar_url)
+        em.set_thumbnail(url=ctx.author.avatar_url)
         await ctx.send(embed=em)
 
     @commands.command(aliases=['botinfo'])
