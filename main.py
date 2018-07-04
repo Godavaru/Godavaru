@@ -81,6 +81,7 @@ class Godavaru(commands.Bot):
 
     async def on_error(self, event, *args, **kwargs):
         self.webhook.send(f':x: **I ran into an error in event `{event}`!**\nArgs: ```\n{args}\n``` KWArgs: ```\n{kwargs}\n```')
+        self.webhook.send(f'Traceback: ```py\n{sys.exc_info()}\n```')
 
     async def change_game(self):
         await self.wait_until_ready()
