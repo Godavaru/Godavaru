@@ -26,15 +26,15 @@ def get_prefix(bot: Bot, msg: Message) -> list:
     Returns:
         A ``list`` of prefixes that will be used in this server.
     """
-    prefixes = [msg.guild.me.mention, msg.guild.me.mention + ' ']
+    prefixes = [msg.guild.me.mention + ' ', msg.guild.me.mention]
     for p in config.prefix:
-        prefixes.append(p)
         prefixes.append(p + ' ')
+        prefixes.append(p)
     try:
         pref = bot.prefixes[str(msg.guild.id)]
         if not pref is None and not len(pref) == 0 and not pref == "":
-            prefixes.append(pref)
             prefixes.append(pref + ' ')
+            prefixes.append(pref)
     except KeyError:
         pass
     return prefixes
