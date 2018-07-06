@@ -251,7 +251,7 @@ class Info:
                        + f'Channels           :  {channel_count}\n'
                        + f'Messages Seen      :  {self.bot.seen_messages}\n'
                        + f'Reconnects         :  {self.bot.reconnects}\n'
-                       + f'DB Calls           :  {self.bot.db_calls}'
+                       + f'DB Calls           :  {self.bot.db_calls}\n'
                        + f'Commands Executed  :  {self.bot.executed_commands}\n\n'
                        + '=========[ Technical Information ]=========\n\n'
                        + f'Version            :  {self.bot.version}\n'

@@ -40,23 +40,24 @@ class Currency:
         """Loot the current channel for goodies!"""
         max_num = 100 if not self.is_premium(ctx.author) else 500
         amnt = random.randint(0, max_num)
-        gets_blossom = random.randint(0, 10) >= 7
+        gets_item = random.randint(0, 10) >= 7
         if amnt > 50:
             self.bot.query_db(f'''INSERT INTO users (userid, balance) VALUES ({ctx.author.id}, {amnt}) 
                                 ON DUPLICATE KEY UPDATE balance = balance + {amnt}''')
-            msg = f":tada: You looted **{amnt}** from this channel!" + (' Also, ' if gets_blossom else '')
+            msg = f":tada: You looted **{amnt}** from this channel!" + (' Also, ' if gets_item else '')
         else:
-            msg = ":slight_frown: You didn't loot anything" + (', but ' if gets_blossom else '.')
-        if gets_blossom:
+            msg = ":slight_frown: You didn't loot anything" + (', but ' if gets_item else '.')
+        if gets_item:
             amount = random.randint(1, 5)
-            msg += f'you found {amount} blossoms! 🌸'
+            item = random.choice([['LEAF', 'leaves'], ['BLOSSOM', 'blossoms']])
+            msg += f'you found {amount} {item[1]}! ' + items.all_items[item[0]]['emoji']
             results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
             itms = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
             try:
-                blossoms = itms['BLOSSOM']
-                itms['BLOSSOM'] = blossoms + amount
+                blossoms = itms[item[0]]
+                itms[item[0]] = blossoms + amount
             except KeyError:
-                itms['BLOSSOM'] = amount
+                itms[item[0]] = amount
             self.bot.query_db(f'''INSERT INTO users (userid, items) VALUES ({ctx.author.id}, "{str(itms)}") 
                                         ON DUPLICATE KEY UPDATE items="{str(itms)}";''')
         await ctx.send(msg)
@@ -403,20 +404,21 @@ class Currency:
         if 'PICKAXE' not in itms or itms['PICKAXE'] == 0:
             ctx.command.reset_cooldown(ctx)
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You don't seem to have a pickaxe.")
-        gets_diamond = random.randint(1, 10) >= 7
+        gets_jewel = random.randint(1, 10) >= 7
+        jewel = random.choice(['DIAMOND', 'RUBY', 'SAPPHIRE'])
         pick_breaks = random.randint(1, 10) >= 8
         max_value = 150 if not self.is_premium(ctx.author) else 300
         num = random.randint(0, max_value)
         if num > 50:
-            msg = f":pick: You mined {num} credits" + (" and you found a diamond" if gets_diamond else "") + (
+            msg = f":pick: You mined {num} credits" + (" and you found a " + jewel.lower() + '!' if gets_jewel else "") + (
                 " but your pickaxe broke :<" if pick_breaks else "") + '.'
             await ctx.send(msg)
-            if gets_diamond:
+            if gets_jewel:
                 try:
-                    amnt = itms['DIAMOND']
-                    itms['DIAMOND'] = amnt + 1
+                    amnt = itms[jewel]
+                    itms[jewel] = amnt + 1
                 except KeyError:
-                    itms['DIAMOND'] = 1
+                    itms[jewel] = 1
             if pick_breaks:
                 pick_amnt = itms['PICKAXE']
                 itms['PICKAXE'] = pick_amnt - 1

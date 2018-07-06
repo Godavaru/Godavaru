@@ -86,7 +86,7 @@ class Logs:
             await channel.send(resolve_emoji('ERROR', channel)
                                + f' Role **{role}** was deleted.\n'
                                + f'```diff\n-ID: {role.id}\n-Name: {role}\n'
-                               + f'-Mentionable: {role.mentionable}\n-Hoisted: {role.hoist}'
+                               + f'-Mentionable: {role.mentionable}\n-Hoisted: {role.hoist}\n'
                                + f'-Colour: {role.colour}\n-Permissions: {role.permissions.value}\n```')
 
     async def on_guild_role_update(self, before, after):
