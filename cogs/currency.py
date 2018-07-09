@@ -38,7 +38,7 @@ class Currency:
     @commands.cooldown(rate=1, per=300, type=commands.BucketType.user)
     async def loot(self, ctx):
         """Loot the current channel for goodies!"""
-        max_num = 100 if not self.is_premium(ctx.author) else 500
+        max_num = 100 if not self.is_premium(ctx.author) else 300
         amnt = random.randint(0, max_num)
         gets_item = random.randint(0, 10) >= 7
         if amnt > 50:
@@ -88,6 +88,7 @@ class Currency:
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def profile(self, ctx, *, member: discord.Member = None):
         """Show yours or someone else's profile."""
         if member is None:
@@ -123,7 +124,30 @@ class Currency:
         em.set_thumbnail(url=member.avatar_url)
         await ctx.send(embed=em)
 
+    @commands.command(aliases=['inv'])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def inventory(self, ctx, *, member: discord.Member = None):
+        """Check your own inventory or the inventory of another user."""
+        if member is None:
+            member = ctx.author
+        if member.bot:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " Bots don't have profiles.")
+        if str(member.id) in self.bot.blacklist.keys():
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That user is blacklisted.")
+        results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={member.id}''')
+        if results:
+            profile = list(results)[0]
+        else:
+            profile = db.default_profile_values
+        itms = json.loads(profile[0].replace("'", '"')) if profile[0] else json.loads('{}')
+        msg = []
+        for i in itms:
+            if itms[i] != 0:
+                msg.append(f"{items.all_items[i]['emoji']} x{itms[i]}")
+        await ctx.send(f'**{member.display_name}\'s Inventory:** ' + (", ".join(msg) if len(msg) > 0 else "None (yet!)"))
+
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def description(self, ctx, *, description: str):
         """Set your profile description.
         Max of 300 for non-donors and 500 for donors."""
@@ -157,6 +181,7 @@ class Currency:
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f" Added reputation point to **{member}**")
 
     @commands.group(aliases=["richest", "top", "lb"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def leaderboard(self, ctx):
         """Check the leaderboard of money."""
         if ctx.invoked_subcommand is None:
@@ -179,6 +204,7 @@ class Currency:
             await ctx.send(embed=em)
 
     @leaderboard.command(name="rep")
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def leaderboard_rep(self, ctx):
         """Check the leaderboard of reputation."""
         results = self.bot.query_db(f'SELECT userid,reps FROM users ORDER BY reps DESC LIMIT 15')
@@ -251,6 +277,7 @@ class Currency:
             await ctx.send(resolve_emoji('ERROR', ctx) + ' You don\'t have the money to do that.')
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def marry(self, ctx, *, member: discord.Member):
         """Marry a user!"""
         if member == ctx.author:
@@ -285,6 +312,7 @@ class Currency:
             await ctx.send(f":sob: {ctx.author.display_name} just got denied :broken_heart:")
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def divorce(self, ctx):
         """Divorce the person you are married to :sob:"""
         married = self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')
@@ -295,6 +323,7 @@ class Currency:
         self.bot.query_db(f'''UPDATE users SET marriage=DEFAULT WHERE userid={married[0][0]}''')
 
     @commands.command(aliases=["bal", "credits"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def balance(self, ctx, *, member: discord.Member = None):
         """Check the balance of yourself or another user."""
         if member is None:
@@ -320,6 +349,7 @@ class Currency:
                                      ctx) + f' You {"gave your daily credits of $" + str(daily_coins) + " to " + member.display_name if member else "collected your daily credits of $" + str(daily_coins)}')
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def buy(self, ctx, item: str, amount: int = 1):
         """Buy an item.
         Use `list` as the param for a list of all items that can be bought."""
@@ -359,6 +389,7 @@ class Currency:
             await ctx.send(resolve_emoji('ERROR', ctx) + " That item can not be bought.")
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def sell(self, ctx, item: str, amount: int = 1):
         """Sell an item.
         Use `list` as the param for a list of all items that can be sold."""
@@ -410,7 +441,7 @@ class Currency:
         max_value = 150 if not self.is_premium(ctx.author) else 300
         num = random.randint(0, max_value)
         if num > 50:
-            msg = f":pick: You mined {num} credits" + (" and you found a " + jewel.lower() + '!' if gets_jewel else "") + (
+            msg = f":pick: You mined {num} credits" + (" and you found a " + jewel.lower() if gets_jewel else "") + (
                 " but your pickaxe broke :<" if pick_breaks else "") + '.'
             await ctx.send(msg)
             if gets_jewel:
