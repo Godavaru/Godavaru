@@ -89,20 +89,17 @@ class Info:
     @about.command()
     async def credits(self, ctx):
         """List the users that have been credited for this bot."""
-        creds = [
-            '267207628965281792|Main developer',
-            '99965250052300800|Secondary developer',
-            '132584525296435200|Web Developer',
-            '188663897279037440|Provided python basic knowledge at the beginning',
-            '170991374445969408|Helped with early on commands & initial hosting'
-        ]
+        creds = {
+            '267207628965281792': 'Main developer',
+            '99965250052300800': 'Secondary developer',
+            '132584525296435200': 'Web Developer',
+            '188663897279037440': 'Provided python basic knowledge at the beginning',
+            '170991374445969408': 'Helped with early on commands & initial hosting'
+        }
         mods = discord.utils.get(self.bot.get_guild(315251940999299072).roles, id=315252093239820289).members
         full_credits = ""
-        for i in range(len(creds)):
-            splitted = creds[i].split('|')
-            user_id = int(splitted[0])
-            desc = splitted[1]
-            full_credits += f'**{self.bot.get_user(user_id)}** - {desc}\n'
+        for key in creds.keys():
+            full_credits += f'**{self.bot.get_user(int(key))}** - {creds.get(key)}\n'
         em = discord.Embed(description=full_credits, color=ctx.author.color)
         em.set_author(name='Credited users', icon_url=ctx.me.avatar_url)
         em.add_field(name="Server Moderators", value="**" + "\n".join([str(m) for m in mods]) + "**")
@@ -121,12 +118,12 @@ class Info:
                 color=0x9B59B6)
             em.set_author(
                 name='Useful Links for Godavaru!',
-                icon_url=ctx.me.avatar_url.split('?')[0])
-            em.add_field(name='Invite URL', value='http://is.gd/godavaru')
-            em.add_field(name='Support Guild', value='https://discord.gg/ewvvKHM')
+                icon_url=ctx.me.avatar_url)
+            em.add_field(name='Invite Links', value='[Add Me To Your Server](http://is.gd/godavaru)\n[Join My Support Guild](https://discord.gg/ewvvKHM)')
             em.add_field(name="Patreon URL", value='https://patreon.com/desii')
-            em.add_field(name="Github", value="https://github.com/Godavaru/Godavaru")
+            em.add_field(name="Github", value="[Godavaru/Godavaru](https://github.com/Godavaru/Godavaru)")
             em.add_field(name="Website", value="https://godavaru.site/")
+            em.set_thumbnail(url=ctx.me.avatar_url)
             await ctx.send(embed=em)
         else:
             await ctx.send('**Useful Links for Godavaru!**\n'

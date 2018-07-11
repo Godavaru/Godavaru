@@ -44,7 +44,7 @@ class Currency:
         if amnt > 50:
             self.bot.query_db(f'''INSERT INTO users (userid, balance) VALUES ({ctx.author.id}, {amnt}) 
                                 ON DUPLICATE KEY UPDATE balance = balance + {amnt}''')
-            msg = f":tada: You looted **{amnt}** from this channel!" + (' Also, ' if gets_item else '')
+            msg = f":tada: You looted **${amnt}** from this channel!" + (' Also, ' if gets_item else '')
         else:
             msg = ":slight_frown: You didn't loot anything" + (', but ' if gets_item else '.')
         if gets_item:
@@ -195,7 +195,7 @@ class Currency:
                 n = i + 1
                 if n < 10:
                     n = f'0{i+1}'
-                msg += f'{n}.- {user}: ${row[1]}\n'
+                msg += f'**{n}.- {user}**: `${row[1]}`\n'
             em = discord.Embed(
                 title="Richest Users",
                 description=msg,
@@ -217,7 +217,7 @@ class Currency:
             n = i + 1
             if n < 10:
                 n = f'0{i+1}'
-            msg += f'{n}.- {user}: {row[1]} points\n'
+            msg += f'**{n}.- {user}**: `{row[1]} points`\n'
         em = discord.Embed(
             title="Richest Users in Reputation",
             description=msg,

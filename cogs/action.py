@@ -225,9 +225,9 @@ class Action:
         with open('killquotes.txt') as f:
             quotes = f.readlines()
         if ctx.author.id == member.id:
-            return await ctx.send(":x: Don't kill yourself! You're loved!")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " Don't kill yourself! You're loved!")
         if member.id == ctx.me.id:
-            return await ctx.send(":x: Nice try. <3")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " Nice try. <3")
         await ctx.send(":knife: " + random.choice(quotes).format(member.display_name, ctx.author.display_name))
 
 

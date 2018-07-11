@@ -331,10 +331,10 @@ class Utils:
         hours_match = re.search("(\d*) ?h", time)
         minutes_match = re.search("(\d*) ?m", time)
         seconds_match = re.search("(\d*) ?s", time)
-        days = int(days_match[1]) if days_match is not None else 0
-        hours = int(hours_match[1]) if hours_match is not None else 0
-        minutes = int(minutes_match[1]) if minutes_match is not None else 0
-        seconds = int(seconds_match[1]) if seconds_match is not None else 0
+        days = int(days_match[1]) if days_match is not None and days_match[1].isdigit() else 0
+        hours = int(hours_match[1]) if hours_match is not None and hours_match[1].isdigit() else 0
+        minutes = int(minutes_match[1]) if minutes_match is not None and minutes_match[1].isdigit() else 0
+        seconds = int(seconds_match[1]) if seconds_match is not None and seconds_match[1].isdigit() else 0
         total = (days * 86400) + (hours * 3600) + (minutes * 60) + seconds
         if total <= 10:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " That's too little time!")

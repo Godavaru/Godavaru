@@ -182,28 +182,7 @@ class Fun:
     # wait, you're not desii?
     # uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
     # why does this exist again?
-
-    @commands.command()
-    async def slots(self, ctx):
-        """Roll the slot machine and try your luck."""
-        var1 = int(random.random() * 5)
-        var2 = int(random.random() * 5)
-        var3 = int(random.random() * 5)
-        var4 = int(random.random() * 5)
-        var5 = int(random.random() * 5)
-        var6 = int(random.random() * 5)
-        var7 = int(random.random() * 5)
-        var8 = int(random.random() * 5)
-        var9 = int(random.random() * 5)
-        col = [":moneybag:", ":cherries:", ":carrot:", ":popcorn:", ":seven:"]
-        if var6 == var5 and var5 == var4 and var4 == var6:
-            msg = "**You won!**"
-        else:
-            msg = "**You lost!**"
-        await ctx.send(
-            "{0}\n\n{1}{2}{3}\n{4}{5}{6} :arrow_left:\n{7}{8}{9}".format(msg, col[var1], col[var2], col[var3],
-                                                                         col[var4], col[var5], col[var6], col[var7],
-                                                                         col[var8], col[var9]))
+    # hi u meme
 
     @commands.command()
     async def bowling(self, ctx):
