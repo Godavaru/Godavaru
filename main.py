@@ -23,7 +23,6 @@ class Godavaru(commands.Bot):
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
-        self.session = aiohttp.ClientSession()
         self.weeb = weeb.Client(token=config.weeb_token, user_agent=f'Godavaru/{self.version}/{config.environment}')
         self.seen_messages = 0
         self.reconnects = 0
@@ -78,6 +77,7 @@ class Godavaru(commands.Bot):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
         self.weeb_types = await self.weeb.get_types()
+        self.session = aiohttp.ClientSession()
 
     async def on_error(self, event, *args, **kwargs):
         self.webhook.send(f':x: **I ran into an error in event `{event}`!**\nArgs: ```\n{args}\n``` KWArgs: ```\n{kwargs}\n```')

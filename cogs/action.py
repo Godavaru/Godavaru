@@ -20,7 +20,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'***cuddles with you***'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="cuddle", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename='cuddle.gif'))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename='cuddle.gif'))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -33,7 +33,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'***hugs*** Are you okay now, **{ctx.author.display_name}**?'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="hug", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="hug.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="hug.gif"))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -46,7 +46,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'**Uh, okay. Sure. _slaps_**'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="slap", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="slap.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="slap.gif"))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -59,7 +59,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'I\'ll kiss you! *kisses*'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="kiss", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="kiss.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="kiss.gif"))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -73,7 +73,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'***pats you***'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="pat", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="pat.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="pat.gif"))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -86,7 +86,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'*pokes you* hi. *pokes more*'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="poke", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="poke.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="poke.gif"))
 
     @commands.command(aliases=["teehee"], usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -99,7 +99,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'*teases you* hehe'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="teehee", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="tease.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="tease.gif"))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -112,7 +112,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'***stares at you***'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="stare", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="stare.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="stare.gif"))
 
     @commands.command(usage="<members>")
     @commands.bot_has_permissions(attach_files=True)
@@ -138,7 +138,7 @@ class Action:
         if ctx.author in ctx.message.mentions:
             msg = f'**Self-discipline! I like it! Go sleep!**'
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="sleepy", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="sleep.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="sleep.gif"))
 
     @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
@@ -149,7 +149,7 @@ class Action:
         else:
             msg = f"**{ctx.author.display_name}** is crying because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="cry", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="cry.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="cry.gif"))
 
     @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
@@ -160,7 +160,7 @@ class Action:
         else:
             msg = f"**{ctx.author.display_name}** is triggered because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**"
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="triggered", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="triggered.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="triggered.gif"))
 
     @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
@@ -171,7 +171,7 @@ class Action:
         else:
             msg = f"**{ctx.author.display_name}** is thinking about **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="thinking", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="thinking.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="thinking.gif"))
 
     @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
@@ -182,7 +182,7 @@ class Action:
         else:
             msg = f"**{ctx.author.display_name}** is blushing because of **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**! o.o"
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="blush", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="blush.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="blush.gif"))
 
     @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
@@ -194,7 +194,7 @@ class Action:
         else:
             msg = f"**{ctx.author.display_name}** is smiling at**{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="smile", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="smile.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="smile.gif"))
 
     @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
@@ -205,7 +205,7 @@ class Action:
         else:
             msg = f"**{ctx.author.display_name}** is shrugging at **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="shrug", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="hug.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="hug.gif"))
 
     @commands.command(usage="[members]")
     @commands.bot_has_permissions(attach_files=True)
@@ -216,7 +216,7 @@ class Action:
         else:
             msg = f"**{ctx.author.display_name}** is confused with **{(', '.join([m.display_name for m in ctx.message.mentions])).replace(', '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name, ' and '+ctx.message.mentions[len(ctx.message.mentions)-1].display_name)}**!"
         img = await self.bot.session.get(url=(await self.bot.weeb.get_image(imgtype="clagwimoth", filetype="gif"))[0])
-        await ctx.send(content=msg, file=discord.File(img, filename="hug.gif"))
+        await ctx.send(content=msg, file=discord.File(await img.read(), filename="hug.gif"))
 
     @commands.command()
     async def kill(self, ctx, *, member: discord.Member):
