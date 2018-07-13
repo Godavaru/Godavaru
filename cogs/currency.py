@@ -52,7 +52,7 @@ class Currency:
             item = random.choice([['LEAF', 'leaves'], ['BLOSSOM', 'blossoms']])
             msg += f'you found {amount} {item[1]}! ' + items.all_items[item[0]]['emoji']
             results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
-            itms = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('')
+            itms = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
             try:
                 blossoms = itms[item[0]]
                 itms[item[0]] = blossoms + amount

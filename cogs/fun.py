@@ -307,8 +307,8 @@ class Fun:
     async def achievement(self, ctx, *, text: str):
         """Generate a minecraft achievement."""
         num = random.randint(1, 26)
-        img = await self.bot.session.get(
-            f'https://www.minecraftskinstealer.com/achievement/a.php?i={num}&h=Achievement+Get%21&t={text[:26].replace(" ", "+")}')
+        img = await (await self.bot.session.get(
+            f'https://www.minecraftskinstealer.com/achievement/a.php?i={num}&h=Achievement+Get%21&t={text[:26].replace(" ", "+")}')).read()
         await ctx.send(file=discord.File(img, filename='achievement.png'))
 
     @commands.command()
