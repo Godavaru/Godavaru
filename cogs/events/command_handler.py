@@ -57,7 +57,7 @@ class CommandHandler:
             if random.randint(1, 5) == 3:
                 await ctx.send('O-oh? Looks like you found a bug! Added it to your inventory!')
                 results = self.bot.query_db(f'''SELECT items FROM users WHERE userid={ctx.author.id}''')
-                items = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.dumps({})
+                items = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
                 try:
                     amnt = items['BUG']
                     items['BUG'] = amnt + 1
