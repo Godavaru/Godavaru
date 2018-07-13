@@ -138,6 +138,9 @@ class Settings:
             if role:
                 if role.is_default():
                     return await ctx.send(resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as a self role.')
+                if role.position >= ctx.author.top_role.position:
+                    return await ctx.send(
+                        resolve_emoji('ERROR', ctx) + ' You cannot manage a role higher than your own.')
                 results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
                 selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
                 selfroles[name] = role.id
@@ -167,6 +170,9 @@ class Settings:
             if r.is_default():
                 return await ctx.send(
                     resolve_emoji('ERROR', ctx) + ' You cannot set the default everyone role as an autorole.')
+            if r.position >= ctx.author.top_role.position:
+                return await ctx.send(
+                    resolve_emoji('ERROR', ctx) + ' You cannot manage a role higher than your own.')
             self.bot.query_db(f'''INSERT INTO settings (guildid,autorole) VALUES ({ctx.guild.id},{r.id})
                                 ON DUPLICATE KEY UPDATE autorole={r.id};''')
             await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Set the guild autorole to **{r.name}**.')
