@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 
 import config
-from cogs.utils.tools import *
+from cogs.utils.tools import resolve_emoji
 
 about_description = """
 **H-hello!~~**
@@ -25,6 +25,22 @@ I have quite a few features; I can list them for you now!
 
 Check all my commands with `g_help` or `godavaru help`!
 """
+
+
+def get_pressure(n):
+    bar = n / 1000
+    return f"{round(bar)} bar | {n} hPA"
+
+
+def get_wind(n):
+    imp = n * 2.2
+    return f"{n} m/s | {round(imp)} mph"
+
+
+def get_temp(n):
+    cel = n - 273.15
+    fa = n * 9 / 5 - 459.67
+    return f"{round(cel)} °C | {round(fa)} °F"
 
 
 class Info:
@@ -73,20 +89,17 @@ class Info:
     @about.command()
     async def credits(self, ctx):
         """List the users that have been credited for this bot."""
-        creds = [
-            '267207628965281792|Main developer',
-            '99965250052300800|Secondary developer',
-            '132584525296435200|Web Developer',
-            '188663897279037440|Provided python basic knowledge at the beginning',
-            '170991374445969408|Helped with early on commands & initial hosting'
-        ]
+        creds = {
+            '267207628965281792': 'Main developer',
+            '99965250052300800': 'Secondary developer',
+            '132584525296435200': 'Web Developer',
+            '188663897279037440': 'Provided python basic knowledge at the beginning',
+            '170991374445969408': 'Helped with early on commands & initial hosting'
+        }
         mods = discord.utils.get(self.bot.get_guild(315251940999299072).roles, id=315252093239820289).members
         full_credits = ""
-        for i in range(len(creds)):
-            splitted = creds[i].split('|')
-            user_id = int(splitted[0])
-            desc = splitted[1]
-            full_credits += f'**{self.bot.get_user(user_id)}** - {desc}\n'
+        for key in creds.keys():
+            full_credits += f'**{self.bot.get_user(int(key))}** - {creds.get(key)}\n'
         em = discord.Embed(description=full_credits, color=ctx.author.color)
         em.set_author(name='Credited users', icon_url=ctx.me.avatar_url)
         em.add_field(name="Server Moderators", value="**" + "\n".join([str(m) for m in mods]) + "**")
@@ -105,12 +118,12 @@ class Info:
                 color=0x9B59B6)
             em.set_author(
                 name='Useful Links for Godavaru!',
-                icon_url=ctx.me.avatar_url.split('?')[0])
-            em.add_field(name='Invite URL', value='http://is.gd/godavaru')
-            em.add_field(name='Support Guild', value='https://discord.gg/ewvvKHM')
+                icon_url=ctx.me.avatar_url)
+            em.add_field(name='Invite Links', value='[Add Me To Your Server](http://is.gd/godavaru)\n[Join My Support Guild](https://discord.gg/ewvvKHM)')
             em.add_field(name="Patreon URL", value='https://patreon.com/desii')
-            em.add_field(name="Github", value="https://github.com/Godavaru/Godavaru")
+            em.add_field(name="Github", value="[Godavaru/Godavaru](https://github.com/Godavaru/Godavaru)")
             em.add_field(name="Website", value="https://godavaru.site/")
+            em.set_thumbnail(url=ctx.me.avatar_url)
             await ctx.send(embed=em)
         else:
             await ctx.send('**Useful Links for Godavaru!**\n'
@@ -166,10 +179,10 @@ class Info:
             cmd = self.bot.all_commands.get(command_or_category)
             if cmd is None:
                 if self.bot.get_cog(command_or_category) is None:
-                    return await ctx.send(":x: I did not find that command or category.")
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + " I did not find that command or category.")
                 cmds = sorted(list(self.bot.get_cog_commands(command_or_category)), key=lambda c: c.name)
                 if len(cmds) == 0:  # Shouldn't happen, but it's a failsafe
-                    return await ctx.send(":x: There are no commands in that category.")
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + " There are no commands in that category.")
                 msg = ""
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
@@ -177,7 +190,7 @@ class Info:
                                    color=ctx.author.color)
                 em.set_footer(
                     text=f"Requested by {ctx.author.display_name} | For extended help, do {prefix}help <command>",
-                    icon_url=ctx.author.avatar_url.split('?')[0])
+                    icon_url=ctx.author.avatar_url)
                 return await ctx.send(embed=em)
             em = discord.Embed(title="Extended help for command: " + cmd.name, description=cmd.help,
                                color=ctx.author.color)
@@ -193,7 +206,7 @@ class Info:
                 for i in range(len(cmds)):
                     msg += f"`{cmds[i].name}` - {cmds[i].short_doc}\n"
                 em.add_field(name="Subcommands", value=msg, inline=False)
-            em.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url.split('?')[0])
+            em.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             return await ctx.send(embed=em)
         em = discord.Embed(
             title="Godavaru Help",
@@ -207,10 +220,11 @@ class Info:
                 continue
             em.add_field(name=f'[{len(cmds)}] - {cog}', value=f"`{'`, `'.join([c.name for c in cmds])}`", inline=False)
         em.set_footer(text=f"Requested by {ctx.author.display_name} | Total commands: {len(self.bot.commands)}",
-                      icon_url=ctx.author.avatar_url.split('?')[0])
+                      icon_url=ctx.author.avatar_url)
+        em.set_thumbnail(url=ctx.author.avatar_url)
         await ctx.send(embed=em)
 
-    @commands.command(pass_context=True)
+    @commands.command(aliases=['botinfo'])
     async def info(self, ctx):
         """Show some of the more statistical information about me.
         This information includes the current version(s), number of commands, amount of servers, channels, users, uptime, and average websocket ping."""
@@ -233,6 +247,8 @@ class Info:
                        + f'Users              :  {member_count}\n'
                        + f'Channels           :  {channel_count}\n'
                        + f'Messages Seen      :  {self.bot.seen_messages}\n'
+                       + f'Reconnects         :  {self.bot.reconnects}\n'
+                       + f'DB Calls           :  {self.bot.db_calls}\n'
                        + f'Commands Executed  :  {self.bot.executed_commands}\n\n'
                        + '=========[ Technical Information ]=========\n\n'
                        + f'Version            :  {self.bot.version}\n'
@@ -244,25 +260,15 @@ class Info:
                        + 'Websocket Ping     :  {:.0f}ms\n```'.format(ping))
 
     @commands.command()
+    @commands.bot_has_permissions(attach_files=True)
     async def avatar(self, ctx, *, user: discord.Member = None):
         """Get the avatar of a user!
         If the user is none, it will grab your avatar. If the user is not found, this message will be shown."""
         if user is None:
             user = ctx.author
-        url = user.avatar_url + ('&.gif' if user.avatar.startswith('a_') else '')
-        embed = discord.Embed(
-            color=ctx.author.color
-        ).set_image(
-            url=url
-        ).set_footer(
-            icon_url=url,
-            text=f"Requested by {ctx.author.display_name}"
-        ).set_author(
-            icon_url=url,
-            url=url,
-            name=f"{user.display_name}'s avatar"
-        )
-        await ctx.send(embed=embed)
+        img = await (await self.bot.session.get(user.avatar_url)).read()
+        await ctx.send(content=resolve_emoji('SUCCESS', ctx) + f' **{user.display_name}**\'s avatar!',
+                       file=discord.File(img, filename=f'{user.avatar}.{"png" if not user.avatar.startswith("a_") else "gif"}'))
 
     @commands.command(aliases=["guild", "ginfo", "server", "serverinfo", "sinfo"])
     async def guildinfo(self, ctx):
@@ -274,7 +280,7 @@ class Info:
         roles = ", ".join([r.name for r in sorted(g.roles, key=lambda x: -x.position) if not r.is_default()])
         roles_haste = await self.bot.post_to_haste(roles)
         emotes = " ".join([str(e) for e in g.emojis]) if len(g.emojis) > 0 else "No emotes are in this guild."
-        emotes_haste = await self.bot.post_to_haste(emotes)
+        emotes_haste = await self.bot.post_to_haste("\n".join([e.name for e in g.emojis]))
         guild_embed = discord.Embed(
             title=g.name,
             description=f"Guild ID: {g.id}",
@@ -358,6 +364,40 @@ class Info:
         await ctx.send(embed=em)
 
     @commands.command()
+    async def weather(self, ctx, *, city: str):
+        """Get weather information for a specified city."""
+        r = await self.bot.session.get(
+            f"http://api.openweathermap.org/data/2.5/weather/?q={city}&APPID={config.weather_token}")
+        if (await r.text()).startswith('{"coord"'):
+            j = await r.json()
+            em = discord.Embed(
+                title=f":flag_{j['sys']['country'].lower()}: Weather for {j['name']}, {j['sys']['country']}",
+                description=f"{j['weather'][0]['main']} ({j['clouds']['all']}% clouds)",
+                color=ctx.author.color
+            )
+
+            em.add_field(
+                name="🌡 Temperature",
+                value=f"Current: { get_temp(j['main']['temp'])}\n"
+                      + f"Max: { get_temp(j['main']['temp_max'])}\n"
+                      + f"Min: { get_temp(j['main']['temp_min'])}"
+            ).add_field(
+                name="💧 Humidity",
+                value=f"{j['main']['humidity']}%"
+            ).add_field(
+                name="💨 Wind Speeds",
+                value=get_wind(j['wind']['speed'])
+            ).add_field(
+                name="🎐 Pressure",
+                value=get_pressure(j['main']['pressure'])
+            ).set_thumbnail(
+                url=f"http://openweathermap.org/img/w/{j['weather'][0]['icon']}.png"
+            )
+            await ctx.send(embed=em)
+        else:
+            await ctx.send(resolve_emoji('ERROR', ctx) + " U-uh, I'm sorry, but that c-city doesn't seem to exist!")
+
+    @commands.command()
     async def status(self, ctx, *, user: discord.Member = None):
         """Display the current status of the specified member.
         If the member is not specified or an invalid member argument is passed, the member is the author."""
@@ -389,15 +429,6 @@ class Info:
                 m2, s2 = divmod(game.duration.total_seconds(), 60)
                 em.add_field(name="Duration", value="`%02d:%02d/%02d:%02d`" % (m, s, m2, s2))
                 em.set_thumbnail(url=game.album_cover_url)
-            elif hasattr(game, 'assets'):
-                ###################################################
-                # UNFINISHED COMMAND, WILL FINISH AT A LATER DATE #
-                ###################################################
-                em.add_field(name="Large Text", value=game.assets['large_text'])
-                em.add_field(name="Small Text", value=game.assets['small_text'])
-                em.add_field(name="State", value=game.state)
-                em.add_field(name="Details", value=game.details)
-                em.set_thumbnail(url=game.assets['large_image'])
             em.set_footer(text="Hope you enjoy it!")
         await ctx.send(embed=em)
 
@@ -410,7 +441,7 @@ class Info:
         changelog = m.clean_content
         if noembed != "noembed" and ctx.channel.permissions_for(ctx.me).embed_links:
             em = discord.Embed(description=changelog, color=ctx.author.color)
-            em.set_author(icon_url=m.author.avatar_url.replace("?size=1024", ""),
+            em.set_author(icon_url=m.author.avatar_url,
                           name="Found the latest changelog from my support guild!")
             em.timestamp = m.created_at
             await ctx.send(embed=em)
@@ -426,7 +457,7 @@ class Info:
         msg = '\n\n'.join(map(lambda m: f'**{m.author.display_name} ({m.author})**\n{m.clean_content}', msgs))
         if noembed != "noembed" and ctx.channel.permissions_for(ctx.me).embed_links:
             em = discord.Embed(description=msg, color=ctx.author.color)
-            em.set_author(icon_url=msgs[0].author.avatar_url.replace('?size=1024', ''),
+            em.set_author(icon_url=msgs[0].author.avatar_url,
                           name="The latest five announcements from my support guild!")
             em.timestamp = msgs[0].created_at
             await ctx.send(embed=em)

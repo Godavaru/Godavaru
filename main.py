@@ -1,26 +1,18 @@
 import asyncio
 import datetime
-import json
-import random
 import signal
-import string
 import sys
 import traceback
-import urllib
-import config
-
-import aiohttp
 import discord
-import pymysql
 import os
 import weeb
+import pymysql as mysql
 from discord.ext import commands
-import logging
-from threading import Thread
-from flask import Flask, Response, request
-
-from cogs.utils.db import *
-from cogs.utils.tools import *
+import config
+import random
+import aiohttp
+from cogs.utils.db import get_all_prefixes, get_blacklist
+from cogs.utils.tools import get_prefix
 
 
 class Godavaru(commands.Bot):
@@ -28,18 +20,21 @@ class Godavaru(commands.Bot):
         self.start_time = datetime.datetime.now()
         self.prefixes = get_all_prefixes()
         super().__init__(command_prefix=get_prefix, case_insensitive=True)
-        self.token = 'no u'  # yes this is a necessary change
         self.version = config.version
         self.version_info = config.version_description
         self.remove_command('help')
-        self.session = aiohttp.ClientSession()
-        self.weeb = weeb.Client(token=config.weeb_token,
-                                user_agent='Godavaru/' + self.version + '/' + config.environment)
+        self.weeb = weeb.Client(token=config.weeb_token, user_agent=f'Godavaru/{self.version}/{config.environment}')
         self.seen_messages = 0
         self.reconnects = 0
         self.executed_commands = 0
+        self.db_calls = 0
         self.modlogs = dict()
         self.snipes = dict()
+        self.blacklist = get_blacklist(self)
+        with open('splashes.txt') as f:
+            self.splashes = f.readlines()
+        self.game_task = self.loop.create_task(self.change_game())
+        self.post_task = self.loop.create_task(self.post_counts())
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
         extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')] + ['events.' + f for f in
@@ -81,21 +76,32 @@ class Godavaru(commands.Bot):
         self.webhook.send(startup_message)
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
-        is_prod = config.environment == "Production"
-        if is_prod:
-            self.weeb_types = await self.weeb.get_types()
-            while True:
-                with open('splashes.txt') as f:
-                    splashes = f.readlines()
-                pr = random.choice(splashes).format(self.version, len(self.guilds))
-                await self.change_presence(
-                    activity=discord.Game(name=config.prefix[0] + "help | " + pr))
-                data = {'server_count': len(self.guilds)}
-                dbl_url = 'https://discordbots.org/api/bots/311810096336470017/stats'
-                terminal_url = "https://ls.terminal.ink/api/v1/bots/311810096336470017"
+        self.weeb_types = await self.weeb.get_types()
+        self.session = aiohttp.ClientSession()
+
+    async def on_error(self, event, *args, **kwargs):
+        self.webhook.send(f':x: **I ran into an error in event `{event}`!**\nArgs: ```\n{args}\n``` KWArgs: ```\n{kwargs}\n```')
+        self.webhook.send(f'Traceback: ```py\n{sys.exc_info()}\n```')
+
+    async def change_game(self):
+        await self.wait_until_ready()
+        while not self.is_closed():
+            pr = random.choice(self.splashes).format(self.version, len(self.guilds))
+            await self.change_presence(
+                activity=discord.Game(name=config.prefix[0] + "help | " + pr))
+            await asyncio.sleep(900)
+
+    async def post_counts(self):
+        await self.wait_until_ready()
+        while not self.is_closed() and config.environment == 'Production':
+            data = {'server_count': len(self.guilds)}
+            dbl_url = f'https://discordbots.org/api/bots/{self.user.id}/stats'
+            pw_url = f'https://bots.discord.pw/api/bots/{self.user.id}/stats'
+            if config.dbotstoken != '':
                 await self.session.post(dbl_url, data=data, headers={'Authorization': config.dbotstoken})
-                await self.session.post(terminal_url, data=data, headers={'Authorization': config.terminal_token})
-                await asyncio.sleep(900)
+            if config.pw_token != '':
+                await self.session.post(pw_url, data=data, headers={'Authorization': config.pw_token})
+            await asyncio.sleep(1800)
 
     async def on_resumed(self):
         self.webhook.send(f"[`{datetime.datetime.now().strftime('%H:%M:%S')}`][`Godavaru`]\n"
@@ -107,10 +113,11 @@ class Godavaru(commands.Bot):
         self.logout()
         sys.exit(0)
 
-    def query_db(self, query):
-        db = pymysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
+    def query_db(self, query, *args, **kwargs):
+        self.db_calls += 1
+        db = mysql.connect(config.db_ip, config.db_user, config.db_pass, config.db_name, charset='utf8mb4')
         cur = db.cursor()
-        cur.execute(query)
+        cur.execute(query, *args, **kwargs)
         res = cur.fetchall()
         db.commit()
         cur.close()

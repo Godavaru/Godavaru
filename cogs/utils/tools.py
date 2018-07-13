@@ -7,7 +7,6 @@ import string
 import random
 import re
 
-
 _CHANNEL_MENTION_MATCH = re.compile('<#([0-9]+)>$')
 _ROLE_MENTION_MATCH = re.compile('<@&([0-9]+)>$')
 
@@ -27,32 +26,18 @@ def get_prefix(bot: Bot, msg: Message) -> list:
     Returns:
         A ``list`` of prefixes that will be used in this server.
     """
-    prefixes = []
-    prefixes.append(msg.guild.me.mention)
-    prefixes.append(msg.guild.me.mention + ' ')
-    for p in config.prefix:
-        prefixes.append(p)
-        prefixes.append(p + ' ')
+    prefixes = [msg.guild.me.mention + ' ', msg.guild.me.mention]
     try:
         pref = bot.prefixes[str(msg.guild.id)]
         if not pref is None and not len(pref) == 0 and not pref == "":
-            prefixes.append(pref)
             prefixes.append(pref + ' ')
+            prefixes.append(pref)
     except KeyError:
         pass
+    for p in config.prefix:
+        prefixes.append(p + ' ')
+        prefixes.append(p)
     return prefixes
-
-
-async def get(url, headers=None):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url=url, headers=headers) as resp:
-            return await resp.read()
-
-
-async def post(url, headers=None, data=None):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url=url, headers=headers, data=data) as resp:
-            return await resp.read()
 
 
 def resolve_channel(string: str, ctx: Context) -> TextChannel or None:
@@ -66,7 +51,6 @@ def resolve_channel(string: str, ctx: Context) -> TextChannel or None:
           TextChannel or None: The ``TextChannel`` found or None if none found.
     """
     match = _CHANNEL_MENTION_MATCH.match(string)
-    channel = None
     if match:
         channel = utils.get(ctx.guild.text_channels, id=int(match.group(1)))
     else:
@@ -88,7 +72,6 @@ def resolve_role(string: str, ctx: Context) -> Role or None:
           Role or None: The ``Role`` found or None if none found.
     """
     match = _ROLE_MENTION_MATCH.match(string)
-    role = None
     if match:
         role = utils.get(ctx.guild.roles, id=int(match.group(1)))
     else:
@@ -223,3 +206,10 @@ async def process_join_leave(bot, guild, user, action):
         channel = guild.get_channel(int(query[0][0]))
         if channel and channel.permissions_for(guild.me).send_messages:
             await channel.send(query[0][1].format(guild=guild, user=user))
+
+
+def parse_flags(string):
+    if not isinstance(string, str):
+        return dict()
+    match = re.findall('--(?P<key>\S+) (?P<value>"[^"]*"|[^\r\n\t\f\v -]*)', string)
+    return dict(match)

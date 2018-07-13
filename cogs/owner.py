@@ -1,14 +1,10 @@
 """
 NOTICE:
     The following is taken with minor (to no) modification from https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/admin.py:
-        cleanup_code
-        get_syntax_error
         _eval
-        repl
 """
 import datetime
 import io
-import inspect
 import os
 import sys
 import textwrap
@@ -34,17 +30,6 @@ class Owner:
     def __init__(self, bot):
         self.bot = bot
         self.last_result = None
-        self.sessions = set()
-
-    def cleanup_code(self, content):
-        if content.startswith('```') and content.endswith('```'):
-            return '\n'.join(content.split('\n')[1:-1])
-        return content.strip('` \n')
-
-    def get_syntax_error(self, e):
-        if e.text is None:
-            return f'```py\n{e.__class__.__name__}: {e}\n```'
-        return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
 
     @commands.command(name="eval", aliases=["ev", "debug"])
     @commands.check(is_owner)
@@ -101,96 +86,8 @@ class Owner:
                     f".* ```py\n{content}```" if content else " with no returns.*"))
             except discord.HTTPException:
                 await ctx.send("*Executed in {}ms and returned:*\nContent too long. Haste: ".format(
-                    ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + await self.bot.post_to_haste(content))
-
-    @commands.command()
-    @commands.check(is_owner)
-    async def repl(self, ctx):
-        """Launches an interactive REPL session."""
-        variables = {
-            'ctx': ctx,
-            'bot': self.bot,
-            'message': ctx.message,
-            'guild': ctx.guild,
-            'channel': ctx.channel,
-            'author': ctx.author,
-            '_': None,
-        }
-
-        if ctx.channel.id in self.sessions:
-            await ctx.send('Already running a REPL session in this channel. Exit it with `quit`.')
-            return
-
-        self.sessions.add(ctx.channel.id)
-        await ctx.send('Enter code to execute or evaluate. `exit()` or `quit` to exit.')
-
-        def check(m):
-            return m.author.id == ctx.author.id and \
-                   m.channel.id == ctx.channel.id
-
-        while True:
-            try:
-                response = await self.bot.wait_for('message', check=check, timeout=10.0 * 60.0)
-            except asyncio.TimeoutError:
-                await ctx.send('Timed out, exiting REPL session.')
-                self.sessions.remove(ctx.channel.id)
-                break
-
-            cleaned = self.cleanup_code(response.content)
-
-            if cleaned in ('quit', 'exit', 'exit()'):
-                await ctx.send('Exiting.')
-                self.sessions.remove(ctx.channel.id)
-                return
-
-            executor = exec
-            if cleaned.count('\n') == 0:
-                # single statement, potentially 'eval'
-                try:
-                    code = compile(cleaned, '<repl session>', 'eval')
-                except SyntaxError:
-                    pass
-                else:
-                    executor = eval
-
-            if executor is exec:
-                try:
-                    code = compile(cleaned, '<repl session>', 'exec')
-                except SyntaxError as e:
-                    await ctx.send(self.get_syntax_error(e))
-                    continue
-
-            variables['message'] = response
-
-            fmt = None
-            stdout = io.StringIO()
-
-            try:
-                with redirect_stdout(stdout):
-                    result = executor(code, variables)
-                    if inspect.isawaitable(result):
-                        result = await result
-            except Exception as e:
-                value = stdout.getvalue()
-                fmt = f'```py\n{value}{traceback.format_exc()}\n```'
-            else:
-                value = stdout.getvalue()
-                if result is not None:
-                    fmt = f'```py\n{value}{result}\n```'
-                    variables['_'] = result
-                elif value:
-                    fmt = f'```py\n{value}\n```'
-
-            try:
-                if fmt is not None:
-                    if len(fmt) > 2000:
-                        await ctx.send('Content too long. Haste: ' + await self.bot.post_to_haste(fmt))
-                    else:
-                        await ctx.send(fmt)
-            except discord.Forbidden:
-                pass
-            except discord.HTTPException as e:
-                await ctx.send(f'Unexpected error: `{e}`')
+                    ((datetime.datetime.utcnow() - before) * 1000).total_seconds()) + await self.bot.post_to_haste(
+                    content))
 
     @commands.command(name="exec")
     @commands.check(is_owner)
@@ -204,13 +101,10 @@ class Owner:
             sp.kill()
             return await ctx.send(
                 resolve_emoji('ERROR', ctx) + ' S-sorry! The command timed out... I-I\'ll try harder next time!')
-        msg = "Executing...\n"
         if out:
-            msg += 'Success! ```\n{}```\n'.format(out.decode())
+            await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Returncode: {sp.returncode} ```\n{out.decode()}```\n')
         if err:
-            msg += 'Error/Info/Warn! ```\n{}```\n'.format(err.decode())
-        msg += "Returncode: {}".format(sp.returncode)
-        await ctx.send(msg)
+            await ctx.send(resolve_emoji('WARN', ctx) + f' Returncode: {sp.returncode} ```\n{err.decode()}```\n')
 
     @commands.command(aliases=["die", "reboot"])
     @commands.check(is_owner)
@@ -233,8 +127,8 @@ class Owner:
                 desc = list(cur.description)
                 x = []
                 for it in desc:
-                    l = list(it)
-                    x.append(l[0])
+                    item = list(it)
+                    x.append(item[0])
                 table = PrettyTable(x)
                 for row in cur.fetchall():
                     table.add_row(list(row))
@@ -246,9 +140,9 @@ class Owner:
                                                                               ctx) + " Nothing was returned in this query.")
             except discord.HTTPException:
                 await ctx.send(f'Content too long. Hastepaste: ' + await self.bot.post_to_haste(table))
-        except pymysql.err.ProgrammingError as e:
-            err_msg = str(e).split(',')[1].replace(')', '').replace('"', '')
-            await ctx.send(f":x: {err_msg}")
+        except Exception as e:
+            await ctx.send(resolve_emoji('ERROR', ctx) + e.__class__.__name__ + ': ' + str(e))
+
 
     @commands.command()
     @commands.check(is_owner)
@@ -295,6 +189,42 @@ class Owner:
             await ctx.send(resolve_emoji('ERROR', ctx)
                            + f" I-I'm sorry, I couldn't load the `{extension}` module >w< "
                            + f"```py\n{traceback.format_exc()}```")
+
+    @commands.command()
+    @commands.check(is_owner)
+    async def blacklist(self, ctx, id: int, *, reason: str = None):
+        """Blacklist a user or a guild."""
+        if not reason:
+            reason = 'Not defined.'
+        if str(id) in self.bot.blacklist.keys():
+            await ctx.send(
+                resolve_emoji('ERROR', ctx) + f' That ID is already blacklisted for `{self.bot.blacklist[str(id)]}`\n'
+                                              f'Do you wish to remove this blacklist?')
+
+            def check(m):
+                return m.content.lower() == 'yes' and m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+
+            try:
+                await self.bot.wait_for('message', check=check, timeout=60.0)
+            except asyncio.TimeoutError:
+                return await ctx.send('Kept blacklist due to request timeout.')
+            del self.bot.blacklist[str(id)]
+            self.bot.query_db(f'DELETE FROM blacklist WHERE id={id};')
+            em = discord.Embed(description=f'**ID:** {id}\n**Action:** Un-Blacklist\n**Reason:** {reason}',
+                               color=0x00ff00)
+            em.set_author(icon_url=ctx.author.avatar_url, name=str(ctx.author))
+            em.timestamp = datetime.datetime.utcnow()
+            await self.bot.get_channel(388274450870829057).send(embed=em)
+            return await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Removed the blacklist for **{id}**.')
+        self.bot.blacklist[str(id)] = reason
+        self.bot.query_db(f'INSERT INTO blacklist VALUES(%s, %s)', (id, reason))
+        em = discord.Embed(description=f'**ID:** {id}\n**Action:** Blacklist\n**Reason:** {reason}', color=0xff0000)
+        em.set_author(icon_url=ctx.author.avatar_url, name=str(ctx.author))
+        em.timestamp = datetime.datetime.utcnow()
+        await self.bot.get_channel(388274450870829057).send(embed=em)
+        if self.bot.get_guild(id):
+            await self.bot.get_guild(id).leave()
+        await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Blacklisted ID **{id}** for `{reason}`')
 
 
 def setup(bot):

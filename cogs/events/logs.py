@@ -1,6 +1,6 @@
 from ..utils.db import get_log_channel
 from ..utils.tools import resolve_emoji, escape_markdown, process_join_leave
-from discord import TextChannel, VoiceChannel
+from discord import TextChannel, VoiceChannel, utils
 
 
 class Logs:
@@ -38,6 +38,12 @@ class Logs:
             await channel.send(resolve_emoji('INFO', channel)
                                + f' `{member}` (`{member.id}`) has joined `{member.guild}` (`Member #{len(member.guild.members)}`)')
         await process_join_leave(self.bot, member.guild, member, 'join')
+        query = self.bot.query_db(f'''SELECT autorole FROM settings WHERE guildid={member.guild.id};''')
+        if not member.bot:
+            if query and query[0][0]:
+                role = utils.get(member.guild.roles, id=int(query[0][0]))
+                if role:
+                    await member.add_roles(role, reason='Guild Autorole Assigner')
 
     async def on_member_remove(self, member):
         channel = get_log_channel(self.bot, member.guild)
@@ -80,7 +86,7 @@ class Logs:
             await channel.send(resolve_emoji('ERROR', channel)
                                + f' Role **{role}** was deleted.\n'
                                + f'```diff\n-ID: {role.id}\n-Name: {role}\n'
-                               + f'-Mentionable: {role.mentionable}\n-Hoisted: {role.hoist}'
+                               + f'-Mentionable: {role.mentionable}\n-Hoisted: {role.hoist}\n'
                                + f'-Colour: {role.colour}\n-Permissions: {role.permissions.value}\n```')
 
     async def on_guild_role_update(self, before, after):
@@ -152,7 +158,7 @@ class Logs:
             await c.send(resolve_emoji('ERROR', c)
                          + f' Channel **{channel}** was deleted.\n'
                          + f'```diff\n-Name: {channel}\n-ID: {channel.id}'
-                         + (f'\n+Topic: {channel.topic}' if hasattr(channel, 'topic') else '')
+                         + (f'\n-Topic: {channel.topic}' if hasattr(channel, 'topic') else '')
                          + (f'\n-Category: {channel.category}' if hasattr(channel, 'category') else '')
                          + f'\n-Type: {chan_type}\n```')
 

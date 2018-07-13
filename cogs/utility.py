@@ -10,13 +10,12 @@ import urllib
 import urllib.parse
 import re
 
-import aiohttp
 import pytz
 from discord.ext import commands
 from PIL import ImageColor
 
-from cogs.utils import image
-from cogs.utils.tools import *
+from cogs.utils.tools import resolve_emoji
+from cogs.utils.checks import is_nsfw
 
 
 class Utils:
@@ -44,6 +43,8 @@ class Utils:
                                          ctx) + ' Couldn\'t find that timezone, make sure to use one from this list: <https://pastebin.com/B5tLQdEY>\nAlso remember that timezones are case sensitive.')
 
     @commands.command()
+    @is_nsfw()
+    @commands.bot_has_permissions(embed_links=True)
     async def urban(self, ctx, *, params):
         """Search up a word on urban dictionary.
         To get another result for the same argument, simply use `urban <word> -number <int>`"""
@@ -87,7 +88,7 @@ class Utils:
     async def choose(self, ctx, *choices):
         """Choose a random item from a list."""
         if len(choices) < 2:
-            await ctx.send(":x: I-I need at least two things to choose!")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " I-I need at least two things to choose!")
             return
         await ctx.send(f":thinking: O-oh, you want me to choose? I guess I choose `{random.choice(choices)}`")
 
@@ -97,12 +98,14 @@ class Utils:
         Note that this does have a joke if the word "dick" is included. To avoid this, end the string with '--bypass'"""
         if 'dick' in string.lower():
             if not string.lower().endswith('--bypass'):
-                await ctx.send("\N{CROSS MARK} That is too " + ("small" if 'lars' not in string.lower() else 'long'))
+                await ctx.send(resolve_emoji('ERROR', ctx) + " That is too " + (
+                    "small" if 'lars' not in string.lower() else 'long'))
             else:
-                await ctx.send(f"\N{WHITE HEAVY CHECK MARK} That string is `{len(string) - 9}` characters long "
-                               "(excluding the bypass)")
+                await ctx.send(resolve_emoji('SUCCESS', ctx) + f" That string is `{len(string) - 9}` characters long "
+                                                               "(excluding the bypass)")
         else:
-            await ctx.send(f"\N{WHITE HEAVY CHECK MARK} The string you gave me is `{len(string)}` characters long.")
+            await ctx.send(
+                resolve_emoji('SUCCESS', ctx) + f" The string you gave me is `{len(string)}` characters long.")
 
     @commands.command(name="8ball", aliases=['mb', 'magicball'])
     async def _8ball(self, ctx, *, question):
@@ -112,27 +115,29 @@ class Utils:
             'U-uh, sure!',  # y
             'I mean, n-not like I want to say y-yes or anything... b-baka!',  # y
             'S-Sure, you baka!',  # y
-            'O-of course!', # y
+            'O-of course!',  # y
             'I-I don\'t know, b-baka!',  # i
             'I\'m not all-knowing, you baka tako!',  # i
             'Baka! How am I supposed to know that?',  # i
             'I-I\'m b-busy right now, you baka...',  # i
             'N-not like I want to g-give you an answer or anything!',  # i
-            'B-baka!', # i
+            'B-baka!',  # i
             'B-Baka! Don\'t make me slap you!',  # n
             'N-no...',  # n
             'I t-told you no, b-baka!',  # n
             'Are you dumb?',  # n
             'N-no... I-it\'s not like I\'m s-sorry about that or anything!',  # n
             'No, you b-baka tako!',  # n
-            'N-no, you baka!', # n
-            'Geez, stop pushing yourself! You\'re going to get yourself hurt one day, you idiot!' # n
+            'N-no, you baka!',  # n
+            'Geez, stop pushing yourself! You\'re going to get yourself hurt one day, you idiot!'  # n
         ]
         if re.compile('will you go out with me\??').match(question.lower()):
-            return await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' W-why are y-you asking! I-it\'s not like I l-like you or anything...')
+            return await ctx.send(resolve_emoji('TSUNDERE',
+                                                ctx) + ' W-why are y-you asking! I-it\'s not like I l-like you or anything...')
         await ctx.send(resolve_emoji('TSUNDERE', ctx) + ' ' + random.choice(answers))
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def cat(self, ctx):
         """Get a random cat image!"""
         content = [";w; Don't be sad, here's a cat!",
@@ -151,13 +156,14 @@ class Utils:
                 await ctx.send(resolve_emoji('ERROR', ctx) + " Error retrieving cat image :<")
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def dog(self, ctx):
         """Get a random dog image!"""
         is_video = True
         url = None
         while is_video:
-            r = requests.get('https://random.dog/woof.json')
-            js = r.json()
+            r = await self.bot.session.get('https://random.dog/woof.json')
+            js = await r.json()
             if js['url'].endswith('.mp4'):
                 pass
             else:
@@ -182,9 +188,8 @@ class Utils:
             anim = False if not match.group(1) else True
             suffix = ".png" if not anim else ".gif"
             url = f"https://cdn.discordapp.com/emojis/{match.group(3)}{suffix}?size=1024"
-            image.save_to_image(url=url, name=match.group(2) + suffix)
-            await ctx.send(file=discord.File(f'./images/{match.group(2)}{suffix}'))
-            os.remove(f'./images/{match.group(2)}{suffix}')
+            img = await (await self.bot.session.get(url)).read()
+            await ctx.send(file=discord.File(img, filename=f'{match.group(2)}{suffix}'))
         else:
             try:
                 em = str(emote.encode('unicode_escape'))
@@ -197,6 +202,7 @@ class Utils:
                 await ctx.send(resolve_emoji('ERROR', ctx) + " That is not a custom or unicode emoji!")
 
     @commands.command(aliases=["color"])
+    @commands.bot_has_permissions(embed_links=True)
     async def colour(self, ctx, hexcode: str):
         """Show a preview of a hex colour."""
         if hexcode.startswith("0x") or hexcode.startswith("#"):
@@ -219,6 +225,7 @@ class Utils:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def discrim(self, ctx, *, discrim: str):
         """Find users with the discriminator provided.
         If you are unaware, a discriminator is the 4 digit number following your discord name, as seen [here](https://i.imgur.com/kdbY9Nx.png)."""
@@ -240,6 +247,7 @@ class Utils:
         await ctx.send(embed=em)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def math(self, ctx, *, expression: str):
         """Evaluate complex mathematical equations (or simple ones, whatever you prefer).
         The available operations are as follows:
@@ -253,16 +261,17 @@ class Utils:
                 if oper[1].lower() in available_endpoints:
                     op = oper[1].lower()
                 else:
-                    return await ctx.send(":x: S-Sorry! That operation seems invalid")
+                    return await ctx.send(resolve_emoji('ERROR', ctx) + " S-Sorry! That operation seems invalid")
             except:
                 return await ctx.send(
-                    ":x: Y-you need to give me a valid operation! I made a list for you in the command help.")
+                    resolve_emoji('ERROR',
+                                  ctx) + " Y-you need to give me a valid operation! I made a list for you in the command help.")
         expr = oper[0].replace('/', '%2F')
         r = requests.get("https://newton.now.sh/" + op + "/" + expr)
         try:
             js = r.json()
         except json.decoder.JSONDecodeError:
-            return await ctx.send(":x: I-I'm sorry! Something happened with the api.")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " I-I'm sorry! Something happened with the api.")
         em = discord.Embed(title="Expression Evaluation", color=ctx.message.author.color)
         em.add_field(name="Operation", value=js['operation'], inline=False)
         em.add_field(name="Expression", value=js['expression'], inline=False)
@@ -278,14 +287,15 @@ class Utils:
         Has a cooldown of 2 requests per day to prevent spamming."""
         request_channel = self.bot.get_channel(316674935898636289)
         if request_channel is None:  # shouldn't happen but /shrug
-            return await ctx.send(":x: Um, I'm sorry? The suggestions channel seems to be missing. "
-                                  + "My owner must have deleted it. Sorry. :/ "
-                                  + "Feel free to suggest your idea in person at my support server "
-                                  + "in **#{}**! (https://discord.gg/ewvvKHM)".format(
-                self.bot.get_channel(315252572812214273).name))
+            return await ctx.send(
+                resolve_emoji('ERROR', ctx) + " Um, I'm sorry? The suggestions channel seems to be missing. "
+                + "My owner must have deleted it. Sorry. :/ "
+                + "Feel free to suggest your idea in person at my support server "
+                + "in **#suggestions**! (https://discord.gg/ewvvKHM)")
+        suggestion = suggestion.replace('@everyone', '@\u200Beveryone').replace('@here', '@\u200Bhere')
         await request_channel.send(f"**User Suggestion By:** {ctx.author} ({ctx.author.id})\n"
                                    + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
-                                   + f"**Suggestion:** {suggestion.replace('@', '@‍')}")
+                                   + f"**Suggestion:** {suggestion}")
         await ctx.send(":ok_hand: Got it! Your suggestion has been sent through cyberspace all the way to my owner!")
 
     @commands.command(aliases=["define"])
@@ -310,9 +320,9 @@ class Utils:
                               icon_url=ctx.message.author.avatar_url.replace('?size=1024', ''))
                 await ctx.send(embed=em)
             except KeyError:
-                await ctx.send(":x: No results found.")
+                await ctx.send(resolve_emoji('ERROR', ctx) + " No results found.")
         else:
-            await ctx.send(":x: No results found.")
+            await ctx.send(resolve_emoji('ERROR', ctx) + " No results found.")
 
     @commands.command()
     async def remindme(self, ctx, time: str, *, msg: str):
@@ -321,13 +331,13 @@ class Utils:
         hours_match = re.search("(\d*) ?h", time)
         minutes_match = re.search("(\d*) ?m", time)
         seconds_match = re.search("(\d*) ?s", time)
-        days = int(days_match[1]) if days_match is not None else 0
-        hours = int(hours_match[1]) if hours_match is not None else 0
-        minutes = int(minutes_match[1]) if minutes_match is not None else 0
-        seconds = int(seconds_match[1]) if seconds_match is not None else 0
+        days = int(days_match[1]) if days_match is not None and days_match[1].isdigit() else 0
+        hours = int(hours_match[1]) if hours_match is not None and hours_match[1].isdigit() else 0
+        minutes = int(minutes_match[1]) if minutes_match is not None and minutes_match[1].isdigit() else 0
+        seconds = int(seconds_match[1]) if seconds_match is not None and seconds_match[1].isdigit() else 0
         total = (days * 86400) + (hours * 3600) + (minutes * 60) + seconds
         if total <= 10:
-            return await ctx.send(":x: That's too little time!")
+            return await ctx.send(resolve_emoji('ERROR', ctx) + " That's too little time!")
         m, s = divmod(total, 60)
         h, m = divmod(m, 60)
         d, h = divmod(h, 24)
@@ -341,7 +351,10 @@ class Utils:
                 f"{scnds} second{'s' if scnds > 1 else ''} " if scnds > 0 else "")
         await ctx.send(f":ok_hand: Okay! I'll remind you in " + t)
         await asyncio.sleep(total)
-        await ctx.author.send(":wave: You asked me to remind you of: " + msg)
+        try:
+            await ctx.author.send(":wave: You asked me to remind you of: " + msg)
+        except:
+            await ctx.send(ctx.author.mention + ': Sorry, I couldn\'t DM you, but you asked to be reminded of: ' + msg)
 
     @commands.command()
     async def unicode(self, ctx, *, character: str):
@@ -361,8 +374,59 @@ class Utils:
         em = discord.Embed(description=snipe['message'], color=ctx.author.color)
         em.set_author(name=str(snipe['author']), icon_url=snipe['author'].avatar_url)
         em.set_footer(text=f'Sniped by {ctx.author} | Sniped at', icon_url=ctx.author.avatar_url)
-        em.timestamp = datetime.datetime.now()
+        em.timestamp = datetime.datetime.utcnow()
         await ctx.send(embed=em)
+
+    @commands.command()
+    @commands.bot_has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(embed_links=True)
+    async def iam(self, ctx, *, name: str):
+        """Claim a self assignable role.
+        Do `iam list` for a list of all."""
+        results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
+        selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
+        if name in ['list', 'ls']:
+            msg = ''
+            for key in selfroles.keys():
+                if discord.utils.get(ctx.guild.roles, id=selfroles[key]):
+                    msg += f'**Self role name:** {key} | **Gives:** {discord.utils.get(ctx.guild.roles, id=selfroles[key])}\n'
+            em = discord.Embed(title='All Self Assignable Roles', description=msg if msg != '' else 'None (yet!)',
+                               color=ctx.author.color)
+            em.set_footer(text='Requested by ' + ctx.author.display_name)
+            return await ctx.send(embed=em)
+        try:
+            role = discord.utils.get(ctx.guild.roles, id=selfroles[name])
+            if role:
+                if role not in ctx.author.roles:
+                    await ctx.author.add_roles(role, reason='Self Assignable Role')
+                    await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Gave you the **{role}** role.')
+                else:
+                    await ctx.send(resolve_emoji('ERROR', ctx) + ' Silly, I can\'t give you a role you already have.')
+            else:
+                await ctx.send(resolve_emoji('ERROR', ctx) + ' The role corresponding to this self role was deleted.')
+        except discord.Forbidden:
+            await ctx.send(resolve_emoji('ERROR',
+                                         ctx) + ' I could not give you that role. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
+
+    @commands.command()
+    @commands.bot_has_permissions(manage_roles=True)
+    async def iamnot(self, ctx, *, name: str):
+        """Remove a self assignable role."""
+        results = self.bot.query_db(f'''SELECT self_roles FROM settings WHERE guildid={ctx.guild.id};''')
+        selfroles = json.loads(results[0][0].replace("'", '"')) if results and results[0][0] else json.loads('{}')
+        try:
+            role = discord.utils.get(ctx.guild.roles, id=selfroles[name])
+            if role:
+                if role in ctx.author.roles:
+                    await ctx.author.remove_roles(role, reason='Self Assignable Role')
+                    await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Removed the **{role}** role from you.')
+                else:
+                    await ctx.send(resolve_emoji('ERROR', ctx) + ' Silly, I can\'t take a role that you don\'t have.')
+            else:
+                await ctx.send(resolve_emoji('ERROR', ctx) + ' The role corresponding to this self role was deleted.')
+        except discord.Forbidden:
+            await ctx.send(resolve_emoji('ERROR',
+                                         ctx) + ' I could not take that role from you. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
 
 
 def setup(bot):
