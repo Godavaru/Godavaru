@@ -314,7 +314,7 @@ class Fun:
     async def achievement(self, ctx, *, text: str):
         """Generate a minecraft achievement."""
         img = await (await self.bot.session.get(
-            f'https://api.alexflipnote.xyz/achievement?text={text}')).read()
+            f'https://api.alexflipnote.xyz/achievement?text={text[:400]}')).read()
         await ctx.send(file=discord.File(img, filename='achievement.png'))
 
     @commands.command()
