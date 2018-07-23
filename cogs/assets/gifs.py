@@ -23,12 +23,12 @@ fuck = [
     "http://www.tagstube.com/wp-content/uploads/cache-e21155888465eabf55d969bc601f08b2/2016/01/Anime-Hentai-Gif-3.gif",
     "http://www.tagstube.com/wp-content/uploads/cache-e21155888465eabf55d969bc601f08b2/2016/01/Anime-Hentai-Gif-4.gif",
     "https://angrygif.com/wp-content/uploads/2017/02/fd5d61e746e1dc4a41b872f4e388753f.gif",
-    "https://rule34.xxx//images/2477/97f898381f619e43a534ccd341d9dbdaf54d9f08.gif",
-    "https://img.rule34.xxx//images/2477/71492aef492422e1ed4874c43f405ac23a930b13.gif",
-    "https://rule34.xxx//images/2477/e1f4fd6ce3ed526077b5246cd4877f1e27b1447f.gif",
-    "https://img.rule34.xxx//images/2477/1df84ed3fc4f9be2ae83bb22f70b397e71cba6c1.gif",
-    "https://rule34.xxx//images/2477/0724f0963a93cfa722d1042661c43bc57c2db3db.gif",
-    "https://img.rule34.xxx//images/2476/8687120bc5b98b8ce7811ac1aa1f77236ca0f2d8.gif",
-    "https://img.rule34.xxx//images/2476/38b3ddab00cb290da4f261efc3bb132c7724efd8.gif",
-    "https://img.rule34.xxx//images/2476/973103f6a4354a483eff79c2b43787c0f03c17d8.gif"
+    "https://rule34.xxx/images/2477/97f898381f619e43a534ccd341d9dbdaf54d9f08.gif",
+    "https://img.rule34.xxx/images/2477/71492aef492422e1ed4874c43f405ac23a930b13.gif",
+    "https://rule34.xxx/images/2477/e1f4fd6ce3ed526077b5246cd4877f1e27b1447f.gif",
+    "https://img.rule34.xxx/images/2477/1df84ed3fc4f9be2ae83bb22f70b397e71cba6c1.gif",
+    "https://rule34.xxx/images/2477/0724f0963a93cfa722d1042661c43bc57c2db3db.gif",
+    "https://img.rule34.xxx/images/2476/8687120bc5b98b8ce7811ac1aa1f77236ca0f2d8.gif",
+    "https://img.rule34.xxx/images/2476/38b3ddab00cb290da4f261efc3bb132c7724efd8.gif",
+    "https://img.rule34.xxx/images/2476/973103f6a4354a483eff79c2b43787c0f03c17d8.gif"
 ]

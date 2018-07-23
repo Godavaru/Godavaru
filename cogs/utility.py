@@ -286,12 +286,15 @@ class Utils:
         """Suggest a feature to be added!
         Has a cooldown of 2 requests per day to prevent spamming."""
         request_channel = self.bot.get_channel(316674935898636289)
+        no_suggest = discord.utils.get(self.bot.get_guild(315251940999299072).roles, id=470249555980582916)
         if request_channel is None:  # shouldn't happen but /shrug
             return await ctx.send(
                 resolve_emoji('ERROR', ctx) + " Um, I'm sorry? The suggestions channel seems to be missing. "
                 + "My owner must have deleted it. Sorry. :/ "
                 + "Feel free to suggest your idea in person at my support server "
                 + "in **#suggestions**! (https://discord.gg/ewvvKHM)")
+        if ctx.author in self.bot.get_guild(315251940999299072).members and no_suggest in self.bot.get_guild(315251940999299072).get_member(ctx.author.id).roles:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + f' You have been barred from suggesting things. If you wish to appeal this, please DM {self.bot.get_user(267207628965281792)} with detailed information on why you should be allowed to suggest things.')
         suggestion = suggestion.replace('@everyone', '@\u200Beveryone').replace('@here', '@\u200Bhere')
         await request_channel.send(f"**User Suggestion By:** {ctx.author} ({ctx.author.id})\n"
                                    + f"**Guild:** {ctx.guild} ({ctx.guild.id})\n"
@@ -407,6 +410,8 @@ class Utils:
         except discord.Forbidden:
             await ctx.send(resolve_emoji('ERROR',
                                          ctx) + ' I could not give you that role. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
+        except KeyError:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' There is no self-role with the name `{name}`.')
 
     @commands.command()
     @commands.bot_has_permissions(manage_roles=True)
@@ -427,6 +432,8 @@ class Utils:
         except discord.Forbidden:
             await ctx.send(resolve_emoji('ERROR',
                                          ctx) + ' I could not take that role from you. Make sure to contact an admin to check that my highest role is above the role trying to be assigned.')
+        except KeyError:
+            await ctx.send(resolve_emoji('ERROR', ctx) + f' There is no self-role with the name `{name}`.')
 
 
 def setup(bot):

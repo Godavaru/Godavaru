@@ -28,6 +28,7 @@ class Currency:
                 'You stepped on an ant. You paid for its life support, costing you $500.'
             ]
         }
+        self.marriages = list()
 
     def is_premium(self, member):
         support = self.bot.get_guild(315251940999299072)
@@ -284,12 +285,15 @@ class Currency:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You can't marry yourself.")
         if member.bot:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You can't marry a bot.")
+        if member.id in self.marriages:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' That person already has a pending proposal.')
         if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''') and \
                 self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={member.id}''')[0][0]:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " That person is already married!")
         if self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''') and \
                 self.bot.query_db(f'''SELECT marriage FROM users WHERE userid={ctx.author.id}''')[0][0]:
             return await ctx.send(resolve_emoji('ERROR', ctx) + " You are already married!")
+        self.marriages.append(member.id)
         await ctx.send(
             f'{member.display_name}, say `yes` or `no` to the marriage proposal from {ctx.author.display_name}')
 
@@ -299,6 +303,7 @@ class Currency:
         try:
             msg = await self.bot.wait_for('message', check=check, timeout=120.0)
         except asyncio.TimeoutError:
+            self.marriages.remove(member.id)
             return await ctx.send("The proposal timed out :<")
         if msg.content.lower() == 'yes':
             await ctx.send(":tada: Congratulations! The two of you are now married.")
@@ -310,6 +315,7 @@ class Currency:
                                 ON DUPLICATE KEY UPDATE marriage={ctx.author.id}''')
         elif msg.content.lower() == 'no':
             await ctx.send(f":sob: {ctx.author.display_name} just got denied :broken_heart:")
+        self.marriages.remove(member.id)
 
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)

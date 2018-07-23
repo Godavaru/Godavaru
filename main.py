@@ -34,7 +34,8 @@ class Godavaru(commands.Bot):
         with open('splashes.txt') as f:
             self.splashes = f.readlines()
         self.game_task = self.loop.create_task(self.change_game())
-        self.post_task = self.loop.create_task(self.post_counts())
+        if config.environment == 'Production':
+            self.post_task = self.loop.create_task(self.post_counts())
         self.webhook = discord.Webhook.partial(int(config.webhook_id), config.webhook_token,
                                                adapter=discord.RequestsWebhookAdapter())
         extensions = [f for f in os.listdir('./cogs') if f.endswith('.py')] + ['events.' + f for f in
@@ -80,8 +81,7 @@ class Godavaru(commands.Bot):
         self.session = aiohttp.ClientSession()
 
     async def on_error(self, event, *args, **kwargs):
-        self.webhook.send(f':x: **I ran into an error in event `{event}`!**\nArgs: ```\n{args}\n``` KWArgs: ```\n{kwargs}\n```')
-        self.webhook.send(f'Traceback: ```py\n{sys.exc_info()}\n```')
+        self.webhook.send(f':x: **I ran into an error in event `{event}`!**\nTraceback: ```py\n{"".join(traceback.format_exception(*sys.exc_info()))}\n```')
 
     async def change_game(self):
         await self.wait_until_ready()
@@ -93,7 +93,7 @@ class Godavaru(commands.Bot):
 
     async def post_counts(self):
         await self.wait_until_ready()
-        while not self.is_closed() and config.environment == 'Production':
+        while not self.is_closed():
             data = {'server_count': len(self.guilds)}
             dbl_url = f'https://discordbots.org/api/bots/{self.user.id}/stats'
             pw_url = f'https://bots.discord.pw/api/bots/{self.user.id}/stats'

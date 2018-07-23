@@ -16,6 +16,7 @@ class Settings:
         self.bot = bot
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def prefix(self, ctx, prefix: str = None):
         """Change the guild prefix.
@@ -33,6 +34,7 @@ class Settings:
         await ctx.send(resolve_emoji('SUCCESS', ctx) + f' Successfully set my prefix here to `{prefix}`')
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def modlog(self, ctx, channel: str):
         """Change the guild mod log channel.
@@ -50,6 +52,7 @@ class Settings:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def muterole(self, ctx, *, role: str):
         """Change the guild mute role.
@@ -70,6 +73,7 @@ class Settings:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Role "{role}" not found.')
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def logs(self, ctx, channel: str):
         """Change the guild logging channel.
@@ -87,6 +91,7 @@ class Settings:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def welcome(self, ctx, channel: str, *, msg: str = None):
         """Set the welcome message & channel for this server.
@@ -108,6 +113,7 @@ class Settings:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def leave(self, ctx, channel: str, *, msg: str = None):
         """Set the leave message & channel for this server.
@@ -130,6 +136,7 @@ class Settings:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Channel "{channel}" not found.')
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def selfroles(self, ctx, func: str, name: str, *, role: discord.Role = None):
         """Manage the guild self roles for the `iam` command.
@@ -161,6 +168,7 @@ class Settings:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Invalid function, check `{ctx.prefix}help {ctx.command}`')
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.guild)
     @commands.check(can_manage)
     async def autorole(self, ctx, *, role: str):
         """Set the guild autorole (the role that will be assigned on member join).
@@ -181,39 +189,6 @@ class Settings:
             await ctx.send(resolve_emoji('SUCCESS', ctx) + ' Successfully reset your autorole.')
         else:
             await ctx.send(resolve_emoji('ERROR', ctx) + f' Role "{role}" not found.')
-
-    @commands.command(name='import')
-    @commands.check(can_manage)
-    @commands.cooldown(rate=1, per=3600, type=commands.BucketType.guild)
-    async def _import(self, ctx):
-        """Import settings from Kumiko.
-        WARNING: THIS CAN NOT BE UNDONE."""
-        kum_query = self.bot.query_db(f'''SELECT logchannel,modlogchannel,muterole,
-                                        joinmessage,leavemessage,welcomechannel FROM desii.opts 
-                                        WHERE guildid={ctx.guild.id};''')
-        if kum_query:
-            await ctx.send('Found data! Are you ***sure*** that you want to do this? This can **NOT** be undone.'
-                           + ' This will replace all of your current settings in Godavaru. Are you ***bolded sure*** '
-                           + 'that you wish to go through with this? Please say `yes` if you wish to continue.')
-
-            def check(m):
-                return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id and m.content == 'yes'
-
-            try:
-                await self.bot.wait_for('message', check=check, timeout=60.0)
-            except asyncio.TimeoutError:
-                return await ctx.send(resolve_emoji('ERROR', ctx) + f' The time ran out, cancelling import.')
-            data = kum_query[0]
-            self.bot.query_db(f'''INSERT INTO settings (guildid,log_channel,mod_channel,muterole,welcome_message,
-                                leave_message,welcome_channel,leave_channel) VALUES ({ctx.guild.id}, %s, %s, %s, 
-                                %s, %s, %s, %s) ON DUPLICATE KEY UPDATE log_channel=%s,mod_channel=%s,muterole=%s,
-                                welcome_message=%s, leave_message=%s,welcome_channel=%s,leave_channel=%s;''',
-                              (data[0], data[1], data[2], data[3], data[4], data[5], data[5], data[0], data[1], data[2],
-                               data[3], data[4], data[5], data[5]))
-            await ctx.send(
-                resolve_emoji('SUCCESS', ctx) + f' Successfully imported all data from Kumiko into Godavaru.')
-        else:
-            await ctx.send(resolve_emoji('ERROR', ctx) + f' I couldn\'t find any data from Kumiko to import.')
 
 
 def setup(bot):

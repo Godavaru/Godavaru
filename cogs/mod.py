@@ -104,7 +104,10 @@ class Mod:
     async def hackban(self, ctx, user_id: int, *, reason: str = None):
         """Ban a member by their user ID.
         You can also supply an optional reason."""
-        member = await self.bot.get_user_info(user_id)
+        try:
+            member = await self.bot.get_user_info(user_id)
+        except discord.NotFound:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' That user does not seem to exist in Discord\'s database.')
         if member.id in [m.id for m in ctx.guild.members] and ctx.author.top_role.position > discord.utils.get(
                 ctx.guild.members, id=member.id).top_role.position or member not in ctx.guild.members:
             try:
@@ -129,7 +132,10 @@ class Mod:
         if user_id not in [u.user.id for u in await ctx.guild.bans()]:
             await ctx.send(resolve_emoji('ERROR', ctx) + " U-uh, excuse me! That user doesn't seem to be banned!")
             return
-        user = await self.bot.get_user_info(user_id)
+        try:
+            user = await self.bot.get_user_info(user_id)
+        except discord.NotFound:
+            return await ctx.send(resolve_emoji('ERROR', ctx) + ' That user does not seem to exist in Discord\'s database.')
         await ctx.guild.unban(user, reason=f'Responsible Moderator: {ctx.author} | Reason: ' + (
             reason if reason else 'No reason specified.'))
         await ctx.send(f":ok_hand: I unbanned **{user}** successfully.")

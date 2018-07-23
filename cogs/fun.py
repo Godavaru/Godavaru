@@ -186,6 +186,7 @@ class Fun:
     # uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
     # why does this exist again?
     # hi u meme
+    # wat de fuuk
 
     @commands.command()
     async def bowling(self, ctx):
@@ -207,6 +208,7 @@ class Fun:
                         finisher + init))
 
     @commands.command(aliases=["number"])
+    @commands.cooldown(3, 1, commands.BucketType.user)
     async def numbers(self, ctx, num=None):
         """Get a random fact about a number or specify a number to get a fact about it.
         If your number is invalid, a random number will be used."""
@@ -225,6 +227,7 @@ class Fun:
         await ctx.send(":mega: {}".format(x.text))
 
     @commands.command()
+    @commands.cooldown(30, 1, commands.BucketType.user)
     @commands.bot_has_permissions(embed_links=True, attach_files=True)
     async def love(self, ctx, *members: discord.Member):
         """Use some magic numbers to calculate the compatibility between two users.
@@ -274,7 +277,10 @@ class Fun:
         em.add_field(name="Result", value=f"**{sum}%**\n`{msg}`", inline=False)
         em.add_field(name="Shipname", value=shipname)
         em.set_thumbnail(url="https://www.emojibase.com/resources/img/emojis/hangouts/1f49c.png")
-        await message.delete()
+        try:
+            await message.delete()
+        except:
+            pass
         await ctx.send(file=discord.File(img, filename='love.png'), embed=em.set_image(url="attachment://love.png"))
 
     @commands.command()
@@ -303,6 +309,7 @@ class Fun:
         await ctx.send(":game_die: You rolled a **{}**!".format(random.randint(1, 6)))
 
     @commands.command()
+    @commands.cooldown(3, 1, commands.BucketType.user)
     @commands.bot_has_permissions(attach_files=True)
     async def achievement(self, ctx, *, text: str):
         """Generate a minecraft achievement."""
@@ -312,6 +319,7 @@ class Fun:
         await ctx.send(file=discord.File(img, filename='achievement.png'))
 
     @commands.command()
+    @commands.cooldown(3, 1, commands.BucketType.user)
     async def lyrics(self, ctx, *, song: str):
         """Search up the lyrics to a song on Genius!"""
         async with self.bot.session.get(
@@ -336,6 +344,7 @@ class Fun:
             await ctx.send(resolve_emoji('ERROR', ctx) + ' Sorry, I couldn\'t find that song.')
 
     @commands.command()
+    @commands.cooldown(3, 1, commands.BucketType.user)
     async def person(self, ctx):
         """Generate a random person's information.
         Note: This information is 100% fake and provided by randomuser.me."""
@@ -388,6 +397,7 @@ class Fun:
         await ctx.send(msg + " のワの")
 
     @commands.command(aliases=["nc"])
+    @commands.cooldown(3, 1, commands.BucketType.user)
     async def nightcore(self, ctx):
         """Get a random nightcore song."""
         r = await self.bot.session.get('https://api.apithis.net/nightcore.php')
@@ -407,6 +417,7 @@ class Fun:
         await ctx.send(r)
 
     @commands.command()
+    @commands.cooldown(5, 1, commands.BucketType.user)
     @commands.bot_has_permissions(embed_links=True)
     async def trivia(self, ctx, *, difficulty: str = None):
         """Play a game of trivia."""
@@ -474,6 +485,7 @@ class Fun:
                     resolve_emoji('ERROR', ctx) + " That's not right. The correct answer was `{}`".format(correct))
 
     @commands.command()
+    @commands.cooldown(3, 1, commands.BucketType.user)
     async def joke(self, ctx, *, phrase: str = None):
         """Make a somewhat Chuck Norris related joke."""
         if phrase is None:
@@ -517,6 +529,7 @@ class Fun:
         await ctx.send(f"👏{'👏'.join(msg.split(' '))}👏")
 
     @commands.command()
+    @commands.cooldown(3, 1, commands.BucketType.user)
     @commands.has_permissions(embed_links=True)
     async def yesorno(self, ctx, *, question: str):
         """Ask a question and I will answer with a yes or a no!"""

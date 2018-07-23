@@ -260,6 +260,7 @@ class Info:
                        + 'Websocket Ping     :  {:.0f}ms\n```'.format(ping))
 
     @commands.command()
+    @commands.cooldown(3, 1, commands.BucketType.user)
     @commands.bot_has_permissions(attach_files=True)
     async def avatar(self, ctx, *, user: discord.Member = None):
         """Get the avatar of a user!
@@ -355,7 +356,7 @@ class Info:
         em.add_field(name="Highest Position:", value=user.top_role.position)
         em.add_field(name=f"Roles [{len(user.roles) - 1}]:", value=(", ".join(
             [r.name for r in sorted(user.roles, key=lambda x: -x.position) if not r.is_default()])) if len(
-            user.roles) == 1 else "This user has no roles.")
+            user.roles) > 1 else "This user has no roles.")
         em.set_thumbnail(url=user.avatar_url.replace("?size=1024", ""))
         em.set_author(name=f"{user} ({user.id})", icon_url=user.avatar_url.replace("?size=1024", ""),
                       url=user.avatar_url.replace("?size=1024", ""))
