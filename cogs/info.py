@@ -269,7 +269,7 @@ class Info:
             user = ctx.author
         img = await (await self.bot.session.get(user.avatar_url)).read()
         await ctx.send(content=resolve_emoji('SUCCESS', ctx) + f' **{user.display_name}**\'s avatar!',
-                       file=discord.File(img, filename=f'{user.avatar}.{"png" if not user.avatar.startswith("a_") else "gif"}'))
+                       file=discord.File(img, filename=f'{user.avatar}.{"png" if not user.avatar or not user.avatar.startswith("a_") else "gif"}'))
 
     @commands.command(aliases=["guild", "ginfo", "server", "serverinfo", "sinfo"])
     async def guildinfo(self, ctx):

@@ -81,6 +81,8 @@ class Godavaru(commands.Bot):
         self.session = aiohttp.ClientSession()
 
     async def on_error(self, event, *args, **kwargs):
+        if sys.exc_info()[0] == discord.Forbidden:
+            return
         self.webhook.send(f':x: **I ran into an error in event `{event}`!**\nTraceback: ```py\n{"".join(traceback.format_exception(*sys.exc_info()))}\n```')
 
     async def change_game(self):

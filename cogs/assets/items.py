@@ -6,32 +6,32 @@ all_items = {
     },
     "DIAMOND": {
         "emoji": "💎",
-        "buy": 1500,
+        "buy": 1200,
         "sell": 500
     },
     "SAPPHIRE": {
         "emoji": "💠",
-        "buy": 1500,
-        "sell": 500
-    },
-    "RUBY": {
-        "emoji": "♦",
         "buy": 1000,
         "sell": 300
     },
+    "RUBY": {
+        "emoji": "♦",
+        "buy": 800,
+        "sell": 200
+    },
     "BUG": {
         "emoji": "🐛",
-        "buy": None,
-        "sell": 300
+        "buy": 694201337666,
+        "sell": 1
     },
     "BLOSSOM": {
         "emoji": "🌸",
-        "buy": 300,
-        "sell": 100
+        "buy": 150,
+        "sell": 75
     },
     "LEAF": {
         "emoji": "🍃",
-        "buy": 200,
-        "sell": 50
+        "buy": 50,
+        "sell": 25
     }
 }
