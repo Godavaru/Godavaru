@@ -393,7 +393,7 @@ class Utils:
             for key in selfroles.keys():
                 if discord.utils.get(ctx.guild.roles, id=selfroles[key]):
                     msg += f'**Self role name:** {key} | **Gives:** {discord.utils.get(ctx.guild.roles, id=selfroles[key])}\n'
-            em = discord.Embed(title='All Self Assignable Roles', description=msg if msg != '' else 'None (yet!)',
+            em = discord.Embed(title='All Self Assignable Roles', description=(msg if msg != '' else 'None (yet!)') if len(msg) < 2000 else '[Click me!](' + (await self.bot.post_to_haste(msg)) + ')',
                                color=ctx.author.color)
             em.set_footer(text='Requested by ' + ctx.author.display_name)
             return await ctx.send(embed=em)
